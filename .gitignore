@@ -1,0 +1,11 @@
+.gradle
+.idea
+/DonkeyKongFabric/build
+/DonkeyKongFabric/.gradle
+/DonkeyKongFabric/.idea
+/DonkeyKongFabric/build
+/DonkeyKongFabric/run
+/DonkeyKongPlugin/.gradle
+/DonkeyKongPlugin/.idea
+/DonkeyKongPlugin/build
+/DonkeyKongPlugin/run

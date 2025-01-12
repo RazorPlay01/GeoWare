@@ -1,0 +1,7 @@
+name: DonkeyKongPlugin
+version: '1.0.0'
+main: com.github.razorplay01.donkeyKongPlugin.DonkeyKongPlugin
+api-version: '1.21'
+prefix: DonkeyKongPlugin
+authors: [ RazorPlay ]
+website: https://github.com/RazorPlay01
