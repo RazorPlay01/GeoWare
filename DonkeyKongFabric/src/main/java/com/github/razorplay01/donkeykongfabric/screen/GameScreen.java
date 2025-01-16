@@ -2,12 +2,11 @@ package com.github.razorplay01.donkeykongfabric.screen;
 
 import com.github.razorplay01.donkeykongfabric.DonkeyKongFabric;
 import com.github.razorplay01.donkeykongfabric.game.Barrel;
-import com.github.razorplay01.donkeykongfabric.game.Ladder;
-import com.github.razorplay01.donkeykongfabric.game.Platform;
+import com.github.razorplay01.donkeykongfabric.game.mapobject.Ladder;
+import com.github.razorplay01.donkeykongfabric.game.mapobject.Platform;
 import com.github.razorplay01.donkeykongfabric.game.Player;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -18,11 +17,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import static com.github.razorplay01.donkeykongfabric.game.Player.PLAYER_HEIGHT;
+
 public class GameScreen extends Screen {
     public static final int SCREEN_WIDTH = 224;
     public static final int SCREEN_HEIGHT = 256;
-    private int screenXpos;
-    private int screenYpos;
+    @Getter
+    private Integer screenXPos;
+    @Getter
+    private Integer screenYPos;
 
     private Player player;
     @Getter
@@ -32,9 +35,8 @@ public class GameScreen extends Screen {
     @Getter
     private final List<Platform> platforms = new ArrayList<>();
 
-    private Identifier backgroundImage = Identifier.of(DonkeyKongFabric.MOD_ID, "textures/gui/map_base.png");
+    private final Identifier backgroundImage = Identifier.of(DonkeyKongFabric.MOD_ID, "textures/gui/map_base.png");
 
-    private TextRenderer textRenderer;
     @Setter
     private boolean showJumpMessage = false;
 
@@ -50,122 +52,155 @@ public class GameScreen extends Screen {
 
     @Override
     protected void init() {
-        textRenderer = client.textRenderer;
-        this.screenXpos = (width / 2) - (SCREEN_WIDTH / 2);
-        this.screenYpos = (height / 2) - (SCREEN_HEIGHT / 2);
+        if (screenXPos == null || screenYPos == null || platforms.isEmpty() || player == null) {
+            this.screenXPos = (width / 2) - (SCREEN_WIDTH / 2);
+            this.screenYPos = (height / 2) - (SCREEN_HEIGHT / 2);
 
-        float centerX = screenXpos + ((float) SCREEN_WIDTH / 2) - 4f;
-        float bottomY = screenYpos + SCREEN_HEIGHT - 8f;
-
-        createFirstPlatform(bottomY);
-        createSecondPlatform(bottomY);
-        createThirdPlatform(bottomY);
-        createFourthPlatform(bottomY);
-        createFifthPlatform(bottomY);
-        createSixthPlatform(bottomY);
-        player = new Player(platforms.get(4).getX(), platforms.get(4).getY() - 16, this);
+            createFirstPlatform();
+            createSecondPlatform();
+            createThirdPlatform();
+            createFourthPlatform();
+            createFifthPlatform();
+            createSixthPlatform();
+            createFinalPlatform();
+            player = new Player(screenXPos + 36f, platforms.getFirst().getYPos() - PLAYER_HEIGHT, this);
+        }
     }
 
-    private void createFirstPlatform(float bottomY) {
-        for (int i = 0; i < 14; i++) {
-            float platformX = screenXpos + (i * 8f);
-            platforms.add(new Platform(platformX, bottomY));
+    private void createFirstPlatform() {
+        int platformWidth = 16;
+        int platformHeight = 8;
+        float bottomY = (float) screenYPos + SCREEN_HEIGHT - platformHeight;
+
+        for (int i = 0; i < 7; i++) {
+            float platformX = screenXPos + ((float) i * platformWidth);
+            platforms.add(new Platform(platformX, bottomY, platformWidth, platformHeight));
         }
-        float currentX = screenXpos + (14 * 8f);
+        float currentX = screenXPos + ((float) 7 * platformWidth);
         float currentY = bottomY - 1;
         for (int i = 0; i < 7; i++) {
-            platforms.add(new Platform(currentX, currentY));
-            platforms.add(new Platform(currentX + 8f, currentY));
+            platforms.add(new Platform(currentX, currentY, platformWidth, platformHeight));
             currentX += 16;
             currentY -= 1f;
         }
-        ladders.add(new Ladder(platforms.get(10).getX(), platforms.get(10).getY() - 8, 8, false));
+        ladders.add(new Ladder(screenXPos + 80f, screenYPos + 240f, 8, 8, false));
     }
 
-    private void createSecondPlatform(float bottomY) {
-        float currentX = screenXpos;
+    private void createSecondPlatform() {
+        int platformWidth = 16;
+        int platformHeight = 8;
+        float bottomY = (float) screenYPos + SCREEN_HEIGHT - platformHeight;
+
+        float currentX = screenXPos;
         float currentY = bottomY - 40;
         for (int i = 0; i < 13; i++) {
-            platforms.add(new Platform(currentX, currentY));
-            platforms.add(new Platform(currentX + 8f, currentY));
+            platforms.add(new Platform(currentX, currentY, platformWidth, platformHeight));
             currentX += 16;
             currentY += 1f;
         }
-        ladders.add(new Ladder(platforms.get(38).getX(), platforms.get(38).getY(), 11, true));
-        ladders.add(new Ladder(platforms.get(51).getX(), platforms.get(51).getY(), 24, true));
+        ladders.add(new Ladder(screenXPos + 80f, screenYPos + 213f, 8, 11, true));
+        ladders.add(new Ladder(screenXPos + 184f, screenYPos + 219f, 8, 24, true));
     }
 
-    private void createThirdPlatform(float bottomY) {
-        float currentX = screenXpos + SCREEN_WIDTH - 8f;
+    private void createThirdPlatform() {
+        int platformWidth = 16;
+        int platformHeight = 8;
+        float bottomY = (float) screenYPos + SCREEN_HEIGHT - platformHeight;
+
+        float currentX = (float) screenXPos + SCREEN_WIDTH - platformWidth;
         float currentY = bottomY - 73f;
         for (int i = 0; i < 13; i++) {
-            platforms.add(new Platform(currentX, currentY));
-            platforms.add(new Platform(currentX - 8f, currentY));
+            platforms.add(new Platform(currentX, currentY, platformWidth, platformHeight));
             currentX -= 16;
             currentY += 1f;
         }
-        ladders.add(new Ladder(platforms.get(69).getX(), platforms.get(69).getY(), 32, true));
-        ladders.add(new Ladder(platforms.get(73).getX(), platforms.get(73).getY() - 8, 8, false));
-        ladders.add(new Ladder(platforms.get(77).getX(), platforms.get(77).getY(), 24, true));
+        ladders.add(new Ladder(screenXPos + 96f, screenYPos + 182f, 8, 32, true));
+        ladders.add(new Ladder(screenXPos + 64f, screenYPos + 176f, 8, 8, false));
+        ladders.add(new Ladder(screenXPos + 32f, screenYPos + 186f, 8, 24, true));
 
     }
 
-    private void createFourthPlatform(float bottomY) {
-        float currentX = screenXpos;
+    private void createFourthPlatform() {
+        int platformWidth = 16;
+        int platformHeight = 8;
+        float bottomY = (float) screenYPos + SCREEN_HEIGHT - platformHeight;
+
+        float currentX = screenXPos;
         float currentY = bottomY - 106f;
         for (int i = 0; i < 13; i++) {
-            platforms.add(new Platform(currentX, currentY));
-            platforms.add(new Platform(currentX + 8f, currentY));
+            platforms.add(new Platform(currentX, currentY, platformWidth, platformHeight));
             currentX += 16;
             currentY += 1f;
         }
-        ladders.add(new Ladder(platforms.get(88).getX(), platforms.get(88).getY(), 14, true));
-        ladders.add(new Ladder(platforms.get(94).getX(), platforms.get(94).getY(), 32, true));
-        ladders.add(new Ladder(platforms.get(101).getX(), platforms.get(101).getY() - 8, 8, false));
-        ladders.add(new Ladder(platforms.get(103).getX(), platforms.get(103).getY(), 24, true));
+        ladders.add(new Ladder(screenXPos + 64f, screenYPos + 146f, 8, 14, true));
+        ladders.add(new Ladder(screenXPos + 112f, screenYPos + 149f, 8, 32, true));
+        ladders.add(new Ladder(screenXPos + 168f, screenYPos + 144f, 8, 8, false));
+        ladders.add(new Ladder(screenXPos + 184f, screenYPos + 153f, 8, 24, true));
     }
 
-    private void createFifthPlatform(float bottomY) {
-        float currentX = screenXpos + SCREEN_WIDTH - 8f;
+    private void createFifthPlatform() {
+        int platformWidth = 16;
+        int platformHeight = 8;
+        float bottomY = (float) screenYPos + SCREEN_HEIGHT - platformHeight;
+
+        float currentX = (float) screenXPos + SCREEN_WIDTH - platformWidth;
         float currentY = bottomY - 139f;
         for (int i = 0; i < 13; i++) {
-            platforms.add(new Platform(currentX, currentY));
-            platforms.add(new Platform(currentX - 8f, currentY));
+            platforms.add(new Platform(currentX, currentY, platformWidth, platformHeight));
             currentX -= 16;
             currentY += 1f;
         }
-        ladders.add(new Ladder(platforms.get(112).getX(), platforms.get(112).getY(), 16, true));
-        ladders.add(new Ladder(platforms.get(122).getX(), platforms.get(122).getY() - 13, 13, false));
-        ladders.add(new Ladder(platforms.get(124).getX(), platforms.get(124).getY(), 28, true));
-        ladders.add(new Ladder(platforms.get(129).getX(), platforms.get(129).getY(), 24, true));
+        ladders.add(new Ladder(screenXPos + 168f, screenYPos + 112f, 8, 16, true));
+        ladders.add(new Ladder(screenXPos + 88f, screenYPos + 104f, 8, 13, false));
+        ladders.add(new Ladder(screenXPos + 72f, screenYPos + 118f, 8, 28, true));
+        ladders.add(new Ladder(screenXPos + 32f, screenYPos + 120f, 8, 24, true));
     }
 
-    private void createSixthPlatform(float bottomY) {
+    private void createSixthPlatform() {
+        int platformWidth = 16;
+        int platformHeight = 8;
+        float bottomY = (float) screenYPos + SCREEN_HEIGHT - platformHeight;
+
         float currentY = bottomY - 164f;
-        for (int i = 0; i < 16; i++) {
-            float platformX = screenXpos + (i * 8f);
-            platforms.add(new Platform(platformX, currentY));
+        for (int i = 0; i < 8; i++) {
+            float platformX = (float) screenXPos + (i * platformWidth);
+            platforms.add(new Platform(platformX, currentY, platformWidth, platformHeight));
         }
 
-        float currentX = screenXpos + (16 * 8f);
+        float currentX = screenXPos + (8f * platformWidth);
         for (int i = 0; i < 5; i++) {
-            platforms.add(new Platform(currentX, currentY));
-            platforms.add(new Platform(currentX + 8f, currentY));
+            platforms.add(new Platform(currentX, currentY, platformWidth, platformHeight));
 
             currentX += 16f;
             currentY += 1f;
         }
-        ladders.add(new Ladder(platforms.get(143).getX(), platforms.get(143).getY(), 12, true));
-        ladders.add(new Ladder(platforms.get(148).getX(), platforms.get(148).getY() - 28, 28, false));
-        ladders.add(new Ladder(platforms.get(155).getX(), platforms.get(155).getY(), 24, true));
+        ladders.add(new Ladder(screenXPos + 88f, screenYPos + 84f, 8, 12, true));
+        ladders.add(new Ladder(screenXPos + 184f, screenYPos + 87f, 8, 24, true));
+    }
+
+    private void createFinalPlatform() {
+        int platformWidth = 16;
+        int platformHeight = 8;
+        float currentX = screenXPos + 88f;
+        float currentY = screenYPos + 56f;
+        for (int i = 0; i < 3; i++) {
+            float platformX = currentX + (i * platformWidth);
+            platforms.add(new Platform(platformX, currentY, platformWidth, platformHeight));
+        }
+
+        ladders.add(new Ladder(screenXPos + 128f, screenYPos + 56f, 8, 28, false));
+        platforms.add(new Platform(screenXPos + 64f, screenYPos + 24f, 8, 8));
+        platforms.add(new Platform(screenXPos + 80f, screenYPos + 24f, 8, 8));
+        ladders.add(new Ladder(screenXPos + 64f, screenYPos + 24f, 8, 60, false));
+        ladders.add(new Ladder(screenXPos + 80f, screenYPos + 24f, 8, 60, false));
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         context.drawTexture(
                 backgroundImage,
-                screenXpos,
-                screenYpos,
+                screenXPos,
+                screenYPos,
                 0,
                 0,
                 SCREEN_WIDTH,
@@ -184,8 +219,8 @@ public class GameScreen extends Screen {
         // Lista temporal para almacenar los barriles que deben eliminarse
         List<Barrel> barrelsToRemove = new ArrayList<>();
         for (Barrel barrel : barrels) {
-            // Actualizar barril y verificar si debe eliminarse
-            if (barrel.update(screenXpos, SCREEN_WIDTH, platforms, player, ladders)) {
+            // Actualizar barril yPos verificar si debe eliminarse
+            if (barrel.update(screenXPos, SCREEN_WIDTH, platforms, player, ladders)) {
                 barrelsToRemove.add(barrel); // Añadir a la lista para eliminar
             }
             barrel.checkCollision(player);
@@ -195,12 +230,12 @@ public class GameScreen extends Screen {
         // Eliminar los barriles marcados
         barrels.removeAll(barrelsToRemove);
 
-        player.update(screenXpos, screenYpos, SCREEN_WIDTH, SCREEN_HEIGHT, platforms);
+        player.update(screenXPos, screenYPos, SCREEN_WIDTH, SCREEN_HEIGHT, platforms);
         player.render(context);
 
         if (showJumpMessage) {
             int textWidth = textRenderer.getWidth("Presiona: " + Text.translatable(client.options.jumpKey.getBoundKeyTranslationKey()).getString());
-            context.drawText(textRenderer, "Presiona: " + Text.translatable(client.options.jumpKey.getBoundKeyTranslationKey()).getString(), screenXpos + (SCREEN_WIDTH - textWidth) / 2, screenYpos + SCREEN_HEIGHT - 20, 0xFFFFFF, false);
+            context.drawText(textRenderer, "Presiona: " + Text.translatable(client.options.jumpKey.getBoundKeyTranslationKey()).getString(), screenXPos + (SCREEN_WIDTH - textWidth) / 2, screenYPos + SCREEN_HEIGHT - 20, 0xFFFFFF, false);
         }
 
         player.checkBarrelJump(barrels);
@@ -210,8 +245,8 @@ public class GameScreen extends Screen {
         context.drawText(
                 textRenderer,
                 scoreText,
-                screenXpos + 10, // 10 píxeles desde la izquierda
-                screenYpos + 40, // 10 píxeles desde arriba
+                screenXPos + 10, // 10 píxeles desde la izquierda
+                screenYPos + 40, // 10 píxeles desde arriba
                 0xFFFFFF, // Color blanco
                 true
         );
@@ -221,8 +256,8 @@ public class GameScreen extends Screen {
         context.drawText(
                 textRenderer,
                 timeText,
-                screenXpos + SCREEN_WIDTH - textRenderer.getWidth(timeText) - 10,
-                screenYpos + 40,
+                screenXPos + SCREEN_WIDTH - textRenderer.getWidth(timeText) - 10,
+                screenYPos + 40,
                 0xFFFFFF, // Color blanco
                 true
         );
@@ -241,10 +276,11 @@ public class GameScreen extends Screen {
             barrelSpawnTimer = 0;
 
             // Verificar la probabilidad de spawn
-            if (random.nextFloat() < BARREL_SPAWN_PROBABILITY) {
+            if (random.nextFloat() < BARREL_SPAWN_PROBABILITY && !player.isWinning()) {
                 // Crear un nuevo barril en la posición inicial
                 // Usando la posición del primer barril como referencia
-                barrels.add(new Barrel(platforms.get(137).getX(), platforms.get(137).getY() - 30f));
+                //45 70
+                barrels.add(new Barrel(screenXPos + 45f, screenYPos + 71f));
             }
         }
     }
