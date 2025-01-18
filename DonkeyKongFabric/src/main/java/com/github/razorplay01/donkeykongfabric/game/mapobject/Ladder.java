@@ -7,7 +7,7 @@ public class Ladder extends MapObject {
     private final boolean canPassThroughPlatform;
 
     public Ladder(float xPos, float yPos, float width, float height, boolean canPassThroughPlatform) {
-        super(xPos, yPos, width, height,0xAAFFFF00);
+        super(xPos, yPos, width, height,0xAA00ffec);
         this.canPassThroughPlatform = canPassThroughPlatform;
     }
 }

@@ -1,7 +1,7 @@
 package com.github.razorplay01.donkeykongfabric.game.mapobject;
 
-import com.github.razorplay01.donkeykongfabric.game.util.DebugPoint;
-import lombok.AllArgsConstructor;
+import com.github.razorplay01.donkeykongfabric.game.util.Hitbox;
+import com.github.razorplay01.donkeykongfabric.game.util.IHitbox;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.DrawContext;
@@ -13,54 +13,77 @@ import static com.github.razorplay01.donkeykongfabric.DonkeyKongFabric.IS_DEBUG_
 
 @Getter
 @Setter
-@AllArgsConstructor
-public abstract class MapObject {
+public abstract class MapObject implements IHitbox {
     private float xPos;
     private float yPos;
     private float width;
     private float height;
-    private int debugColor;
-    private final List<DebugPoint> debugPoints = new ArrayList<>();
+    protected final List<Hitbox> hitboxes = new ArrayList<>();
 
-    protected MapObject(float xPos, float yPos) {
+    protected MapObject(float xPos, float yPos, float width, float height, int debugColor) {
         this.xPos = xPos;
         this.yPos = yPos;
-        this.width = 8;
-        this.height = 8;
-        updateDebugPoints();
+        this.width = width;
+        this.height = height;
+        this.hitboxes.add(new Hitbox("default", xPos, yPos, width, height,0,0, debugColor));
     }
 
     public void render(DrawContext context) {
         if (IS_DEBUG_MODE_ENABLE) {
-            context.fill(
-                    (int) getXPos(),
-                    (int) getYPos(),
-                    (int) (getXPos() + getWidth()),
-                    (int) (getYPos() + getHeight()),
-                    debugColor
-            );
-            renderDebugPoints(context, debugPoints);
+            for (Hitbox hitbox : hitboxes) {
+                context.fill(
+                        (int) hitbox.x(),
+                        (int) hitbox.y(),
+                        (int) (hitbox.x() + hitbox.width()),
+                        (int) (hitbox.y() + hitbox.height()),
+                        hitbox.color()
+                );
+                context.drawBorder(
+                        (int) hitbox.x(),
+                        (int) hitbox.y(),
+                        (int) hitbox.width(),
+                        (int) hitbox.height(),
+                        hitbox.color() | 0xFF000000 // Hacer el borde más opaco
+                );
+            }
         }
     }
 
-    public void updateDebugPoints() {
-        debugPoints.clear();
+    @Override
+    public void updateHitboxes() {
+        for (int i = 0; i < hitboxes.size(); i++) {
+            Hitbox hitbox = hitboxes.get(i);
 
-        debugPoints.add(new DebugPoint(xPos, yPos, 0xFF000000)); // Esquina superior izquierda
-        debugPoints.add(new DebugPoint(xPos + width, yPos, 0xFF000000)); // Esquina superior derecha
-        debugPoints.add(new DebugPoint(xPos, yPos + height, 0xFF000000)); // Esquina inferior izquierda
-        debugPoints.add(new DebugPoint(xPos + width, yPos + height, 0xFF000000)); // Esquina inferior derecha
+            hitboxes.set(i, new Hitbox(
+                    hitbox.name(),
+                    xPos + hitbox.xOffset(),
+                    yPos + hitbox.yOffset(),
+                    hitbox.width(),
+                    hitbox.height(),
+                    hitbox.xOffset(),
+                    hitbox.yOffset(),
+                    hitbox.color()
+            ));
+        }
     }
 
-    public static void renderDebugPoints(DrawContext context, List<DebugPoint> debugPoints) {
-        for (DebugPoint point : debugPoints) {
-            context.fill(
-                    (int) point.xPos() - 1,
-                    (int) point.yPos() - 1,
-                    (int) point.xPos() + 1,
-                    (int) point.yPos() + 1,
-                    point.renderColor()
-            );
+    @Override
+    public Hitbox getHitboxByName(String name) {
+        for (Hitbox hitbox : hitboxes) {
+            if (hitbox.name().equals(name)) {
+                return hitbox;
+            }
         }
+        return null;
+    }
+
+    @Override
+    public Hitbox getDefaultHitbox() {
+        for (Hitbox hitbox : hitboxes) {
+            if (hitbox.name().equals("default")) {
+                return hitbox;
+            }
+        }
+        return null;
     }
 }
