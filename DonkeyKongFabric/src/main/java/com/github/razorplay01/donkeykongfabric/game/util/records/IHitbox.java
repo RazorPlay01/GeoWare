@@ -1,4 +1,4 @@
-package com.github.razorplay01.donkeykongfabric.game.util;
+package com.github.razorplay01.donkeykongfabric.game.util.records;
 
 public interface IHitbox {
     void updateHitboxes();
