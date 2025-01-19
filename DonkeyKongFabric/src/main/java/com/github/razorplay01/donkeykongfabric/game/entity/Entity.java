@@ -1,10 +1,10 @@
-package com.github.razorplay01.donkeykongfabric.game;
+package com.github.razorplay01.donkeykongfabric.game.entity;
 
 import com.github.razorplay01.donkeykongfabric.game.mapobject.Ladder;
 import com.github.razorplay01.donkeykongfabric.game.mapobject.MapObject;
 import com.github.razorplay01.donkeykongfabric.game.mapobject.Platform;
-import com.github.razorplay01.donkeykongfabric.game.util.Hitbox;
-import com.github.razorplay01.donkeykongfabric.game.util.IHitbox;
+import com.github.razorplay01.donkeykongfabric.game.util.records.Hitbox;
+import com.github.razorplay01.donkeykongfabric.game.util.records.IHitbox;
 import com.github.razorplay01.donkeykongfabric.game.util.ScreenSide;
 import com.github.razorplay01.donkeykongfabric.screen.GameScreen;
 import lombok.Getter;
@@ -40,14 +40,13 @@ public abstract class Entity implements IHitbox {
     protected float maxFallSpeed = 4f;
     protected float speed = 1f;
 
-
     protected Entity(float xPos, float yPos, float width, float height, GameScreen gameScreen, int debugColor) {
         this.xPos = xPos;
         this.yPos = yPos;
         this.width = width;
         this.height = height;
         this.gameScreen = gameScreen;
-        this.hitboxes.add(new Hitbox("default", xPos, yPos, width, height, 0, 0, debugColor));
+        this.hitboxes.add(new Hitbox(Hitbox.HITBOX_DEFAULT, xPos, yPos, width, height, 0, 0, debugColor));
     }
 
     /**
@@ -58,7 +57,6 @@ public abstract class Entity implements IHitbox {
         for (int i = 0; i < hitboxes.size(); i++) {
             Hitbox hitbox = hitboxes.get(i);
 
-            // Calcula la nueva posición de la hitbox en función de la posición actual del barril
             hitboxes.set(i, new Hitbox(
                     hitbox.name(),
                     xPos + hitbox.xOffset(),
@@ -106,7 +104,7 @@ public abstract class Entity implements IHitbox {
         for (Entity entity : entities) {
             if (entity == this) continue;
 
-            Hitbox entityHitbox = entity.getHitboxByName("default");
+            Hitbox entityHitbox = entity.getHitboxByName(Hitbox.HITBOX_DEFAULT);
             if (entityHitbox != null && targetHitbox.intersects(entityHitbox)) {
                 return entity;
             }
@@ -118,7 +116,7 @@ public abstract class Entity implements IHitbox {
     /**
      * Maneja la colisión con los bordes de la pantalla.
      */
-    protected boolean verifyScreenBoundsCollision() {
+    protected void verifyScreenBoundsCollision() {
         int screenX = gameScreen.getTestGame().getScreen().getScreenXPos();
         int screenY = gameScreen.getTestGame().getScreen().getScreenYPos();
         int screenWidth = gameScreen.getTestGame().getScreenWidth();
@@ -128,30 +126,28 @@ public abstract class Entity implements IHitbox {
         if (xPos < screenX) {
             xPos = screenX;
             onScreenBoundaryCollision(ScreenSide.LEFT);
-            return true;
+            return;
         }
 
         // Colisión con el borde derecho
         if (xPos + width > screenX + screenWidth) {
             xPos = screenX + screenWidth - width;
             onScreenBoundaryCollision(ScreenSide.RIGHT);
-            return true;
+            return;
         }
 
         // Colisión con el borde superior
         if (yPos < screenY) {
             yPos = screenY;
             onScreenBoundaryCollision(ScreenSide.TOP);
-            return true;
+            return;
         }
 
         // Colisión con el borde inferior
         if (yPos + height > screenY + screenHeight) {
             yPos = screenY + screenHeight - height;
             onScreenBoundaryCollision(ScreenSide.BOTTOM);
-            return true;
         }
-        return false;
     }
 
     /**
@@ -184,48 +180,39 @@ public abstract class Entity implements IHitbox {
     @Override
     public Hitbox getDefaultHitbox() {
         for (Hitbox hitbox : hitboxes) {
-            if (hitbox.name().equals("default")) {
+            if (hitbox.name().equals(Hitbox.HITBOX_DEFAULT)) {
                 return hitbox;
             }
         }
         return null;
     }
 
+    protected abstract void update();
+
+    public void render(DrawContext context) {
+        if (IS_DEBUG_MODE_ENABLE) {
+            renderHitboxes(context);
+        }
+    }
+
     public void renderHitboxes(DrawContext context) {
         for (Hitbox hitbox : hitboxes) {
             context.fill(
-                    (int) hitbox.x(),
-                    (int) hitbox.y(),
-                    (int) (hitbox.x() + hitbox.width()),
-                    (int) (hitbox.y() + hitbox.height()),
+                    (int) hitbox.xPos(),
+                    (int) hitbox.yPos(),
+                    (int) (hitbox.xPos() + hitbox.width()),
+                    (int) (hitbox.yPos() + hitbox.height()),
                     hitbox.color() // Usar el color especificado
             );
 
             // Opcional: dibujar el borde de la hitbox
             context.drawBorder(
-                    (int) hitbox.x(),
-                    (int) hitbox.y(),
+                    (int) hitbox.xPos(),
+                    (int) hitbox.yPos(),
                     (int) hitbox.width(),
                     (int) hitbox.height(),
                     hitbox.color() | 0xFF000000 // Hacer el borde más opaco
             );
-        }
-    }
-
-    protected abstract void update();
-
-    public void render(DrawContext context) {
-        // Renderizar hitboxes si está en modo debug
-        if (IS_DEBUG_MODE_ENABLE) {
-            for (Hitbox hitbox : hitboxes) {
-                context.fill(
-                        (int) hitbox.x(),
-                        (int) hitbox.y(),
-                        (int) (hitbox.x() + hitbox.width()),
-                        (int) (hitbox.y() + hitbox.height()),
-                        hitbox.color()
-                );
-            }
         }
     }
 }
