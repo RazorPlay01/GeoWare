@@ -1,7 +1,9 @@
 package com.github.razorplay01.donkeykongfabric.game.stages;
 
-import com.github.razorplay01.donkeykongfabric.game.Barrel;
-import com.github.razorplay01.donkeykongfabric.game.Player;
+import com.github.razorplay01.donkeykongfabric.game.entity.barrel.BarrelSpawner;
+import com.github.razorplay01.donkeykongfabric.game.mapobject.VictoryZone;
+import com.github.razorplay01.donkeykongfabric.game.entity.barrel.Barrel;
+import com.github.razorplay01.donkeykongfabric.game.entity.player.Player;
 import com.github.razorplay01.donkeykongfabric.game.mapobject.Ladder;
 import com.github.razorplay01.donkeykongfabric.game.mapobject.Platform;
 import com.github.razorplay01.donkeykongfabric.screen.GameScreen;
@@ -22,6 +24,8 @@ public abstract class Game implements IGame {
     protected final List<Barrel> barrels = new ArrayList<>();
     protected final List<Ladder> ladders = new ArrayList<>();
     protected final List<Platform> platforms = new ArrayList<>();
+    protected final List<BarrelSpawner> barrelSpawners = new ArrayList<>();
+    protected final List<VictoryZone> victoryPlatforms = new ArrayList<>();
     protected Player player;
     protected final Identifier backgroundImage;
     protected final GameScreen screen;
@@ -45,8 +49,8 @@ public abstract class Game implements IGame {
     /**
      * Crea una línea de plataformas.
      *
-     * @param startX     Posición X inicial.
-     * @param startY     Posición Y inicial.
+     * @param startX     Posición X.
+     * @param startY     Posición Y.
      * @param segments   Número de segmentos de la plataforma.
      * @param directionX Dirección horizontal: -1 para izquierda, 0 para ninguna, 1 para derecha.
      * @param slopeY     Pendiente vertical: > 0 para descendente, < 0 para ascendente, 0 para horizontal.
@@ -99,7 +103,7 @@ public abstract class Game implements IGame {
     }
 
     /**
-     * Renderiza el tiempo con el formato especificado (SS00) y gestiona su actualización.
+     * Renderiza el tiempo con el formato especificado (SS00).
      *
      * @param context      El contexto de dibujo.
      * @param totalSeconds La cantidad total de segundos que durará el temporizador.
@@ -118,7 +122,7 @@ public abstract class Game implements IGame {
         long currentTime = System.currentTimeMillis();
         long elapsedTimeSeconds = (currentTime - startTime) / 1000;
 
-        int newValue = (totalSeconds - (int)elapsedTimeSeconds) / 2 * 100;
+        int newValue = (totalSeconds - (int) elapsedTimeSeconds) / 2 * 100;
         this.displayValue = Math.max(newValue, 0);
 
         String timeText = String.format("%04d", this.displayValue);
