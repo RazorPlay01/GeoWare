@@ -1,7 +1,7 @@
 package com.github.razorplay01.donkeykongfabric.game.mapobject;
 
-import com.github.razorplay01.donkeykongfabric.game.util.Hitbox;
-import com.github.razorplay01.donkeykongfabric.game.util.IHitbox;
+import com.github.razorplay01.donkeykongfabric.game.util.records.Hitbox;
+import com.github.razorplay01.donkeykongfabric.game.util.records.IHitbox;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.DrawContext;
@@ -25,22 +25,22 @@ public abstract class MapObject implements IHitbox {
         this.yPos = yPos;
         this.width = width;
         this.height = height;
-        this.hitboxes.add(new Hitbox("default", xPos, yPos, width, height,0,0, debugColor));
+        this.hitboxes.add(new Hitbox(Hitbox.HITBOX_DEFAULT, xPos, yPos, width, height, 0, 0, debugColor));
     }
 
     public void render(DrawContext context) {
         if (IS_DEBUG_MODE_ENABLE) {
             for (Hitbox hitbox : hitboxes) {
                 context.fill(
-                        (int) hitbox.x(),
-                        (int) hitbox.y(),
-                        (int) (hitbox.x() + hitbox.width()),
-                        (int) (hitbox.y() + hitbox.height()),
+                        (int) hitbox.xPos(),
+                        (int) hitbox.yPos(),
+                        (int) (hitbox.xPos() + hitbox.width()),
+                        (int) (hitbox.yPos() + hitbox.height()),
                         hitbox.color()
                 );
                 context.drawBorder(
-                        (int) hitbox.x(),
-                        (int) hitbox.y(),
+                        (int) hitbox.xPos(),
+                        (int) hitbox.yPos(),
                         (int) hitbox.width(),
                         (int) hitbox.height(),
                         hitbox.color() | 0xFF000000 // Hacer el borde más opaco
@@ -80,7 +80,7 @@ public abstract class MapObject implements IHitbox {
     @Override
     public Hitbox getDefaultHitbox() {
         for (Hitbox hitbox : hitboxes) {
-            if (hitbox.name().equals("default")) {
+            if (hitbox.name().equals(Hitbox.HITBOX_DEFAULT)) {
                 return hitbox;
             }
         }
