@@ -5,8 +5,8 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 
 public class FloatingText {
-    private float x;
-    private float y;
+    private float xPos;
+    private float yPos;
     private String text;
     private long startTime;
     private static final long DURATION = 500;
@@ -14,9 +14,9 @@ public class FloatingText {
     private boolean isActive;
     private float scale;
 
-    public FloatingText(float x, float y, String text, float scale) {
-        this.x = x;
-        this.y = y;
+    public FloatingText(float xPos, float yPos, String text, float scale) {
+        this.xPos = xPos;
+        this.yPos = yPos;
         this.text = text;
         this.startTime = System.currentTimeMillis();
         this.isActive = true;
@@ -51,8 +51,8 @@ public class FloatingText {
         context.drawText(
                 textRenderer,
                 text,
-                (int)(x / scale),
-                (int)((y - yOffset) / scale),
+                (int)(xPos / scale),
+                (int)((yPos - yOffset) / scale),
                 color,
                 true
         );
