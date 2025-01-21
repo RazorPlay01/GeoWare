@@ -8,6 +8,9 @@ import com.github.razorplay01.donkeykongfabric.game.util.records.Hitbox;
 
 import java.util.List;
 
+import static com.github.razorplay01.donkeykongfabric.game.util.records.Hitbox.HITBOX_BARREL;
+import static com.github.razorplay01.donkeykongfabric.game.util.records.Hitbox.HITBOX_LADDER;
+
 public class PlayerCollisionHandler {
     private static final float BARREL_JUMP_HEIGHT = 20.0f;
     private static final float BARREL_TOP_OFFSET = 4.0f;
@@ -88,7 +91,7 @@ public class PlayerCollisionHandler {
 
     //Ladder Collision
     public static boolean isValidLadderContact(Player player, Ladder ladder) {
-        Hitbox playerHitbox = player.getHitboxByName(Player.HITBOX_LADDER);
+        Hitbox playerHitbox = player.getHitboxByName(HITBOX_LADDER);
         Hitbox ladderHitbox = ladder.getDefaultHitbox();
 
         if (playerHitbox == null || ladderHitbox == null || player.isJumping()) return false;
@@ -96,33 +99,7 @@ public class PlayerCollisionHandler {
         return playerHitbox.intersects(ladderHitbox);
     }
 
-    /*public static Ladder findBestLadder(Player player, List<Ladder> ladders, boolean movingUp) {
-        return ladders.stream()
-                .filter(ladder -> isValidLadderContact(player, ladder))
-                .max((ladder1, ladder2) -> compareLadders(ladder1, ladder2, player, movingUp))
-                .orElse(null);
-    }*/
     public static Ladder findBestLadder(Player player, List<Ladder> ladders, boolean movingUp) {
-        Hitbox playerHitbox = player.getHitboxByName(Player.HITBOX_LADDER);
-
-        // Debug info
-        System.out.println("Player Hitbox: " +
-                "x=" + playerHitbox.xPos() +
-                ", y=" + playerHitbox.yPos() +
-                ", w=" + playerHitbox.width() +
-                ", h=" + playerHitbox.height());
-
-        for (Ladder ladder : ladders) {
-            Hitbox ladderHitbox = ladder.getDefaultHitbox();
-            boolean intersects = playerHitbox.intersects(ladderHitbox);
-            System.out.println("Ladder at " +
-                    "x=" + ladderHitbox.xPos() +
-                    ", y=" + ladderHitbox.yPos() +
-                    ", w=" + ladderHitbox.width() +
-                    ", h=" + ladderHitbox.height() +
-                    " intersects=" + intersects);
-        }
-
         return ladders.stream()
                 .filter(ladder -> isValidLadderContact(player, ladder))
                 .max((ladder1, ladder2) -> compareLadders(ladder1, ladder2, player, movingUp))
@@ -150,7 +127,7 @@ public class PlayerCollisionHandler {
 
     //Barrel collison
     public static CollisionResult handleBarrelCollision(Player player, List<Barrel> barrels) {
-        Hitbox playerHitbox = player.getHitboxByName(Player.HITBOX_BARREL);
+        Hitbox playerHitbox = player.getHitboxByName(HITBOX_BARREL);
         if (playerHitbox == null) return new CollisionResult(false, false);
 
         return barrels.stream()

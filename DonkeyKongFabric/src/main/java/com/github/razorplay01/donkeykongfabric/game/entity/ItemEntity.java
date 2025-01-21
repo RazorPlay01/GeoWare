@@ -1,0 +1,12 @@
+package com.github.razorplay01.donkeykongfabric.game.entity;
+
+import com.github.razorplay01.donkeykongfabric.screen.GameScreen;
+
+public abstract class ItemEntity extends Entity {
+    protected ItemEntity(float xPos, float yPos, float width, float height, GameScreen gameScreen, int debugColor) {
+        super(xPos, yPos, width, height, gameScreen, debugColor);
+        this.velocityX = 0;
+        this.velocityY = 0;
+        this.gravity = 0;
+    }
+}

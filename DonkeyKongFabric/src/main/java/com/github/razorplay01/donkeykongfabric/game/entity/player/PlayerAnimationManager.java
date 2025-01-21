@@ -1,14 +1,14 @@
 package com.github.razorplay01.donkeykongfabric.game.entity.player;
 
-import com.github.razorplay01.donkeykongfabric.DonkeyKongFabric;
+import com.github.razorplay01.donkeykongfabric.game.entity.Entity;
 import com.github.razorplay01.donkeykongfabric.game.util.Animation;
-import com.mojang.blaze3d.systems.RenderSystem;
+import lombok.Getter;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.util.Identifier;
+
+import static com.github.razorplay01.donkeykongfabric.game.entity.Entity.renderTexture;
+import static com.github.razorplay01.donkeykongfabric.game.util.texture.TextureProvider.*;
 
 public class PlayerAnimationManager {
-    private static final Identifier TEXTURE = Identifier.of(DonkeyKongFabric.MOD_ID, "textures/gui/game/player.png");
-
     private final Animation walkAnimationR;
     private final Animation walkAnimationL;
     private final Animation climbAnimation;
@@ -19,29 +19,55 @@ public class PlayerAnimationManager {
     private final Animation winAnimationR;
     private final Animation winAnimationL;
     private final Animation loseAnimation;
+    private final Animation hammetAnimationR;
+    private final Animation hammetAnimationL;
+    private final Animation hammetWalkAnimationR;
+    private final Animation hammetWalkAnimationL;
 
     private Animation currentAnimation;
+    @Getter
     private boolean facingRight;
+    private final Player player;
 
-    public PlayerAnimationManager() {
+    public PlayerAnimationManager(Player player) {
         // Inicialización de todas las animaciones
-        walkAnimationR = new Animation(36, 18, 18, 18, 2, 0.2f, true, true);
-        walkAnimationL = new Animation(54, 18, 18, 18, 2, 0.2f, true, true);
-        climbAnimation = new Animation(0, 0, 18, 18, 2, 0.1f, false, true);
-        idleAnimationR = new Animation(0, 36, 18, 18, 1, 0.1f, false, true);
-        idleAnimationL = new Animation(18, 36, 18, 18, 1, 0.1f, false, true);
-        jumpAnimationR = new Animation(36, 0, 18, 18, 1, 0.1f, false, true);
-        jumpAnimationL = new Animation(54, 0, 18, 18, 1, 0.1f, false, true);
-        winAnimationR = new Animation(0, 18, 18, 18, 1, 0.1f, false, true);
-        winAnimationL = new Animation(18, 18, 18, 18, 1, 0.1f, false, true);
-        loseAnimation = new Animation(0, 54, 18, 18, 4, 0.5f, false, false);
+        walkAnimationR = new Animation(PLAYER_WALK_R_TEXTURES, 0.2f, true);
+        walkAnimationL = new Animation(PLAYER_WALK_L_TEXTURES, 0.2f, true);
+        climbAnimation = new Animation(PLAYER_CLIMB_TEXTURES, 0.02f, true);
+        idleAnimationR = new Animation(PLAYER_IDLE_R_TEXTURES, 0.1f, true);
+        idleAnimationL = new Animation(PLAYER_IDLE_L_TEXTURES, 0.1f, true);
+        jumpAnimationR = new Animation(PLAYER_JUMP_R_TEXTURES, 0.1f, true);
+        jumpAnimationL = new Animation(PLAYER_JUMP_L_TEXTURES, 0.1f, true);
+        winAnimationR = new Animation(PLAYER_WIN_R_TEXTURES, 0.1f, true);
+        winAnimationL = new Animation(PLAYER_WIN_L_TEXTURES, 0.1f, true);
+        loseAnimation = new Animation(PLAYER_DIE_TEXTURES, 0.5f, false);
+        hammetAnimationR = new Animation(PLAYER_HAMMET_R_TEXTURES, 0.1f, true);
+        hammetAnimationL = new Animation(PLAYER_HAMMET_L_TEXTURES, 0.1f, true);
+        hammetWalkAnimationR = new Animation(PLAYER_HAMMET_R_TEXTURES, 0.1f, true);
+        hammetWalkAnimationL = new Animation(PLAYER_HAMMET_L_TEXTURES, 0.1f, true);
 
         this.facingRight = true;
         this.currentAnimation = idleAnimationR;
+        this.player = player;
     }
 
     public void updateAnimation(PlayerState state, boolean isMoving) {
-        currentAnimation = getAnimationForState(state);
+        Animation nextAnimation;
+
+        if (state == PlayerState.WITH_HAMMER) {
+            if (Math.abs(player.getVelocityX()) > 0) {
+                nextAnimation = facingRight ? hammetWalkAnimationR : hammetWalkAnimationL;
+            } else {
+                nextAnimation = facingRight ? hammetAnimationR : hammetAnimationL;
+            }
+        } else {
+            nextAnimation = getAnimationForState(state);
+        }
+
+        if (nextAnimation != currentAnimation) {
+            currentAnimation = nextAnimation;
+            currentAnimation.reset();
+        }
 
         if (state == PlayerState.CLIMBING) {
             if (isMoving) {
@@ -61,30 +87,27 @@ public class PlayerAnimationManager {
             case JUMPING -> facingRight ? jumpAnimationR : jumpAnimationL;
             case WINNING -> facingRight ? winAnimationR : winAnimationL;
             case LOSING -> loseAnimation;
+            case WITH_HAMMER -> {
+                if (Math.abs(player.getVelocityX()) > 0) {  // Si se está moviendo
+                    yield facingRight ? hammetWalkAnimationR : hammetWalkAnimationL;
+                } else {  // Si está quieto
+                    yield facingRight ? hammetAnimationR : hammetAnimationL;
+                }
+            }
             default -> facingRight ? idleAnimationR : idleAnimationL;
         };
     }
 
-    public void render(DrawContext context, float xPos, float yPos) {
-        RenderSystem.setShaderTexture(0, TEXTURE);
-        context.drawTexture(
-                TEXTURE,
-                (int) xPos - 3,
-                (int) yPos - 2,
-                currentAnimation.getCurrentU(),
-                currentAnimation.getCurrentV(),
-                18,
-                18,
-                72,
-                72
-        );
+    public void render(DrawContext context, Entity player) {
+        int xOffset = 0;
+        int yOffset = 0;
+        if (currentAnimation == hammetAnimationL || currentAnimation == hammetAnimationR) {
+            yOffset = -6;
+        }
+        renderTexture(context, player, currentAnimation, xOffset, yOffset);
     }
 
     public void setFacingDirection(boolean facingRight) {
         this.facingRight = facingRight;
-    }
-
-    public void resetAnimation() {
-        currentAnimation.reset();
     }
 }

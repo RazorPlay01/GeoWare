@@ -1,14 +1,16 @@
 package com.github.razorplay01.donkeykongfabric.game.stages;
 
 import com.github.razorplay01.donkeykongfabric.DonkeyKongFabric;
+import com.github.razorplay01.donkeykongfabric.game.entity.Fire;
+import com.github.razorplay01.donkeykongfabric.game.entity.HammetItem;
 import com.github.razorplay01.donkeykongfabric.game.mapobject.VictoryZone;
 import com.github.razorplay01.donkeykongfabric.game.entity.player.Player;
-import com.github.razorplay01.donkeykongfabric.game.mapobject.Ladder;
 import com.github.razorplay01.donkeykongfabric.game.mapobject.Platform;
 import com.github.razorplay01.donkeykongfabric.game.entity.barrel.BarrelSpawner;
 import com.github.razorplay01.donkeykongfabric.screen.GameScreen;
 import lombok.Getter;
 import lombok.Setter;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
@@ -33,31 +35,108 @@ public class TestGame extends Game {
             createGameMap();
         }
         this.player = new Player(screen.getScreenXPos() + 36f, screen.getScreenYPos() + this.getScreenHeight() - 16 - platforms.getFirst().getHeight(), screen);
+        this.items.add(new HammetItem(screen.getScreenXPos() + 167f, screen.getScreenYPos() + 190f, 13, 13, screen));
+        this.items.add(new HammetItem(screen.getScreenXPos() + 16f, screen.getScreenYPos() + 92f, 13, 13, screen));
+        this.fires.add(new Fire(screen.getScreenXPos() + 10f, screen.getScreenYPos() + this.getScreenHeight() - 16 - platforms.getFirst().getHeight(), screen));
         this.victoryPlatforms.add(new VictoryZone(screen.getScreenXPos() + 88f, screen.getScreenYPos() + 36f, 48, 20, 0xAAFFFFFF));
     }
 
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        // Renderizar elementos del juego
         for (VictoryZone victoryPlatform : getVictoryPlatforms()) {
             player.checkVictoryPlatform(victoryPlatform);
             victoryPlatform.render(context);
         }
-        for (Platform platform : getPlatforms()) {
-            platform.render(context);
-        }
-        for (Ladder ladder : getLadders()) {
-            ladder.render(context);
-        }
+
+        getPlatforms().forEach(platform -> platform.render(context));
+        getLadders().forEach(ladder -> ladder.render(context));
+        getItems().forEach(item -> item.render(context));
+
+        // Siempre spawneamos barriles
         for (BarrelSpawner barrelSpawner : getBarrelSpawners()) {
             barrelSpawner.removeAndSpawnBarrels(context);
             barrelSpawner.update();
         }
 
-        // Update and render player
+        for (Fire fire : getFires()) {
+            fire.render(context);
+            fire.update();
+        }
+
+        // Siempre actualizamos y renderizamos al jugador
         updateAndRenderPlayer(context, mouseX, mouseY, delta);
 
-        // Render score and time
+        // Manejo del delay inicial
+        if (!gameStarted) {
+            if (gameStartTime == 0) {
+                gameStartTime = System.currentTimeMillis();
+                initialDelay = 5; // 3 segundos de delay inicial
+            }
+
+            long currentTime = System.currentTimeMillis();
+            if ((currentTime - gameStartTime) / 1000 >= initialDelay) {
+                gameStarted = true;
+            }
+
+            // Renderizar mensaje de espera
+            String waitMessage = "Starting in " + (initialDelay - (currentTime - gameStartTime) / 1000);
+            context.drawText(
+                    textRenderer,
+                    waitMessage,
+                    screen.getScreenXPos() + getScreenWidth() / 2 - textRenderer.getWidth(waitMessage) / 2,
+                    screen.getScreenYPos() + getScreenHeight() / 2,
+                    0xFFFFFF,
+                    true
+            );
+        }
+
+        // Verificar si el juego debe terminar
+        if (!gameEnded && (getPlayer().isWinning() || getPlayer().isLosing())) {
+            gameEnded = true;
+            if (getPlayer().isWinning()) {
+                finalScore = displayValue + getPlayer().getScore();
+            } else {
+                finalScore = getPlayer().getScore();
+            }
+
+            // Programar el cierre de la pantalla
+            new Thread(() -> {
+                try {
+                    Thread.sleep(3000); // Esperar 3 segundos
+                    MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(null));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }).start();
+        }
+
+        // Si el juego ha terminado, mostrar mensaje de fin
+        if (gameEnded) {
+            String endMessage = getPlayer().isWinning() ? "You Win!" : "Game Over";
+            String scoreMessage = "Final Score: " + finalScore;
+
+            context.drawText(
+                    textRenderer,
+                    endMessage,
+                    screen.getScreenXPos() + getScreenWidth() / 2 - textRenderer.getWidth(endMessage) / 2,
+                    screen.getScreenYPos() + getScreenHeight() / 2,
+                    0xFFFFFF,
+                    true
+            );
+
+            context.drawText(
+                    textRenderer,
+                    scoreMessage,
+                    screen.getScreenXPos() + getScreenWidth() / 2 - textRenderer.getWidth(scoreMessage) / 2,
+                    screen.getScreenYPos() + getScreenHeight() / 2 + 20,
+                    0xFFFFFF,
+                    true
+            );
+        }
+
+        // Siempre renderizar score y tiempo
         renderScore(context, textRenderer, getPlayer().getScore(), screen.getScreenXPos() + 10, screen.getScreenYPos() + 40, 1.0f);
         renderTime(context, textRenderer, 60, screen.getScreenXPos() + 10, screen.getScreenYPos() + 60, 1.0f);
     }

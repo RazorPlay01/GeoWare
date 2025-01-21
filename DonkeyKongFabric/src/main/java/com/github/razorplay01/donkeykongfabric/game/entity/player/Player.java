@@ -1,6 +1,7 @@
 package com.github.razorplay01.donkeykongfabric.game.entity.player;
 
-import com.github.razorplay01.donkeykongfabric.DonkeyKongFabric;
+import com.github.razorplay01.donkeykongfabric.game.entity.HammetItem;
+import com.github.razorplay01.donkeykongfabric.game.entity.ItemEntity;
 import com.github.razorplay01.donkeykongfabric.game.mapobject.VictoryZone;
 import com.github.razorplay01.donkeykongfabric.game.entity.barrel.Barrel;
 import com.github.razorplay01.donkeykongfabric.game.entity.Entity;
@@ -12,33 +13,19 @@ import com.github.razorplay01.donkeykongfabric.screen.GameScreen;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+
+import static com.github.razorplay01.donkeykongfabric.game.util.records.Hitbox.*;
 
 @Setter
 @Getter
 public class Player extends Entity {
-    public static final String HITBOX_LADDER = "ladder";
-    public static final String HITBOX_BARREL = "barrel";
-
     private final List<FloatingText> floatingTexts = new ArrayList<>();
-
     private final PlayerAnimationManager animationManager;
-
-    private static final Identifier TEXTURE = Identifier.of(DonkeyKongFabric.MOD_ID, "textures/gui/game/player.png");
     private PlayerState currentState = PlayerState.IDLE;
-    private final Animation walkAnimationR = new Animation(36, 18, 18, 18, 2, 0.2f, true, true);
-    private final Animation walkAnimationL = new Animation(54, 18, 18, 18, 2, 0.2f, true, true);
-    private final Animation climbAnimation = new Animation(0, 0, 18, 18, 2, 0.1f, false, true);
-    private final Animation idleAnimationR = new Animation(0, 36, 18, 18, 1, 0.1f, false, true);
-    private final Animation idleAnimationL = new Animation(18, 36, 18, 18, 1, 0.1f, false, true);
-    private final Animation jumpAnimationR = new Animation(36, 0, 18, 18, 1, 0.1f, false, true);
-    private final Animation jumpAnimationL = new Animation(54, 0, 18, 18, 1, 0.1f, false, true);
-    private final Animation winAnimationR = new Animation(0, 18, 18, 18, 1, 0.1f, false, true);
-    private final Animation winAnimationL = new Animation(18, 18, 18, 18, 1, 0.1f, false, true);
-    private final Animation loseAnimation = new Animation(0, 54, 18, 18, 4, 0.5f, false, false);
 
     // Variables para animación
     private boolean facingRight = true;
@@ -57,25 +44,23 @@ public class Player extends Entity {
     private int score = 0;
     private boolean isBarrelJumpProcessed = false;
 
+    private boolean hasHammer = false;
+    private long hammerStartTime;
+    private static final long HAMMER_DURATION = 10000; // 10 segundos en millisegundos
+    private static final String HITBOX_HAMMER = "hammer";
+    private static final String HITBOX_HAMMER_TOP = "hammer_top";
+
     public Player(float x, float y, GameScreen gameScreen) {
         super(x, y, 12, 16, gameScreen, 0xFF8300ff);
-        this.speed = 1.5f;
+        this.speed = 1f;
         this.gravity = 0.2f;
         this.maxFallSpeed = 4f;
 
-        this.hitboxes.add(new Hitbox(
-                HITBOX_LADDER,
-                xPos,
-                yPos + (this.getHeight() - 2), // Casi al final del jugador
-                this.getWidth(),
-                2, // Altura muy pequeña para detección precisa
-                0,
-                (this.getHeight() - 2),
-                0xAA00ffec
-        ));
-        this.hitboxes.add(new Hitbox(HITBOX_BARREL, xPos + 2, yPos + 2, this.getWidth() - 4, this.getHeight() - 4, 2, 2, 0x50FF0000));
+        this.hitboxes.add(new Hitbox(HITBOX_LADDER, xPos, yPos + (this.getHeight() - 2), this.getWidth(), 2, 0, (this.getHeight() - 2), LADDER_HITBOX_COLOR));
+        this.hitboxes.add(new Hitbox(HITBOX_BARREL, xPos + 2, yPos + 2, this.getWidth() - 4, this.getHeight() - 4, 2, 2, PLAYER_HITBOX_COLOR));
+
         initializeStates();
-        this.animationManager = new PlayerAnimationManager();
+        this.animationManager = new PlayerAnimationManager(this);
     }
 
     private void initializeStates() {
@@ -97,6 +82,10 @@ public class Player extends Entity {
             return;
         }
 
+        if (hasHammer) {
+            updateHammer();
+        }
+
         updateMovement();
         updateState();
         updateHitboxes();
@@ -105,6 +94,7 @@ public class Player extends Entity {
         verifyScreenBoundsCollision();
         checkLadderContact();
         checkBarrelCollision(gameScreen.getTestGame().getBarrels());
+        checkHammerItemCollision(gameScreen.getTestGame().getItems());
     }
 
     private void updateMovement() {
@@ -136,7 +126,7 @@ public class Player extends Entity {
 
     private void updateLadderMovement() {
         if (currentLadder == null) return;
-        float playerClimbSpeed = 1f;
+        float playerClimbSpeed = 0.6f;
 
         velocityX = 0;
         velocityY = 0;
@@ -161,6 +151,7 @@ public class Player extends Entity {
     }
 
     public void jump(int screenHeight) {
+        if (hasHammer) return;
         if (!isJumping && (currentPlatform != null || yPos + this.getHeight() >= screenHeight - 1)) {
             velocityY = -2.6f;
             isJumping = true;
@@ -185,6 +176,7 @@ public class Player extends Entity {
     }
 
     public void moveUp(List<Ladder> ladders) {
+        if (hasHammer) return;
         movingUp = true;
         movingDown = false;
         if (!tryClimbLadder(ladders) && !isOnLadder) {
@@ -193,6 +185,7 @@ public class Player extends Entity {
     }
 
     public void moveDown(List<Ladder> ladders) {
+        if (hasHammer) return;
         if (!isWinning) {
             movingDown = true;
             movingUp = false;
@@ -246,6 +239,7 @@ public class Player extends Entity {
 
     // Métodos de manejo de escaleras
     private boolean tryClimbLadder(List<Ladder> ladders) {
+        if (hasHammer) return false;
         Ladder bestLadder = PlayerCollisionHandler.findBestLadder(this, ladders, movingUp);
 
         if (bestLadder != null) {
@@ -267,6 +261,11 @@ public class Player extends Entity {
             return;
         }
 
+        // Primero verificamos si hay colisión con el martillo
+        if (hasHammer) {
+            checkHammerBarrelCollision(barrels);
+        }
+
         PlayerCollisionHandler.CollisionResult result = PlayerCollisionHandler.handleBarrelCollision(this, barrels);
 
         if (result.hasCollision()) {
@@ -276,7 +275,8 @@ public class Player extends Entity {
                     isBarrelJumpProcessed = true;
                 }
             } else {
-                setLosing(true);
+                //TODO: disable for test
+                //setLosing(true);
             }
         } else {
             if (currentState != PlayerState.JUMPING) {
@@ -338,7 +338,7 @@ public class Player extends Entity {
 
     @Override
     public void render(DrawContext context) {
-        this.animationManager.render(context, this.xPos, this.yPos);
+        this.animationManager.render(context, this);
 
         floatingTexts.removeIf(text -> !text.isActive());
         for (FloatingText text : floatingTexts) {
@@ -367,6 +367,8 @@ public class Player extends Entity {
             currentState = PlayerState.WINNING;
         } else if (isLosing) {
             currentState = PlayerState.LOSING;
+        } else if (hasHammer) {
+            currentState = PlayerState.WITH_HAMMER;
         } else if (isOnLadder) {
             currentState = PlayerState.CLIMBING;
         } else if (isJumping) {
@@ -389,6 +391,119 @@ public class Player extends Entity {
         } else if (newState == PlayerState.CLIMBING || newState == PlayerState.WINNING || newState == PlayerState.LOSING) {
             velocityX = 0;
             velocityY = 0;
+        }
+    }
+
+    private void activateHammer() {
+        hasHammer = true;
+        hammerStartTime = System.currentTimeMillis();
+        currentState = PlayerState.WITH_HAMMER;
+
+        if (isOnLadder) {
+            stopClimbing();
+        }
+
+        addHammerHitbox();
+    }
+
+    private void updateHammer() {
+        if (System.currentTimeMillis() - hammerStartTime >= HAMMER_DURATION) {
+            deactivateHammer();
+            return;
+        }
+
+        // Actualizar posición del hitbox del martillo
+        removeHammerHitbox();
+        addHammerHitbox();
+    }
+
+    private void addHammerHitbox() {
+        // Hitbox frontal
+        Hitbox frontHammerHitbox;
+        // Hitbox superior
+        Hitbox topHammerHitbox;
+
+        if (animationManager.isFacingRight()) {
+            frontHammerHitbox = new Hitbox(HITBOX_HAMMER,
+                    xPos + getWidth(),
+                    yPos,
+                    16, 8,
+                    getWidth(), 0,
+                    0xAAFFAAFF);
+
+            topHammerHitbox = new Hitbox(HITBOX_HAMMER_TOP,
+                    xPos,
+                    yPos - 8,
+                    getWidth(),
+                    8,
+                    0,
+                    -8,
+                    0xAAFFAAFF);
+        } else {
+            frontHammerHitbox = new Hitbox(HITBOX_HAMMER,
+                    xPos - 16,
+                    yPos,
+                    16, 8,
+                    -16, 0,
+                    0xAAFFAAFF);
+
+            topHammerHitbox = new Hitbox(HITBOX_HAMMER_TOP,
+                    xPos,
+                    yPos - 8,
+                    getWidth(),
+                    8,
+                    0,
+                    -8,
+                    0xAAFFAAFF);
+        }
+
+        this.hitboxes.add(frontHammerHitbox);
+        this.hitboxes.add(topHammerHitbox);
+    }
+
+    private void deactivateHammer() {
+        hasHammer = false;
+        removeHammerHitbox();
+        currentState = PlayerState.IDLE;
+    }
+
+    private void removeHammerHitbox() {
+        hitboxes.removeIf(hitbox ->
+                hitbox.name().equals(HITBOX_HAMMER) ||
+                        hitbox.name().equals(HITBOX_HAMMER_TOP)
+        );
+    }
+
+    private void checkHammerBarrelCollision(List<Barrel> barrels) {
+        Hitbox frontHammerHitbox = getHitboxByName(HITBOX_HAMMER);
+        Hitbox topHammerHitbox = getHitboxByName(HITBOX_HAMMER_TOP);
+
+        for (Barrel barrel : barrels) {
+            Hitbox barrelHitbox = barrel.getDefaultHitbox();
+            if (barrelHitbox == null) continue;
+
+            if ((frontHammerHitbox != null && frontHammerHitbox.intersects(barrelHitbox)) ||
+                    (topHammerHitbox != null && topHammerHitbox.intersects(barrelHitbox))) {
+                barrel.setRemove(true);
+                addScore(200);
+            }
+        }
+    }
+
+    private void checkHammerItemCollision(List<ItemEntity> hammers) {
+        Hitbox playerHitbox = getHitboxByName(HITBOX_BARREL);
+        if (playerHitbox == null) return;
+
+        Iterator<ItemEntity> iterator = hammers.iterator();
+        while (iterator.hasNext()) {
+            ItemEntity item = iterator.next();
+            if (item instanceof HammetItem hammer) {
+                Hitbox hammerHitbox = hammer.getDefaultHitbox();
+                if (hammerHitbox != null && playerHitbox.intersects(hammerHitbox) && !hasHammer) {
+                    activateHammer();
+                    iterator.remove();
+                }
+            }
         }
     }
 }
