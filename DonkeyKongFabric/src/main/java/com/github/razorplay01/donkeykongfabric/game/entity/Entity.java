@@ -3,9 +3,11 @@ package com.github.razorplay01.donkeykongfabric.game.entity;
 import com.github.razorplay01.donkeykongfabric.game.mapobject.Ladder;
 import com.github.razorplay01.donkeykongfabric.game.mapobject.MapObject;
 import com.github.razorplay01.donkeykongfabric.game.mapobject.Platform;
+import com.github.razorplay01.donkeykongfabric.game.util.Animation;
 import com.github.razorplay01.donkeykongfabric.game.util.records.Hitbox;
 import com.github.razorplay01.donkeykongfabric.game.util.records.IHitbox;
 import com.github.razorplay01.donkeykongfabric.game.util.ScreenSide;
+import com.github.razorplay01.donkeykongfabric.game.util.texture.Texture;
 import com.github.razorplay01.donkeykongfabric.screen.GameScreen;
 import lombok.Getter;
 import lombok.Setter;
@@ -214,5 +216,31 @@ public abstract class Entity implements IHitbox {
                     hitbox.color() | 0xFF000000 // Hacer el borde más opaco
             );
         }
+    }
+
+    public static void renderTexture(DrawContext context, Entity entity, Animation currentAnimation, int xOffset, int yOffset) {
+        Texture currentTexture = currentAnimation.getCurrentTexture();
+
+        // Calcular dimensiones escaladas de la textura
+        int width = (int) (currentAnimation.getFrameWidth() * currentTexture.scale());
+        int height = (int) (currentAnimation.getFrameHeight() * currentTexture.scale());
+
+        // Calculo para centrar la textura en la entidad
+        int centeredX = (int) (entity.getXPos() + xOffset + (entity.getWidth() - width) / 2.0);
+        int centeredY = (int) (entity.getYPos() + yOffset + (entity.getHeight() - height) / 2.0);
+
+        context.drawTexture(
+                currentTexture.identifier(),
+                centeredX,
+                centeredY,
+                width,
+                height,
+                currentAnimation.getCurrentU(),
+                currentAnimation.getCurrentV(),
+                currentAnimation.getFrameWidth(),
+                currentAnimation.getFrameHeight(),
+                currentTexture.textureWidth(),
+                currentTexture.textureHeight()
+        );
     }
 }

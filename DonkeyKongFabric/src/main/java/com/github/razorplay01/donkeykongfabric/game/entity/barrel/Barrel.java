@@ -1,6 +1,5 @@
 package com.github.razorplay01.donkeykongfabric.game.entity.barrel;
 
-import com.github.razorplay01.donkeykongfabric.DonkeyKongFabric;
 import com.github.razorplay01.donkeykongfabric.game.entity.Entity;
 import com.github.razorplay01.donkeykongfabric.game.mapobject.Ladder;
 import com.github.razorplay01.donkeykongfabric.game.mapobject.Platform;
@@ -9,20 +8,19 @@ import com.github.razorplay01.donkeykongfabric.game.util.records.Hitbox;
 import com.github.razorplay01.donkeykongfabric.game.util.ScreenSide;
 import com.github.razorplay01.donkeykongfabric.screen.GameScreen;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.util.Identifier;
 
 import java.util.*;
 
+import static com.github.razorplay01.donkeykongfabric.game.util.records.Hitbox.*;
+import static com.github.razorplay01.donkeykongfabric.game.util.texture.TextureProvider.*;
+
 @Getter
 public class Barrel extends Entity {
-    private static final String HITBOX_LADDER = "ladder";
-    private static final String HITBOX_PLAYER = "player";
-    private static final Identifier TEXTURE = Identifier.of(DonkeyKongFabric.MOD_ID, "textures/gui/game/barrel.png");
-
-    private final Animation horizontalRightAnimation = new Animation(0, 0, 12, 12, 4, 0.5f, false, true);
-    private final Animation horizontalLeftAnimation = new Animation(0, 12, 12, 12, 4, 0.5f, false, true);
-    private final Animation verticalAnimation = new Animation(48, 0, 17, 12, 2, 0.8f, true, true);
+    private final Animation horizontalRightAnimation = new Animation(BARREL_R_TEXTURES, 0.5f, true);
+    private final Animation horizontalLeftAnimation = new Animation(BARREL_L_TEXTURES, 0.5f, true);
+    private final Animation verticalAnimation = new Animation(BARREL_V_TEXTURES, 0.8f, true);
 
     private static final float LADDER_DESCENT_SPEED = 0.5f;
     private static final float PROBABILITY_TO_USE_LADDER = 0.25f;
@@ -32,16 +30,17 @@ public class Barrel extends Entity {
     private final Random random = new Random(System.currentTimeMillis());
     private final Set<Ladder> checkedLadders = new HashSet<>();
 
+    @Setter
     private boolean remove = false;
     private boolean shouldChangeDirectionAfterLadder;
     private boolean hasJumpedOverBarrel = false;
 
     public Barrel(float x, float y, GameScreen gameScreen) {
         super(x, y, 12, 12, gameScreen, 0xFF8a3a00);
-        this.velocityX = 0.6f;
+        this.velocityX = 1f;
 
-        this.hitboxes.add(new Hitbox(HITBOX_LADDER, xPos - 2, yPos - 2, 16, 16, -2, -2, 0x5000FF00));
-        this.hitboxes.add(new Hitbox(HITBOX_PLAYER, xPos + (this.width - 8) / 2, yPos + (this.height - 8) / 2, 8, 8, (this.width - 8) / 2, (this.height - 8) / 2, 0x50f10000));
+        this.hitboxes.add(new Hitbox(HITBOX_LADDER, xPos - 2, yPos - 2, 16, 16, -2, -2, LADDER_HITBOX_COLOR));
+        this.hitboxes.add(new Hitbox(HITBOX_PLAYER, xPos + (this.width - 8) / 2, yPos + (this.height - 8) / 2, 8, 8, (this.width - 8) / 2, (this.height - 8) / 2, PLAYER_HITBOX_COLOR));
     }
 
     @Override
@@ -197,10 +196,6 @@ public class Barrel extends Entity {
         return horizontalAlignment <= alignmentTolerance;
     }
 
-    public void onJumpedOver() {
-        hasJumpedOverBarrel = true;
-    }
-
     public boolean hasBeenJumpedOver() {
         return hasJumpedOverBarrel;
     }
@@ -213,27 +208,17 @@ public class Barrel extends Entity {
     public void render(DrawContext context) {
         Animation currentAnimation;
         int xOffset = 0;
+        int yOffset = 0;
 
         if (isOnLadder) {
             currentAnimation = verticalAnimation;
-            xOffset = -2;
         } else if (velocityX > 0) {
             currentAnimation = horizontalRightAnimation;
         } else {
             currentAnimation = horizontalLeftAnimation;
         }
 
-        context.drawTexture(
-                TEXTURE,
-                (int) (xPos + xOffset),
-                (int) yPos,
-                currentAnimation.getCurrentU(),
-                currentAnimation.getCurrentV(),
-                currentAnimation.getFrameWidth(),
-                currentAnimation.getFrameHeight(),
-                64,
-                24
-        );
+        renderTexture(context, this, currentAnimation, xOffset, yOffset);
 
         // Renderizar hitboxes si es necesario
         super.render(context);
