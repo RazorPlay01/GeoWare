@@ -1,7 +1,6 @@
 package com.github.razorplay01.donkeykongfabric.screen;
 
 import com.github.razorplay01.donkeykongfabric.game.stages.TestGame;
-import com.mojang.blaze3d.systems.RenderSystem;
 import lombok.Getter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -37,6 +36,9 @@ public class GameScreen extends Screen {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         MinecraftClient client = MinecraftClient.getInstance();
+        if (!testGame.isGameStarted() || testGame.isGameEnded()) {
+            return false;
+        }
         if (keyCode == GLFW.GLFW_KEY_LEFT || keyCode == client.options.leftKey.getDefaultKey().getCode()) {
             testGame.getPlayer().moveLeft();
             return true;

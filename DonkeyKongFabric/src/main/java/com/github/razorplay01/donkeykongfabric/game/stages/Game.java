@@ -1,5 +1,7 @@
 package com.github.razorplay01.donkeykongfabric.game.stages;
 
+import com.github.razorplay01.donkeykongfabric.game.entity.Fire;
+import com.github.razorplay01.donkeykongfabric.game.entity.ItemEntity;
 import com.github.razorplay01.donkeykongfabric.game.entity.barrel.BarrelSpawner;
 import com.github.razorplay01.donkeykongfabric.game.mapobject.VictoryZone;
 import com.github.razorplay01.donkeykongfabric.game.entity.barrel.Barrel;
@@ -26,14 +28,22 @@ public abstract class Game implements IGame {
     protected final List<Platform> platforms = new ArrayList<>();
     protected final List<BarrelSpawner> barrelSpawners = new ArrayList<>();
     protected final List<VictoryZone> victoryPlatforms = new ArrayList<>();
+    protected final List<Fire> fires = new ArrayList<>();
+    protected final List<ItemEntity> items = new ArrayList<>();
     protected Player player;
     protected final Identifier backgroundImage;
     protected final GameScreen screen;
 
-    private long startTime;
-    private int totalSeconds;
-    private int displayValue;
-    private boolean timeInitialized = false;
+    protected long startTime = 0;
+    protected int totalSeconds;
+    protected int displayValue;
+    protected boolean timeInitialized = false;
+
+    protected boolean gameStarted = false;
+    protected int initialDelay;
+    protected long gameStartTime;
+    protected boolean gameEnded = false;
+    protected int finalScore = 0;
 
     protected Game(Identifier backgroundImage, GameScreen screen) {
         this.backgroundImage = backgroundImage;
@@ -113,17 +123,22 @@ public abstract class Game implements IGame {
      */
     public void renderTime(DrawContext context, TextRenderer textRenderer, int totalSeconds, int x, int y, float scale) {
         if (!timeInitialized) {
-            this.startTime = System.currentTimeMillis();
             this.totalSeconds = totalSeconds;
             this.displayValue = (totalSeconds / 2) * 100;
             this.timeInitialized = true;
         }
 
-        long currentTime = System.currentTimeMillis();
-        long elapsedTimeSeconds = (currentTime - startTime) / 1000;
+        if (gameStarted && startTime == 0) {
+            this.startTime = System.currentTimeMillis();
+        }
 
-        int newValue = (totalSeconds - (int) elapsedTimeSeconds) / 2 * 100;
-        this.displayValue = Math.max(newValue, 0);
+        if (gameStarted && !gameEnded) {
+            long currentTime = System.currentTimeMillis();
+            long elapsedTimeSeconds = (currentTime - startTime) / 1000;
+
+            int newValue = (totalSeconds - (int) elapsedTimeSeconds) / 2 * 100;
+            this.displayValue = Math.max(newValue, 0);
+        }
 
         String timeText = String.format("%04d", this.displayValue);
         context.getMatrices().push();
