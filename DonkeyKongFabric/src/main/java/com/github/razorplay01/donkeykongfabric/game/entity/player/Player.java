@@ -1,7 +1,7 @@
 package com.github.razorplay01.donkeykongfabric.game.entity.player;
 
-import com.github.razorplay01.donkeykongfabric.game.entity.HammetItem;
-import com.github.razorplay01.donkeykongfabric.game.entity.ItemEntity;
+import com.github.razorplay01.donkeykongfabric.game.entity.item.HammetItem;
+import com.github.razorplay01.donkeykongfabric.game.entity.item.ItemEntity;
 import com.github.razorplay01.donkeykongfabric.game.mapobject.VictoryZone;
 import com.github.razorplay01.donkeykongfabric.game.entity.barrel.Barrel;
 import com.github.razorplay01.donkeykongfabric.game.entity.Entity;
@@ -179,9 +179,7 @@ public class Player extends Entity {
         if (hasHammer) return;
         movingUp = true;
         movingDown = false;
-        if (!tryClimbLadder(ladders) && !isOnLadder) {
-            jump(gameScreen.getTestGame().getScreenHeight());
-        }
+        tryClimbLadder(ladders);
     }
 
     public void moveDown(List<Ladder> ladders) {

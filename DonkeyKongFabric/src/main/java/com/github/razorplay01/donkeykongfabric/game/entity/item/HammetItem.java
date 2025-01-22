@@ -1,4 +1,4 @@
-package com.github.razorplay01.donkeykongfabric.game.entity;
+package com.github.razorplay01.donkeykongfabric.game.entity.item;
 
 import com.github.razorplay01.donkeykongfabric.game.util.Animation;
 import com.github.razorplay01.donkeykongfabric.game.util.records.Hitbox;

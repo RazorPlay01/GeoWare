@@ -1,7 +1,7 @@
 package com.github.razorplay01.donkeykongfabric.game.stages;
 
 import com.github.razorplay01.donkeykongfabric.game.entity.Fire;
-import com.github.razorplay01.donkeykongfabric.game.entity.ItemEntity;
+import com.github.razorplay01.donkeykongfabric.game.entity.item.ItemEntity;
 import com.github.razorplay01.donkeykongfabric.game.entity.barrel.BarrelSpawner;
 import com.github.razorplay01.donkeykongfabric.game.mapobject.VictoryZone;
 import com.github.razorplay01.donkeykongfabric.game.entity.barrel.Barrel;
@@ -138,6 +138,10 @@ public abstract class Game implements IGame {
 
             int newValue = (totalSeconds - (int) elapsedTimeSeconds) / 2 * 100;
             this.displayValue = Math.max(newValue, 0);
+
+            if (this.displayValue <= 0) {
+                player.setLosing(true);
+            }
         }
 
         String timeText = String.format("%04d", this.displayValue);

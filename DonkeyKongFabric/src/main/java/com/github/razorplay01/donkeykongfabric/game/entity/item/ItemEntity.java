@@ -1,5 +1,6 @@
-package com.github.razorplay01.donkeykongfabric.game.entity;
+package com.github.razorplay01.donkeykongfabric.game.entity.item;
 
+import com.github.razorplay01.donkeykongfabric.game.entity.Entity;
 import com.github.razorplay01.donkeykongfabric.screen.GameScreen;
 
 public abstract class ItemEntity extends Entity {
