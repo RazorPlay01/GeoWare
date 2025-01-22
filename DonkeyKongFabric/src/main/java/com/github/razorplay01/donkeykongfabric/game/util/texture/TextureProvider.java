@@ -76,4 +76,25 @@ public class TextureProvider {
     private static final Identifier EXTRA_TEXTURE = Identifier.of(DonkeyKongFabric.MOD_ID, "textures/gui/game/extra.png");
     public static final List<Texture> HAMMET_ITEM_TEXTURES = List.of(
             new Texture(EXTRA_TEXTURE, 56, 18, 13, 13, 84, 56, 1.0f));
+
+    private static final Identifier PARTICLE_TEXTURE = Identifier.of(DonkeyKongFabric.MOD_ID, "textures/gui/game/pop_particle.png");
+    public static final List<Texture> PARTICLE_TEXTURES = List.of(
+            new Texture(PARTICLE_TEXTURE, 0, 0, 16, 16, 80, 16, 1.0f),
+            new Texture(PARTICLE_TEXTURE, 16, 0, 16, 16, 80, 16, 1.0f),
+            new Texture(PARTICLE_TEXTURE, 32, 0, 16, 16, 80, 16, 1.0f),
+            new Texture(PARTICLE_TEXTURE, 48, 0, 16, 16, 80, 16, 1.0f),
+            new Texture(PARTICLE_TEXTURE, 64, 0, 16, 16, 80, 16, 1.0f)
+    );
+    private static final Identifier DONKEY_KONG_TEXTURE = Identifier.of(DonkeyKongFabric.MOD_ID, "textures/gui/game/donkey_kong.png");
+    public static final List<Texture> DONKEY_KONG_BARREL_TEXTURES = List.of(
+            new Texture(DONKEY_KONG_TEXTURE, 0, 32, 45, 40, 144, 120, 1.0f),
+            new Texture(DONKEY_KONG_TEXTURE, 46, 32, 45, 40, 144, 120, 1.0f),
+            new Texture(DONKEY_KONG_TEXTURE, 92, 32, 45, 40, 144, 120, 1.0f),
+            new Texture(DONKEY_KONG_TEXTURE, 0, 80, 45, 40, 144, 120, 1.0f));
+    public static final List<Texture> DONKEY_KONG_IDLE_TEXTURES = List.of(
+            new Texture(DONKEY_KONG_TEXTURE, 0, 0, 45, 40, 144, 120, 1.0f));
+    public static final List<Texture> DONKEY_KONG_EXTRA_TEXTURES = List.of(
+            new Texture(DONKEY_KONG_TEXTURE, 46, 0, 45, 40, 144, 120, 1.0f),
+            new Texture(DONKEY_KONG_TEXTURE, 92, 0, 45, 40, 144, 120, 1.0f),
+            new Texture(DONKEY_KONG_TEXTURE, 0, 80, 45, 40  , 144, 120, 1.0f));
 }

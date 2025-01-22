@@ -1,11 +1,13 @@
 package com.github.razorplay01.donkeykongfabric.game.util;
 
 import com.github.razorplay01.donkeykongfabric.game.util.texture.Texture;
+import lombok.Getter;
 import net.minecraft.client.MinecraftClient;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class Animation {
     private final List<Texture> textures;
     private final float animationSpeed;
@@ -73,5 +75,9 @@ public class Animation {
 
     public int getFrameHeight() {
         return getCurrentTexture().height();
+    }
+
+    public boolean isFinished() {
+        return !loop && currentFrame == textures.size() - 1;
     }
 }

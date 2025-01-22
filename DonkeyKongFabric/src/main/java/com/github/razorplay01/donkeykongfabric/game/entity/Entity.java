@@ -114,7 +114,6 @@ public abstract class Entity implements IHitbox {
         return null;
     }
 
-
     /**
      * Maneja la colisión con los bordes de la pantalla.
      */

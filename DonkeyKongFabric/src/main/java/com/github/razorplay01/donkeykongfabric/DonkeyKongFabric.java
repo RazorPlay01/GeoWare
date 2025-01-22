@@ -12,7 +12,7 @@ import org.slf4j.LoggerFactory;
 public class DonkeyKongFabric implements ModInitializer, ClientModInitializer {
     public static final String MOD_ID = "donkeykongfabric";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    public static final boolean IS_DEBUG_MODE_ENABLE = true;
+    public static final boolean IS_DEBUG_MODE_ENABLE = false;
 
     @Override
     public void onInitialize() {
