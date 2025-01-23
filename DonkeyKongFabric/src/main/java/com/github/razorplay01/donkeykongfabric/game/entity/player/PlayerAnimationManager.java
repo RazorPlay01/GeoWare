@@ -101,8 +101,11 @@ public class PlayerAnimationManager {
     public void render(DrawContext context, Entity player) {
         int xOffset = 0;
         int yOffset = 0;
-        if (currentAnimation == hammetAnimationL || currentAnimation == hammetAnimationR) {
+        if (currentAnimation == hammetAnimationL || currentAnimation == hammetAnimationR ||
+                currentAnimation == hammetWalkAnimationL || currentAnimation == hammetWalkAnimationR) {
             yOffset = -6;
+        } else {
+            yOffset = -1;
         }
         renderTexture(context, player, currentAnimation, xOffset, yOffset);
     }

@@ -1,8 +1,9 @@
 package com.github.razorplay01.donkeykongfabric.game.stages;
 
 import com.github.razorplay01.donkeykongfabric.game.entity.Fire;
+import com.github.razorplay01.donkeykongfabric.game.entity.Particle;
+import com.github.razorplay01.donkeykongfabric.game.entity.barrel.DonkeyKong;
 import com.github.razorplay01.donkeykongfabric.game.entity.item.ItemEntity;
-import com.github.razorplay01.donkeykongfabric.game.entity.barrel.BarrelSpawner;
 import com.github.razorplay01.donkeykongfabric.game.mapobject.VictoryZone;
 import com.github.razorplay01.donkeykongfabric.game.entity.barrel.Barrel;
 import com.github.razorplay01.donkeykongfabric.game.entity.player.Player;
@@ -26,11 +27,12 @@ public abstract class Game implements IGame {
     protected final List<Barrel> barrels = new ArrayList<>();
     protected final List<Ladder> ladders = new ArrayList<>();
     protected final List<Platform> platforms = new ArrayList<>();
-    protected final List<BarrelSpawner> barrelSpawners = new ArrayList<>();
     protected final List<VictoryZone> victoryPlatforms = new ArrayList<>();
     protected final List<Fire> fires = new ArrayList<>();
     protected final List<ItemEntity> items = new ArrayList<>();
+    protected final List<Particle> particles = new ArrayList<>();
     protected Player player;
+    protected DonkeyKong donkeyKong;
     protected final Identifier backgroundImage;
     protected final GameScreen screen;
 

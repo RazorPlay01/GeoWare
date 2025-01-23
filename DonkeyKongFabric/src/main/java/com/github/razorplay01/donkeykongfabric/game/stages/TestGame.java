@@ -2,11 +2,12 @@ package com.github.razorplay01.donkeykongfabric.game.stages;
 
 import com.github.razorplay01.donkeykongfabric.DonkeyKongFabric;
 import com.github.razorplay01.donkeykongfabric.game.entity.Fire;
+import com.github.razorplay01.donkeykongfabric.game.entity.Particle;
+import com.github.razorplay01.donkeykongfabric.game.entity.barrel.DonkeyKong;
 import com.github.razorplay01.donkeykongfabric.game.entity.item.HammetItem;
 import com.github.razorplay01.donkeykongfabric.game.mapobject.VictoryZone;
 import com.github.razorplay01.donkeykongfabric.game.entity.player.Player;
 import com.github.razorplay01.donkeykongfabric.game.mapobject.Platform;
-import com.github.razorplay01.donkeykongfabric.game.entity.barrel.BarrelSpawner;
 import com.github.razorplay01.donkeykongfabric.screen.GameScreen;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,6 +15,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
+
+import java.util.Iterator;
+import java.util.List;
 
 @Getter
 public class TestGame extends Game {
@@ -26,7 +30,6 @@ public class TestGame extends Game {
 
     public TestGame(GameScreen screen) {
         super(Identifier.of(DonkeyKongFabric.MOD_ID, "textures/gui/map_base.png"), screen);
-        this.barrelSpawners.add(new BarrelSpawner(screen, 80, 0.7f));
     }
 
     @Override
@@ -35,6 +38,7 @@ public class TestGame extends Game {
             createGameMap();
         }
         this.player = new Player(screen.getScreenXPos() + 36f, screen.getScreenYPos() + this.getScreenHeight() - 16 - platforms.getFirst().getHeight(), screen);
+        this.donkeyKong = new DonkeyKong(screen.getScreenXPos() + 18f, screen.getScreenYPos() + 52f, screen, 80, 0.7f);
         this.items.add(new HammetItem(screen.getScreenXPos() + 167f, screen.getScreenYPos() + 190f, 13, 13, screen));
         this.items.add(new HammetItem(screen.getScreenXPos() + 16f, screen.getScreenYPos() + 92f, 13, 13, screen));
         this.fires.add(new Fire(screen.getScreenXPos() + 10f, screen.getScreenYPos() + this.getScreenHeight() - 16 - platforms.getFirst().getHeight(), screen));
@@ -45,6 +49,7 @@ public class TestGame extends Game {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        updateParticles();
         // Renderizar elementos del juego
         for (VictoryZone victoryPlatform : getVictoryPlatforms()) {
             player.checkVictoryPlatform(victoryPlatform);
@@ -54,11 +59,11 @@ public class TestGame extends Game {
         getPlatforms().forEach(platform -> platform.render(context));
         getLadders().forEach(ladder -> ladder.render(context));
         getItems().forEach(item -> item.render(context));
+        getParticles().forEach(particle -> particle.render(context));
 
-        for (BarrelSpawner barrelSpawner : getBarrelSpawners()) {
-            barrelSpawner.removeAndSpawnBarrels(context);
-            barrelSpawner.update();
-        }
+        donkeyKong.update();
+        donkeyKong.render(context);
+        donkeyKong.removeAndSpawnBarrels(context);
 
         for (Fire fire : getFires()) {
             fire.render(context);
@@ -249,5 +254,18 @@ public class TestGame extends Game {
         this.getPlatforms().add(new Platform(screen.getScreenXPos() + 80f, screen.getScreenYPos() + 24f, 8, 8));
         createLadder(screen.getScreenXPos() + 64f, screen.getScreenYPos() + 24f, 8, 60, false);
         createLadder(screen.getScreenXPos() + 80f, screen.getScreenYPos() + 24f, 8, 60, false);
+    }
+
+    public void updateParticles() {
+        List<Particle> particles = getParticles();
+        Iterator<Particle> iterator = particles.iterator();
+
+        while (iterator.hasNext()) {
+            Particle particle = iterator.next();
+            particle.update(); // Actualizamos la partícula
+            if (particle.isFinished()) {
+                iterator.remove(); // Eliminamos partículas finalizadas
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 package com.github.razorplay01.donkeykongfabric.game.entity.player;
 
+import com.github.razorplay01.donkeykongfabric.game.entity.Particle;
 import com.github.razorplay01.donkeykongfabric.game.entity.item.HammetItem;
 import com.github.razorplay01.donkeykongfabric.game.entity.item.ItemEntity;
 import com.github.razorplay01.donkeykongfabric.game.mapobject.VictoryZone;
@@ -19,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import static com.github.razorplay01.donkeykongfabric.game.util.records.Hitbox.*;
+import static com.github.razorplay01.donkeykongfabric.game.util.texture.TextureProvider.PARTICLE_TEXTURES;
 
 @Setter
 @Getter
@@ -482,6 +484,13 @@ public class Player extends Entity {
 
             if ((frontHammerHitbox != null && frontHammerHitbox.intersects(barrelHitbox)) ||
                     (topHammerHitbox != null && topHammerHitbox.intersects(barrelHitbox))) {
+
+                float particleX = barrel.getXPos() + (barrel.getWidth() - 16) / 2;
+                float particleY = barrel.getYPos() + (barrel.getHeight() - 16) / 2;
+                gameScreen.getTestGame().getParticles().add(
+                        new Particle(particleX, particleY, 16, 16, gameScreen,
+                                new Animation(PARTICLE_TEXTURES, 0.5f, false)));
+
                 barrel.setRemove(true);
                 addScore(200);
             }
