@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "tetrismod",
+  "version": "${version}",
+  "name": "TetrisMod",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/tetrismod/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.github.razorplay01.tetrismod.Tetrismod"
+    ],
+    "main": [
+      "com.github.razorplay01.tetrismod.Tetrismod"
+    ]
+  },
+  "mixins": [
+    "tetrismod.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

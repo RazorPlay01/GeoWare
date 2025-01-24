@@ -1,0 +1,21 @@
+plugins {
+}
+
+allprojects {
+    project_version = project.project_version
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    dependencies {
+        compileOnly 'com.mysql:mysql-connector-j:9.1.0'
+        implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.47.1.0'
+
+        compileOnly 'org.projectlombok:lombok:1.18.36'
+        annotationProcessor 'org.projectlombok:lombok:1.18.36'
+
+        testCompileOnly 'org.projectlombok:lombok:1.18.36'
+        testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
+    }
+}

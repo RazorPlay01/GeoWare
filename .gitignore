@@ -9,3 +9,9 @@
 /DonkeyKongPlugin/.idea
 /DonkeyKongPlugin/build
 /DonkeyKongPlugin/run
+
+/TetrisMod/build
+/TetrisMod/.gradle
+/TetrisMod/.idea
+/TetrisMod/build
+/TetrisMod/run
