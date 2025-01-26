@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "donkeykong",
+  "version": "${version}",
+  "name": "DonkeyKongFabric",
+  "description": "",
+  "authors": [
+    {
+      "name": "RazorPlay01",
+      "contact": {
+        "homepage": "https://x.com/RazorPlay01",
+        "sources": "https://github.com/RazorPlay01"
+      }
+    }
+  ],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/donkeykongfabric/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.github.razorplay01.geoware.donkeykong.DonkeyKong"
+    ],
+    "main": [
+      "com.github.razorplay01.geoware.donkeykong.DonkeyKong"
+    ]
+  },
+  "mixins": [
+    "donkeykong.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

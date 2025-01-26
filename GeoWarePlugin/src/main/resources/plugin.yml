@@ -1,0 +1,13 @@
+name: GeoWarePlugin
+version: ${version}
+main: com.github.razorplay01.geoware.geowareplugin.GeoWarePlugin
+api-version: '1.21'
+prefix: GeoWare
+authors: [ RazorPlay ]
+website: https://github.com/RazorPlay01
+
+commands:
+  test:
+    aliases:
+      - tst
+    description: Test basic command

@@ -9,9 +9,9 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'MinecraftEventsUtiles'
+rootProject.name = 'GeoWare'
 
-include 'MinecraftEventsUtilesPlugin'
-include 'MinecraftEventsUtilesMod'
-include 'MinecraftEventsUtilesCommon'
-
+include 'GeoWareCommon'
+include 'GeoWarePlugin'
+include 'ModTetris'
+include 'ModDonkeyKong'
