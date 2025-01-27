@@ -19,10 +19,10 @@
   "environment": "client",
   "entrypoints": {
     "client": [
-      "com.github.razorplay01.geoware.Arkanoid"
+      "com.github.razorplay01.geoware.arkanoid.Arkanoid"
     ],
     "main": [
-      "com.github.razorplay01.geoware.Arkanoid"
+      "com.github.razorplay01.geoware.arkanoid.Arkanoid"
     ]
   },
   "mixins": [
