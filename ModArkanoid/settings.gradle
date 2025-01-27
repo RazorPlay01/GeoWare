@@ -4,15 +4,6 @@ pluginManagement {
             name = 'Fabric'
             url = 'https://maven.fabricmc.net/'
         }
-        mavenCentral()
         gradlePluginPortal()
     }
 }
-
-rootProject.name = 'GeoWare'
-
-include 'GeoWareCommon'
-include 'GeoWarePlugin'
-include 'ModTetris'
-include 'ModDonkeyKong'
-include 'ModArkanoid'

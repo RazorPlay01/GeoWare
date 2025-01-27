@@ -20,3 +20,9 @@ build
 /ModTetris/.idea
 /ModTetris/build
 /ModTetris/run
+
+/ModArkanoid/build
+/ModArkanoid/.gradle
+/ModArkanoid/.idea
+/ModArkanoid/build
+/ModArkanoid/run

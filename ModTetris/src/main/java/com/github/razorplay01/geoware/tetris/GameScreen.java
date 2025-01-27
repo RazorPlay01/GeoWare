@@ -86,8 +86,8 @@ public class GameScreen extends Screen {
 
         // Mensajes
         String endMessage = "¡GAME ENDED!";
-        String scoreMessage = "Final Score: " + game.getScore();
-        String levelMessage = "Level Reached: " + game.getLevel();
+        String scoreMessage = "Game Score: " + game.getScore();
+        String levelMessage = "Total Score: 000000";
         String timeMessage = String.format("Closing in %.1f seconds...",
                 (END_GAME_DURATION - (System.currentTimeMillis() - endGameStartTime)) / 1000.0);
 
@@ -98,13 +98,13 @@ public class GameScreen extends Screen {
 
         // Renderizar todos los mensajes centrados
         context.drawText(this.textRenderer, endMessage,
-                centerX - messageWidth/2, centerY - 40, 0xFFFFFF00, true);
+                centerX - messageWidth / 2, centerY - 40, 0xFFFFFF00, true);
         context.drawText(this.textRenderer, scoreMessage,
-                centerX - scoreWidth/2, centerY, 0xFFFFFFFF, true);
+                centerX - scoreWidth / 2, centerY, 0xFFFFFFFF, true);
         context.drawText(this.textRenderer, levelMessage,
-                centerX - levelWidth/2, centerY + 20, 0xFFFFFFFF, true);
+                centerX - levelWidth / 2, centerY + 20, 0xFFFFFFFF, true);
         context.drawText(this.textRenderer, timeMessage,
-                centerX - timeWidth/2, centerY + 50, 0xFFAAAAAA, true);
+                centerX - timeWidth / 2, centerY + 50, 0xFFAAAAAA, true);
     }
 
     @Override

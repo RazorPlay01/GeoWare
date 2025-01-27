@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "tetris",
+  "id": "arkanoid",
   "version": "${version}",
-  "name": "Tetris",
+  "name": "Arkanoid",
   "description": "",
   "authors": [
     {
@@ -15,18 +15,18 @@
   ],
   "contact": {},
   "license": "All-Rights-Reserved",
-  "icon": "assets/tetris/icon.png",
+  "icon": "assets/arkanoid/icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [
-      "com.github.razorplay01.geoware.tetris.Tetris"
+      "com.github.razorplay01.geoware.Arkanoid"
     ],
     "main": [
-      "com.github.razorplay01.geoware.tetris.Tetris"
+      "com.github.razorplay01.geoware.Arkanoid"
     ]
   },
   "mixins": [
-    "tetrismod.mixins.json"
+    "arkanoid.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=${loader_version}",
