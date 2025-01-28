@@ -3,6 +3,7 @@ package com.github.razorplay01.geoware.donkeykong.game.stages;
 import com.github.razorplay01.geoware.donkeykong.DonkeyKong;
 import com.github.razorplay01.geoware.donkeykong.game.entity.Fire;
 import com.github.razorplay01.geoware.donkeykong.game.entity.Particle;
+import com.github.razorplay01.geoware.donkeykong.game.entity.barrel.DonkeyKongEntity;
 import com.github.razorplay01.geoware.donkeykong.game.entity.item.HammetItem;
 import com.github.razorplay01.geoware.donkeykong.game.mapobject.VictoryZone;
 import com.github.razorplay01.geoware.donkeykong.game.entity.player.Player;
@@ -37,7 +38,7 @@ public class TestGame extends Game {
             createGameMap();
         }
         this.player = new Player(screen.getScreenXPos() + 36f, screen.getScreenYPos() + this.getScreenHeight() - 16 - platforms.getFirst().getHeight(), screen);
-        this.donkeyKong = new com.github.razorplay01.geoware.donkeykong.game.entity.barrel.DonkeyKong(screen.getScreenXPos() + 18f, screen.getScreenYPos() + 52f, screen, 80, 0.7f);
+        this.donkeyKong = new DonkeyKongEntity(screen.getScreenXPos() + 18f, screen.getScreenYPos() + 52f, screen, 80, 0.7f);
         this.items.add(new HammetItem(screen.getScreenXPos() + 167f, screen.getScreenYPos() + 190f, 13, 13, screen));
         this.items.add(new HammetItem(screen.getScreenXPos() + 16f, screen.getScreenYPos() + 92f, 13, 13, screen));
         this.fires.add(new Fire(screen.getScreenXPos() + 10f, screen.getScreenYPos() + this.getScreenHeight() - 16 - platforms.getFirst().getHeight(), screen));

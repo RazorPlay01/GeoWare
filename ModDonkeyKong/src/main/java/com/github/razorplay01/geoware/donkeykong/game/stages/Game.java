@@ -2,7 +2,7 @@ package com.github.razorplay01.geoware.donkeykong.game.stages;
 
 import com.github.razorplay01.geoware.donkeykong.game.entity.Fire;
 import com.github.razorplay01.geoware.donkeykong.game.entity.Particle;
-import com.github.razorplay01.geoware.donkeykong.game.entity.barrel.DonkeyKong;
+import com.github.razorplay01.geoware.donkeykong.game.entity.barrel.DonkeyKongEntity;
 import com.github.razorplay01.geoware.donkeykong.game.entity.item.ItemEntity;
 import com.github.razorplay01.geoware.donkeykong.game.mapobject.VictoryZone;
 import com.github.razorplay01.geoware.donkeykong.game.entity.barrel.Barrel;
@@ -32,7 +32,7 @@ public abstract class Game implements IGame {
     protected final List<ItemEntity> items = new ArrayList<>();
     protected final List<Particle> particles = new ArrayList<>();
     protected Player player;
-    protected DonkeyKong donkeyKong;
+    protected DonkeyKongEntity donkeyKong;
     protected final Identifier backgroundImage;
     protected final GameScreen screen;
 

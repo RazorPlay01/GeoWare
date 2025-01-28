@@ -10,13 +10,19 @@ import org.lwjgl.glfw.GLFW;
 public class GameScreen extends Screen {
     private final TetrisGame game;
 
+    private final long gameTimeLimit; // en milisegundos
+    private long gameStartTime;
+    private boolean timeUp = false;
+
     private boolean showingEndGame = false;
     private long endGameStartTime;
     private static final long END_GAME_DURATION = 5000;
 
-    public GameScreen(float speedMultiplier) {
+    public GameScreen(float speedMultiplier, int timeLimitSeconds) {
         super(Text.empty());
         this.game = new TetrisGame(speedMultiplier);
+        this.gameTimeLimit = timeLimitSeconds * 1000L; // Convertir segundos a milisegundos
+        this.gameStartTime = System.currentTimeMillis(); // Iniciar el temporizador
     }
 
     @Override
@@ -29,17 +35,31 @@ public class GameScreen extends Screen {
         int boardX = (screenWidth - boardWidth) / 2;
         int boardY = (screenHeight - boardHeight) / 2;
 
+        // Mostrar tiempo restante
         if (!showingEndGame) {
-            renderGame(context, boardX, boardY, boardWidth);
+            long currentTime = System.currentTimeMillis();
+            long elapsedTime = currentTime - gameStartTime;
+            long remainingTime = Math.max(0, gameTimeLimit - elapsedTime);
+            int seconds = (int) (remainingTime / 1000);
 
-            if (game.isPaused()) {
-                renderCenteredMessage(context, "PAUSED", 0xFFFFFFFF);
-            }
+            String timeText = String.format("Time: %d:%02d", seconds / 60, seconds % 60);
+            context.drawText(
+                    this.textRenderer,
+                    timeText,
+                    boardX + boardWidth + 20, // Posición junto al tablero
+                    boardY + 140, // Debajo de la puntuación
+                    0xFFFFFFFF,
+                    true
+            );
+        }
 
-            if (game.isGameOver() && !game.isShouldClose()) {
-                renderCenteredMessage(context, "GAME OVER", 0xFFFF0000);
-            }
-        } else {
+        renderGame(context, boardX, boardY, boardWidth);
+
+        if (game.isPaused()) {
+            renderCenteredMessage(context, "PAUSED", 0xFFFFFFFF);
+        }
+
+        if (showingEndGame) {
             renderEndGameScreen(context);
         }
     }
@@ -85,15 +105,15 @@ public class GameScreen extends Screen {
         context.fill(0, 0, this.width, this.height, 0xCC000000);
 
         // Mensajes
-        String endMessage = "¡GAME ENDED!";
+        String endMessage = timeUp ? "¡TIME'S UP!" : "¡GAME ENDED!";
         String scoreMessage = "Game Score: " + game.getScore();
-        String levelMessage = "Total Score: 000000";
+        String totalScoreMessage = "Total Score: " + game.getScore(); // Puedes ajustar esto si tienes un puntaje total
         String timeMessage = String.format("Closing in %.1f seconds...",
                 (END_GAME_DURATION - (System.currentTimeMillis() - endGameStartTime)) / 1000.0);
 
         int messageWidth = this.textRenderer.getWidth(endMessage);
         int scoreWidth = this.textRenderer.getWidth(scoreMessage);
-        int levelWidth = this.textRenderer.getWidth(levelMessage);
+        int totalScoreWidth = this.textRenderer.getWidth(totalScoreMessage);
         int timeWidth = this.textRenderer.getWidth(timeMessage);
 
         // Renderizar todos los mensajes centrados
@@ -101,8 +121,8 @@ public class GameScreen extends Screen {
                 centerX - messageWidth / 2, centerY - 40, 0xFFFFFF00, true);
         context.drawText(this.textRenderer, scoreMessage,
                 centerX - scoreWidth / 2, centerY, 0xFFFFFFFF, true);
-        context.drawText(this.textRenderer, levelMessage,
-                centerX - levelWidth / 2, centerY + 20, 0xFFFFFFFF, true);
+        context.drawText(this.textRenderer, totalScoreMessage,
+                centerX - totalScoreWidth / 2, centerY + 20, 0xFFFFFFFF, true);
         context.drawText(this.textRenderer, timeMessage,
                 centerX - timeWidth / 2, centerY + 50, 0xFFAAAAAA, true);
     }
@@ -110,8 +130,15 @@ public class GameScreen extends Screen {
     @Override
     public void tick() {
         long currentTime = System.currentTimeMillis();
+        long elapsedTime = currentTime - gameStartTime;
 
-        if ((game.isGameOver() || game.isShouldClose()) && !showingEndGame) {
+        // Verificar si se acabó el tiempo
+        if (elapsedTime >= gameTimeLimit && !timeUp) {
+            timeUp = true;
+            game.endGame(); // Finalizar el juego
+        }
+
+        if ((game.isGameOver() || game.isShouldClose() || timeUp) && !showingEndGame) {
             showingEndGame = true;
             endGameStartTime = currentTime;
         }

@@ -60,8 +60,8 @@ public class TestGame extends Game {
         context.drawText(
                 client.textRenderer,
                 scoreText,
-                screen.getScreenXPos() + 10, // Posición X
-                screen.getScreenYPos() + 10, // Posición Y
+                screen.getScreenXPos() + GAME_WIDTH + 10, // Posición X
+                screen.getScreenYPos(), // Posición Y
                 0xFFFFFFFF, // Color blanco
                 true // Con sombra
         );

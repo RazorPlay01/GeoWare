@@ -20,7 +20,7 @@ public class Arkanoid implements ModInitializer, ClientModInitializer {
             dispatcher.register(CommandManager.literal("arkanoid")
                     .executes(context -> {
                         if (context.getSource().getPlayer() != null) {
-                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new GameScreen(1000)));
+                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new GameScreen(0, 30)));
                         }
                         return 1;
                     }));

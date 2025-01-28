@@ -14,7 +14,7 @@ public class Tetris implements ModInitializer, ClientModInitializer {
             dispatcher.register(CommandManager.literal("tetris")
                     .executes(context -> {
                         if (context.getSource().getPlayer() != null) {
-                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new GameScreen(3.0f)));
+                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new GameScreen(3.0f, 60)));
                         }
                         return 1;
                     }));

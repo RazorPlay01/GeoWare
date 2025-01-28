@@ -11,7 +11,7 @@ import java.util.Random;
 
 import static com.github.razorplay01.geoware.donkeykong.game.util.texture.TextureProvider.*;
 
-public class DonkeyKong extends Entity {
+public class DonkeyKongEntity extends Entity {
     private final Random random = new Random();
     private int spawnTimer;
     private final int spawnInterval;
@@ -26,7 +26,7 @@ public class DonkeyKong extends Entity {
     private boolean isSpawningBarrel = false;
     private boolean isPlayingExtra = false;
 
-    public DonkeyKong(float xPos, float yPos, GameScreen gameScreen, int spawnInterval, float spawnProbability) {
+    public DonkeyKongEntity(float xPos, float yPos, GameScreen gameScreen, int spawnInterval, float spawnProbability) {
         super(xPos, yPos, 46, 32, gameScreen, 0xFF0000); // Ajusta el tamaño según tus necesidades
         this.gameScreen = gameScreen;
 
