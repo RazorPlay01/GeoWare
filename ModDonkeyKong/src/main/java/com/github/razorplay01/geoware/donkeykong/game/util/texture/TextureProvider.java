@@ -47,23 +47,21 @@ public class TextureProvider {
             new Texture(PLAYER_EXTRA_TEXTURE, 0, 28, 28, 28, 84, 56, 1.0f));
 
     private static final Identifier BARREL_TEXTURE = Identifier.of(DonkeyKong.MOD_ID, "textures/gui/game/barrel.png");
-    private static final int BARREL_WIDTH = 12;
-    private static final int BARREL_HEIGHT = 12;
-    private static final int BARREL_TEXTURE_WIDTH = 64;
-    private static final int BARREL_TEXTURE_HEIGHT = 24;
+    private static final int BARREL_TEXTURE_WIDTH = 80;
+    private static final int BARREL_TEXTURE_HEIGHT = 32;
     public static final List<Texture> BARREL_R_TEXTURES = List.of(
-            new Texture(BARREL_TEXTURE, 0, 0, BARREL_WIDTH, BARREL_HEIGHT, BARREL_TEXTURE_WIDTH, BARREL_TEXTURE_HEIGHT, 1.0f),
-            new Texture(BARREL_TEXTURE, 12, 0, BARREL_WIDTH, BARREL_HEIGHT, BARREL_TEXTURE_WIDTH, BARREL_TEXTURE_HEIGHT, 1.0f),
-            new Texture(BARREL_TEXTURE, 24, 0, BARREL_WIDTH, BARREL_HEIGHT, BARREL_TEXTURE_WIDTH, BARREL_TEXTURE_HEIGHT, 1.0f),
-            new Texture(BARREL_TEXTURE, 36, 0, BARREL_WIDTH, BARREL_HEIGHT, BARREL_TEXTURE_WIDTH, BARREL_TEXTURE_HEIGHT, 1.0f));
+            new Texture(BARREL_TEXTURE, 0, 0, 16, 16, BARREL_TEXTURE_WIDTH, BARREL_TEXTURE_HEIGHT, 1.0f),
+            new Texture(BARREL_TEXTURE, 16, 0, 16, 16, BARREL_TEXTURE_WIDTH, BARREL_TEXTURE_HEIGHT, 1.0f),
+            new Texture(BARREL_TEXTURE, 32, 0, 16, 16, BARREL_TEXTURE_WIDTH, BARREL_TEXTURE_HEIGHT, 1.0f),
+            new Texture(BARREL_TEXTURE, 48, 0, 16, 16, BARREL_TEXTURE_WIDTH, BARREL_TEXTURE_HEIGHT, 1.0f));
     public static final List<Texture> BARREL_L_TEXTURES = List.of(
-            new Texture(BARREL_TEXTURE, 0, 12, BARREL_WIDTH, BARREL_HEIGHT, BARREL_TEXTURE_WIDTH, BARREL_TEXTURE_HEIGHT, 1.0f),
-            new Texture(BARREL_TEXTURE, 12, 12, BARREL_WIDTH, BARREL_HEIGHT, BARREL_TEXTURE_WIDTH, BARREL_TEXTURE_HEIGHT, 1.0f),
-            new Texture(BARREL_TEXTURE, 24, 12, BARREL_WIDTH, BARREL_HEIGHT, BARREL_TEXTURE_WIDTH, BARREL_TEXTURE_HEIGHT, 1.0f),
-            new Texture(BARREL_TEXTURE, 36, 12, BARREL_WIDTH, BARREL_HEIGHT, BARREL_TEXTURE_WIDTH, BARREL_TEXTURE_HEIGHT, 1.0f));
+            new Texture(BARREL_TEXTURE, 0, 16, 16, 16, BARREL_TEXTURE_WIDTH, BARREL_TEXTURE_HEIGHT, 1.0f),
+            new Texture(BARREL_TEXTURE, 16, 16, 16, 16, BARREL_TEXTURE_WIDTH, BARREL_TEXTURE_HEIGHT, 1.0f),
+            new Texture(BARREL_TEXTURE, 32, 16, 16, 16, BARREL_TEXTURE_WIDTH, BARREL_TEXTURE_HEIGHT, 1.0f),
+            new Texture(BARREL_TEXTURE, 48, 16, 16, 16, BARREL_TEXTURE_WIDTH, BARREL_TEXTURE_HEIGHT, 1.0f));
     public static final List<Texture> BARREL_V_TEXTURES = List.of(
-            new Texture(BARREL_TEXTURE, 48, 0, 17, BARREL_HEIGHT, BARREL_TEXTURE_WIDTH, BARREL_TEXTURE_HEIGHT, 1.0f),
-            new Texture(BARREL_TEXTURE, 48, 12, 17, BARREL_HEIGHT, BARREL_TEXTURE_WIDTH, BARREL_TEXTURE_HEIGHT, 1.0f));
+            new Texture(BARREL_TEXTURE, 64, 0, 16, 16, BARREL_TEXTURE_WIDTH, BARREL_TEXTURE_HEIGHT, 1.0f),
+            new Texture(BARREL_TEXTURE, 64, 16, 16, 16, BARREL_TEXTURE_WIDTH, BARREL_TEXTURE_HEIGHT, 1.0f));
 
     private static final Identifier FIRE_TEXTURE = Identifier.of(DonkeyKong.MOD_ID, "textures/gui/game/fire.png");
     public static final List<Texture> FIRE_R_TEXTURES = List.of(
@@ -96,5 +94,5 @@ public class TextureProvider {
     public static final List<Texture> DONKEY_KONG_EXTRA_TEXTURES = List.of(
             new Texture(DONKEY_KONG_TEXTURE, 46, 0, 45, 40, 144, 120, 1.0f),
             new Texture(DONKEY_KONG_TEXTURE, 92, 0, 45, 40, 144, 120, 1.0f),
-            new Texture(DONKEY_KONG_TEXTURE, 0, 80, 45, 40  , 144, 120, 1.0f));
+            new Texture(DONKEY_KONG_TEXTURE, 0, 80, 45, 40, 144, 120, 1.0f));
 }

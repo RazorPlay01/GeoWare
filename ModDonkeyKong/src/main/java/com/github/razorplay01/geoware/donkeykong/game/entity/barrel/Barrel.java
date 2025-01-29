@@ -18,9 +18,9 @@ import static com.github.razorplay01.geoware.donkeykong.game.util.texture.Textur
 
 @Getter
 public class Barrel extends Entity {
-    private final Animation horizontalRightAnimation = new Animation(BARREL_R_TEXTURES, 0.5f, true);
-    private final Animation horizontalLeftAnimation = new Animation(BARREL_L_TEXTURES, 0.5f, true);
-    private final Animation verticalAnimation = new Animation(BARREL_V_TEXTURES, 0.8f, true);
+    private final Animation horizontalRightAnimation = new Animation(BARREL_R_TEXTURES, 0.8f, true);
+    private final Animation horizontalLeftAnimation = new Animation(BARREL_L_TEXTURES, 0.8f, true);
+    private final Animation verticalAnimation = new Animation(BARREL_V_TEXTURES, 1f, true);
 
     private static final float LADDER_DESCENT_SPEED = 0.5f;
     private static final float PROBABILITY_TO_USE_LADDER = 0.25f;
