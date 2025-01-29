@@ -26,3 +26,9 @@ build
 /ModArkanoid/.idea
 /ModArkanoid/build
 /ModArkanoid/run
+
+/ModHanoiTowers/build
+/ModHanoiTowers/.gradle
+/ModHanoiTowers/.idea
+/ModHanoiTowers/build
+/ModHanoiTowers/run
