@@ -10,6 +10,7 @@ import com.github.razorplay01.geoware.arkanoid.screen.GameScreen;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.DrawContext;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,16 +56,20 @@ public abstract class Entity implements IHitbox {
         for (int i = 0; i < hitboxes.size(); i++) {
             Hitbox hitbox = hitboxes.get(i);
 
-            hitboxes.set(i, new Hitbox(
-                    hitbox.name(),
-                    xPos + hitbox.xOffset(),
-                    yPos + hitbox.yOffset(),
-                    hitbox.width(),
-                    hitbox.height(),
-                    hitbox.xOffset(),
-                    hitbox.yOffset(),
-                    hitbox.color()
-            ));
+            if (hitbox.name().equalsIgnoreCase(Hitbox.HITBOX_DEFAULT)) {
+                hitboxes.set(i, new Hitbox(Hitbox.HITBOX_DEFAULT, xPos, yPos, width, height, 0, 0, this.color));
+            } else {
+                hitboxes.set(i, new Hitbox(
+                        hitbox.name(),
+                        xPos + hitbox.xOffset(),
+                        yPos + hitbox.yOffset(),
+                        hitbox.width(),
+                        hitbox.height(),
+                        hitbox.xOffset(),
+                        hitbox.yOffset(),
+                        hitbox.color()
+                ));
+            }
         }
     }
 

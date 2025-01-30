@@ -85,4 +85,28 @@ public class Player extends Entity {
         String scoreText = "" + points;
         floatingTexts.add(new FloatingText(textX, textY, scoreText, 0.5f));
     }
+
+    public void updateHitboxesForResize() {
+        // Limpiar hitboxes existentes
+        hitboxes.clear();
+
+        // Recalcular posiciones de hitboxes basadas en el nuevo ancho
+        float centerHitboxWidth = 16; // Ancho fijo de la hitbox central
+        float sideHitboxWidth = 8;    // Ancho fijo de las hitboxes laterales
+
+        // Calcular el offset para la hitbox central
+        float centerOffset = (width - centerHitboxWidth) / 2;
+
+        // Recrear las hitboxes con las nuevas posiciones
+        hitboxes.add(new Hitbox(Hitbox.HITBOX_DEFAULT, xPos, yPos, width, height, 0, 0, this.color));
+        hitboxes.add(new Hitbox("ball_hitbox", xPos, yPos, centerHitboxWidth, height, centerOffset, 0, 0xFFc3c3c3));
+        hitboxes.add(new Hitbox("boost_ball_hitbox_l", xPos, yPos, sideHitboxWidth, height, 0, 0, 0xAAff5d00));
+        hitboxes.add(new Hitbox("boost_ball_hitbox_r", xPos, yPos, sideHitboxWidth, height, width - sideHitboxWidth, 0, 0xAAff5d00));
+    }
+
+    @Override
+    public void setWidth(float newWidth) {
+        this.width = newWidth;
+        updateHitboxesForResize();
+    }
 }

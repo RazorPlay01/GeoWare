@@ -1,9 +1,11 @@
 package com.github.razorplay01.geoware.arkanoid.game.stages;
 
 import com.github.razorplay01.geoware.arkanoid.game.entity.Ball;
-import com.github.razorplay01.geoware.arkanoid.game.entity.MultiBallPowerUp;
+import com.github.razorplay01.geoware.arkanoid.game.entity.powerup.MultiBallPowerUp;
 import com.github.razorplay01.geoware.arkanoid.game.entity.Player;
-import com.github.razorplay01.geoware.arkanoid.game.entity.PowerUp;
+import com.github.razorplay01.geoware.arkanoid.game.entity.powerup.PowerUp;
+import com.github.razorplay01.geoware.arkanoid.game.entity.powerup.WidthDecreasePowerUp;
+import com.github.razorplay01.geoware.arkanoid.game.entity.powerup.WidthIncreasePowerUp;
 import com.github.razorplay01.geoware.arkanoid.game.mapobject.Brick;
 import com.github.razorplay01.geoware.arkanoid.game.util.BrickColor;
 import com.github.razorplay01.geoware.arkanoid.screen.GameScreen;
@@ -78,6 +80,7 @@ public class TestGame extends Game {
 
     @Override
     public void updateAndRenderPlayer(DrawContext context, int mouseX, int mouseY, float delta) {
+        updateScheduledTasks();
         for (PowerUp powerUp : new ArrayList<>(powerUps)) {
             powerUp.update();
             powerUp.render(context);
@@ -135,18 +138,24 @@ public class TestGame extends Game {
     public void removeBrick(Brick brick) {
         getBricks().remove(brick);
 
-        // Verificar si quedan ladrillos
         if (getBricks().isEmpty()) {
             player.setWinning(true);
         }
 
-        // El resto del código existente para el powerUp
         if (Math.random() < POWERUP_SPAWN_CHANCE) {
             PowerUp powerUp;
             float powerUpX = brick.getXPos() + (brick.getWidth() - 12) / 2;
             float powerUpY = brick.getYPos() + (brick.getHeight() - 12) / 2;
 
-            powerUp = new MultiBallPowerUp(powerUpX, powerUpY, screen);
+            // Elegir aleatoriamente entre los diferentes power-ups
+            if (Math.random() < 0.33) {
+                powerUp = new MultiBallPowerUp(powerUpX, powerUpY, screen);
+            } else if (Math.random() < 0.66) {
+                powerUp = new WidthIncreasePowerUp(powerUpX, powerUpY, screen);
+            } else {
+                powerUp = new WidthDecreasePowerUp(powerUpX, powerUpY, screen);
+            }
+
             powerUps.add(powerUp);
         }
     }

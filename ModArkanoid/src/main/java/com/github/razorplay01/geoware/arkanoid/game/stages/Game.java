@@ -2,9 +2,10 @@ package com.github.razorplay01.geoware.arkanoid.game.stages;
 
 import com.github.razorplay01.geoware.arkanoid.game.entity.Ball;
 import com.github.razorplay01.geoware.arkanoid.game.entity.Player;
-import com.github.razorplay01.geoware.arkanoid.game.entity.PowerUp;
+import com.github.razorplay01.geoware.arkanoid.game.entity.powerup.PowerUp;
 import com.github.razorplay01.geoware.arkanoid.game.mapobject.Brick;
 import com.github.razorplay01.geoware.arkanoid.game.util.BrickColor;
+import com.github.razorplay01.geoware.arkanoid.game.util.GameTask;
 import com.github.razorplay01.geoware.arkanoid.screen.GameScreen;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,8 @@ import java.util.Map;
 @Getter
 @Setter
 public abstract class Game implements IGame {
+    protected final List<GameTask> scheduledTasks = new ArrayList<>();
+
     protected static final Map<Character, BrickColor> BRICK_MAPPING = Map.of(
             'R', BrickColor.RED,
             'G', BrickColor.GREEN,
@@ -108,7 +111,7 @@ public abstract class Game implements IGame {
             this.displayValue = Math.max(newValue, 0);
 
             if (this.displayValue <= 0) {
-                // player.setLosing(true);
+                player.setLosing(true);
             }
         }
 
@@ -124,5 +127,13 @@ public abstract class Game implements IGame {
                 true
         );
         context.getMatrices().pop();
+    }
+
+    public void addScheduledTask(Runnable task, int ticks) {
+        scheduledTasks.add(new GameTask(task, ticks));
+    }
+
+    protected void updateScheduledTasks() {
+        scheduledTasks.removeIf(GameTask::update);
     }
 }

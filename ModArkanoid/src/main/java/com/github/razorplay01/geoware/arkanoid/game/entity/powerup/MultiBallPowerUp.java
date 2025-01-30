@@ -1,6 +1,7 @@
-package com.github.razorplay01.geoware.arkanoid.game.entity;
+package com.github.razorplay01.geoware.arkanoid.game.entity.powerup;
 
 
+import com.github.razorplay01.geoware.arkanoid.game.entity.Ball;
 import com.github.razorplay01.geoware.arkanoid.game.stages.TestGame;
 import com.github.razorplay01.geoware.arkanoid.screen.GameScreen;
 

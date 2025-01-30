@@ -16,15 +16,14 @@ public class Arkanoid implements ModInitializer, ClientModInitializer {
 
     @Override
     public void onInitialize() {
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            dispatcher.register(CommandManager.literal("arkanoid")
-                    .executes(context -> {
-                        if (context.getSource().getPlayer() != null) {
-                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new GameScreen(0, 30)));
-                        }
-                        return 1;
-                    }));
-        });
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
+                dispatcher.register(CommandManager.literal("arkanoid")
+                .executes(context -> {
+                    if (context.getSource().getPlayer() != null) {
+                        MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new GameScreen(0, 60)));
+                    }
+                    return 1;
+                })));
     }
 
     @Override

@@ -1,5 +1,7 @@
-package com.github.razorplay01.geoware.arkanoid.game.entity;
+package com.github.razorplay01.geoware.arkanoid.game.entity.powerup;
 
+import com.github.razorplay01.geoware.arkanoid.game.entity.Entity;
+import com.github.razorplay01.geoware.arkanoid.game.entity.Player;
 import com.github.razorplay01.geoware.arkanoid.screen.GameScreen;
 import net.minecraft.client.gui.DrawContext;
 

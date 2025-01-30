@@ -181,11 +181,23 @@ public class Ball extends Entity {
         if (ballHitbox.intersects(playerDefaultHitbox)) {
             yPos = playerDefaultHitbox.yPos() - height;
 
-            // Calcular el punto de impacto relativo en el jugador (0 a 1)
-            float hitPoint = (xPos + (width / 2) - playerDefaultHitbox.xPos()) / playerDefaultHitbox.width();
+            // Calcular el punto de impacto relativo en el jugador (-1 a 1)
+            float hitPoint = (xPos + (width / 2) - (playerDefaultHitbox.xPos() + playerDefaultHitbox.width() / 2))
+                    / (playerDefaultHitbox.width() / 2);
 
-            // Convertir el punto de impacto a un ángulo entre -60 y -120 grados
-            direction = addRandomAngleVariation((float) (-Math.PI / 3 + (hitPoint * Math.PI / 3)));
+            // Limitar el hitPoint entre -1 y 1
+            hitPoint = Math.clamp(hitPoint, -1, 1);
+
+            // Ángulo base (90 grados en radianes)
+            float baseAngle = -(float)Math.PI/2;
+
+            // Máxima desviación del ángulo (en radianes)
+            float maxAngleDeviation = (float)Math.PI/3; // 60 grados
+
+            // Calcular el nuevo ángulo
+            direction = baseAngle + (hitPoint * maxAngleDeviation);
+
+            // Actualizar velocidades
             updateVelocities();
 
             // Verificar hitboxes especiales del jugador para boost
