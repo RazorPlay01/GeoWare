@@ -26,7 +26,7 @@ public abstract class Game implements IGame {
     protected final MinecraftClient client = MinecraftClient.getInstance();
     protected final List<Barrel> barrels = new ArrayList<>();
     protected final List<Ladder> ladders = new ArrayList<>();
-    public static final List<Platform> platforms = new ArrayList<>();
+    protected final List<Platform> platforms = new ArrayList<>();
     protected final List<VictoryZone> victoryPlatforms = new ArrayList<>();
     protected final List<Fire> fires = new ArrayList<>();
     protected final List<ItemEntity> items = new ArrayList<>();
@@ -87,7 +87,7 @@ public abstract class Game implements IGame {
      * @param canPassThroughPlatform Indica si se puede atravesar la plataforma.
      */
     public void createLadder(float xPos, float yPos, float width, float height, boolean canPassThroughPlatform) {
-        this.getLadders().add(new Ladder(xPos, yPos, width, height, canPassThroughPlatform));
+        this.getLadders().add(new Ladder(xPos, yPos, width, height, canPassThroughPlatform, screen));
     }
 
     /**

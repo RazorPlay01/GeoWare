@@ -34,7 +34,7 @@ public class TestGame extends Game {
 
     @Override
     public void init() {
-        if (platforms.isEmpty() || this.getPlayer() == null) {
+        if (platforms.isEmpty()) {
             createGameMap();
         }
         this.player = new Player(screen.getScreenXPos() + 36f, screen.getScreenYPos() + this.getScreenHeight() - 16 - platforms.getFirst().getHeight(), screen);
@@ -80,8 +80,8 @@ public class TestGame extends Game {
         endGameHandle(context);
 
         // Renderizar score y tiempo
-        renderScore(context, textRenderer, player.getScore(), screen.getScreenXPos() + 10, screen.getScreenYPos() + 40, 1.0f);
-        renderTime(context, textRenderer, 60, screen.getScreenXPos() + 10, screen.getScreenYPos() + 60, 1.0f);
+        renderScore(context, textRenderer, player.getScore(), screen.getScreenXPos() + 10, screen.getScreenYPos() + 10, 1.0f);
+        renderTime(context, textRenderer, 60, screen.getScreenXPos() + 10, screen.getScreenYPos() + 30, 1.0f);
     }
 
     private void endGameHandle(DrawContext context) {
@@ -174,6 +174,8 @@ public class TestGame extends Game {
 
     @Override
     public void createGameMap() {
+        platforms.clear();
+        ladders.clear();
         createFirstPlatform();
         createSecondPlatform();
         createThirdPlatform();

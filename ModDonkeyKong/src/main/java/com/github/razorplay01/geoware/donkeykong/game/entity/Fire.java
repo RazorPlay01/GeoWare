@@ -142,7 +142,7 @@ public class Fire extends Entity {
         velocityY = Math.min(velocityY, maxFallSpeed);
 
 
-        Platform stepPlatform = findStepPlatform(Game.platforms);
+        Platform stepPlatform = findStepPlatform(gameScreen.getTestGame().getPlatforms());
         if (stepPlatform != null) {
             yPos = stepPlatform.getYPos() - height;
             velocityY = 0;
@@ -165,7 +165,7 @@ public class Fire extends Entity {
 
 
     private void checkPlatformCollisions() {
-        for (Platform platform : Game.platforms) {
+        for (Platform platform : gameScreen.getTestGame().getPlatforms()) {
             if (isCollidingWithPlatform(platform)) {
                 yPos = platform.getYPos() - height;
                 velocityY = 0;
@@ -204,7 +204,7 @@ public class Fire extends Entity {
     }
 
     private Platform findPlatformAbove() {
-        return Game.platforms.stream()
+        return gameScreen.getTestGame().getPlatforms().stream()
                 .filter(platform -> platform.getYPos() <= yPos && // Buscar plataformas por encima o al mismo nivel
                         platform.getXPos() < xPos + width &&
                         platform.getXPos() + platform.getWidth() > xPos)

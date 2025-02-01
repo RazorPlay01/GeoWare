@@ -62,7 +62,7 @@ public class Barrel extends Entity {
         xPos = currentLadder.getXPos() + (currentLadder.getWidth() - width) / 2;
 
         if (yPos + height >= currentLadder.getYPos() + currentLadder.getHeight() - PLATFORM_DETECTION_THRESHOLD) {
-            Platform nextPlatform = findNextPlatform(Game.platforms);
+            Platform nextPlatform = findNextPlatform(gameScreen.getTestGame().getPlatforms());
 
             if (nextPlatform != null && Math.abs(nextPlatform.getYPos() - (yPos + height)) <= PLATFORM_DETECTION_THRESHOLD) {
                 yPos = nextPlatform.getYPos() - height;
@@ -92,7 +92,7 @@ public class Barrel extends Entity {
         yPos += velocityY;
         xPos += velocityX;
 
-        for (Platform platform : Game.platforms) {
+        for (Platform platform : gameScreen.getTestGame().getPlatforms()) {
             if (isCollidingWithPlatform(platform)) {
                 yPos = platform.getYPos() - height;
                 velocityY = 0;

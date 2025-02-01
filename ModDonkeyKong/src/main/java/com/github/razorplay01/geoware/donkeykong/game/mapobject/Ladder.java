@@ -3,12 +3,12 @@ package com.github.razorplay01.geoware.donkeykong.game.mapobject;
 import com.github.razorplay01.geoware.donkeykong.DonkeyKong;
 import com.github.razorplay01.geoware.donkeykong.game.util.Animation;
 import com.github.razorplay01.geoware.donkeykong.game.util.texture.Texture;
+import com.github.razorplay01.geoware.donkeykong.screen.GameScreen;
 import lombok.Getter;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
-import java.util.List;
 
-import static com.github.razorplay01.geoware.donkeykong.game.stages.Game.platforms;
+import java.util.List;
 
 @Getter
 public class Ladder extends MapObject {
@@ -16,10 +16,12 @@ public class Ladder extends MapObject {
     public final List<Texture> LADDER_TEXTURES;
     private final Animation IdleAnimation;
     private final boolean canPassThroughPlatform;
+    private final GameScreen gameScreen;
 
-    public Ladder(float xPos, float yPos, float width, float height, boolean canPassThroughPlatform) {
+    public Ladder(float xPos, float yPos, float width, float height, boolean canPassThroughPlatform, GameScreen gameScreen) {
         super(xPos, yPos, width, height, 0xAA00ffec);
         this.canPassThroughPlatform = canPassThroughPlatform;
+        this.gameScreen = gameScreen;
         int textureHeight = (int) Math.ceil((height / 8.0f) * 12);
 
         LADDER_TEXTURES = List.of(
@@ -41,7 +43,7 @@ public class Ladder extends MapObject {
 
             // Verificar si este segmento está cubierto por una plataforma
             boolean isCovered = false;
-            for (Platform platform : platforms) {
+            for (Platform platform : gameScreen.getTestGame().getPlatforms()) {
                 if (isOverlapping(segmentTopY, segmentBottomY, platform)) {
                     isCovered = true;
                     break;

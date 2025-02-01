@@ -94,7 +94,7 @@ public class Player extends Entity {
         updateState();
         updateHitboxes();
 
-        checkPlatformCollision(Game.platforms);
+        checkPlatformCollision(gameScreen.getTestGame().getPlatforms());
         verifyScreenBoundsCollision();
         checkLadderContact();
         checkBarrelCollision(gameScreen.getTestGame().getBarrels());
@@ -139,7 +139,7 @@ public class Player extends Entity {
             yPos -= playerClimbSpeed;
             isClimbing = true;
         } else if (movingDown) {
-            if (PlayerCollisionHandler.canContinueClimbingDown(this, currentLadder, Game.platforms)) {
+            if (PlayerCollisionHandler.canContinueClimbingDown(this, currentLadder, gameScreen.getTestGame().getPlatforms())) {
                 yPos += playerClimbSpeed;
                 isClimbing = true;
             } else {
