@@ -6,7 +6,6 @@ import com.github.razorplay01.geoware.donkeykong.game.util.texture.Texture;
 import lombok.Getter;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
-import com.github.razorplay01.geoware.donkeykong.game.stages.Game;
 import java.util.List;
 
 import static com.github.razorplay01.geoware.donkeykong.game.stages.Game.platforms;
@@ -34,7 +33,7 @@ public class Ladder extends MapObject {
         int yOffset = 0;
 
         // Renderizar la escalera por segmentos de 8 píxeles
-        int segmentHeight = 8; // Altura de cada segmento de la escalera
+        int segmentHeight = 4; // Altura de cada segmento de la escalera
         for (int segmentY = 0; segmentY < this.getHeight(); segmentY += segmentHeight) {
             // Coordenadas del segmento actual
             float segmentTopY = this.getYPos() + segmentY;
@@ -52,9 +51,6 @@ public class Ladder extends MapObject {
             // Si no está cubierto por una plataforma, renderizar este segmento
             if (!isCovered) {
                 renderTextureSegment(context, this, IdleAnimation, xOffset, yOffset, segmentY, segmentHeight);
-            } else {
-                // Depuración opcional: puedes registrar cuándo un segmento está cubierto
-                System.out.println("Segmento cubierto en Y: " + segmentTopY + " - " + segmentBottomY);
             }
         }
 

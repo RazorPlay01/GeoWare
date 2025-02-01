@@ -155,17 +155,11 @@ public class TestGame extends Game {
 
     @Override
     public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-        context.drawTexture(
-                getBackgroundImage(),
-                screen.getScreenXPos(),
-                screen.getScreenYPos(),
-                0,
-                0,
-                getScreenWidth(),
-                getScreenHeight(),
-                getScreenWidth(),
-                getScreenHeight()
-        );
+        // Dibujar el fondo de la zona de juego
+        context.fill(screen.getScreenXPos() + 4, screen.getScreenYPos(), screen.getScreenXPos() + getScreenWidth() + 4, screen.getScreenYPos() + getScreenHeight(), 0xFF000000);
+
+        // Dibujar el borde de la zona de juego
+        context.drawBorder(screen.getScreenXPos() + 4 - 1, screen.getScreenYPos() - 1, getScreenWidth() + 2, getScreenHeight() + 2, 0xFFFFFFFF);
     }
 
     @Override
