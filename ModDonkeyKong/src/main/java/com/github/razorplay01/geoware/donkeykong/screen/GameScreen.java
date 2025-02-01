@@ -29,7 +29,7 @@ public class GameScreen extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        testGame.renderBackground(context, mouseX, mouseY, delta);
+        //testGame.renderBackground(context, mouseX, mouseY, delta);
         testGame.render(context, mouseX, mouseY, delta);
     }
 

@@ -88,7 +88,7 @@ public class DonkeyKongEntity extends Entity {
         super.render(context);
 
         // Renderizar la animación actual
-        renderTexture(context, this, currentAnimation, 0, 0);
+        renderTexture(context, this, currentAnimation, 0, -5);
     }
 
     public void removeAndSpawnBarrels(DrawContext context) {

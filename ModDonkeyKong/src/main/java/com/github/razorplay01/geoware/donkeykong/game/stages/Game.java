@@ -26,7 +26,7 @@ public abstract class Game implements IGame {
     protected final MinecraftClient client = MinecraftClient.getInstance();
     protected final List<Barrel> barrels = new ArrayList<>();
     protected final List<Ladder> ladders = new ArrayList<>();
-    protected final List<Platform> platforms = new ArrayList<>();
+    public static final List<Platform> platforms = new ArrayList<>();
     protected final List<VictoryZone> victoryPlatforms = new ArrayList<>();
     protected final List<Fire> fires = new ArrayList<>();
     protected final List<ItemEntity> items = new ArrayList<>();
@@ -71,7 +71,7 @@ public abstract class Game implements IGame {
         float currentX = startX;
         float currentY = startY;
         for (int i = 0; i < segments; i++) {
-            this.getPlatforms().add(new Platform(currentX, currentY, platformWidth, platformHeight));
+            platforms.add(new Platform(currentX, currentY, platformWidth, platformHeight));
             currentX += directionX * platformWidth;
             currentY += slopeY;
         }

@@ -34,14 +34,14 @@ public class TestGame extends Game {
 
     @Override
     public void init() {
-        if (this.getPlatforms().isEmpty() || this.getPlayer() == null) {
+        if (platforms.isEmpty() || this.getPlayer() == null) {
             createGameMap();
         }
         this.player = new Player(screen.getScreenXPos() + 36f, screen.getScreenYPos() + this.getScreenHeight() - 16 - platforms.getFirst().getHeight(), screen);
         this.donkeyKong = new DonkeyKongEntity(screen.getScreenXPos() + 18f, screen.getScreenYPos() + 52f, screen, 80, 0.7f);
         this.items.add(new HammetItem(screen.getScreenXPos() + 167f, screen.getScreenYPos() + 190f, 13, 13, screen));
         this.items.add(new HammetItem(screen.getScreenXPos() + 16f, screen.getScreenYPos() + 92f, 13, 13, screen));
-        this.fires.add(new Fire(screen.getScreenXPos() + 10f, screen.getScreenYPos() + this.getScreenHeight() - 16 - platforms.getFirst().getHeight(), screen));
+        //this.fires.add(new Fire(screen.getScreenXPos() + 10f, screen.getScreenYPos() + this.getScreenHeight() - 16 - platforms.getFirst().getHeight(), screen));
         this.victoryPlatforms.add(new VictoryZone(screen.getScreenXPos() + 88f, screen.getScreenYPos() + 36f, 48, 20, 0xAAFFFFFF));
     }
 
@@ -56,7 +56,7 @@ public class TestGame extends Game {
             victoryPlatform.render(context);
         }
 
-        getPlatforms().forEach(platform -> platform.render(context));
+        platforms.forEach(platform -> platform.render(context));
         getLadders().forEach(ladder -> ladder.render(context));
         getItems().forEach(item -> item.render(context));
         getParticles().forEach(particle -> particle.render(context));
@@ -250,8 +250,8 @@ public class TestGame extends Game {
         createPlatformLine(screen.getScreenXPos() + 88f, screen.getScreenYPos() + 56f, PLATFORM_WIDTH, PLATFORM_HEIGHT, 3, 1, 0);
         createLadder(screen.getScreenXPos() + 128f, screen.getScreenYPos() + 56f, 8, 28, false);
 
-        this.getPlatforms().add(new Platform(screen.getScreenXPos() + 64f, screen.getScreenYPos() + 24f, 8, 8));
-        this.getPlatforms().add(new Platform(screen.getScreenXPos() + 80f, screen.getScreenYPos() + 24f, 8, 8));
+        platforms.add(new Platform(screen.getScreenXPos() + 64f, screen.getScreenYPos() + 24f, 8, 8));
+        platforms.add(new Platform(screen.getScreenXPos() + 80f, screen.getScreenYPos() + 24f, 8, 8));
         createLadder(screen.getScreenXPos() + 64f, screen.getScreenYPos() + 24f, 8, 60, false);
         createLadder(screen.getScreenXPos() + 80f, screen.getScreenYPos() + 24f, 8, 60, false);
     }

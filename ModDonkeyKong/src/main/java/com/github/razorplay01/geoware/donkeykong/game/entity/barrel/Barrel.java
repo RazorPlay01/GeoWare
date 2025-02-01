@@ -3,6 +3,7 @@ package com.github.razorplay01.geoware.donkeykong.game.entity.barrel;
 import com.github.razorplay01.geoware.donkeykong.game.entity.Entity;
 import com.github.razorplay01.geoware.donkeykong.game.mapobject.Ladder;
 import com.github.razorplay01.geoware.donkeykong.game.mapobject.Platform;
+import com.github.razorplay01.geoware.donkeykong.game.stages.Game;
 import com.github.razorplay01.geoware.donkeykong.game.util.Animation;
 import com.github.razorplay01.geoware.donkeykong.game.util.records.Hitbox;
 import com.github.razorplay01.geoware.donkeykong.game.util.ScreenSide;
@@ -61,7 +62,7 @@ public class Barrel extends Entity {
         xPos = currentLadder.getXPos() + (currentLadder.getWidth() - width) / 2;
 
         if (yPos + height >= currentLadder.getYPos() + currentLadder.getHeight() - PLATFORM_DETECTION_THRESHOLD) {
-            Platform nextPlatform = findNextPlatform(gameScreen.getTestGame().getPlatforms());
+            Platform nextPlatform = findNextPlatform(Game.platforms);
 
             if (nextPlatform != null && Math.abs(nextPlatform.getYPos() - (yPos + height)) <= PLATFORM_DETECTION_THRESHOLD) {
                 yPos = nextPlatform.getYPos() - height;
@@ -91,7 +92,7 @@ public class Barrel extends Entity {
         yPos += velocityY;
         xPos += velocityX;
 
-        for (Platform platform : gameScreen.getTestGame().getPlatforms()) {
+        for (Platform platform : Game.platforms) {
             if (isCollidingWithPlatform(platform)) {
                 yPos = platform.getYPos() - height;
                 velocityY = 0;
@@ -208,7 +209,7 @@ public class Barrel extends Entity {
     public void render(DrawContext context) {
         Animation currentAnimation;
         int xOffset = 0;
-        int yOffset = 0;
+        int yOffset = -1;
 
         if (isOnLadder) {
             currentAnimation = verticalAnimation;

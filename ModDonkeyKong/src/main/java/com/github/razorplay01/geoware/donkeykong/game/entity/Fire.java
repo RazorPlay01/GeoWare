@@ -3,6 +3,7 @@ package com.github.razorplay01.geoware.donkeykong.game.entity;
 import com.github.razorplay01.geoware.donkeykong.game.entity.player.Player;
 import com.github.razorplay01.geoware.donkeykong.game.mapobject.Ladder;
 import com.github.razorplay01.geoware.donkeykong.game.mapobject.Platform;
+import com.github.razorplay01.geoware.donkeykong.game.stages.Game;
 import com.github.razorplay01.geoware.donkeykong.game.util.Animation;
 import com.github.razorplay01.geoware.donkeykong.game.util.records.Hitbox;
 import com.github.razorplay01.geoware.donkeykong.screen.GameScreen;
@@ -141,7 +142,7 @@ public class Fire extends Entity {
         velocityY = Math.min(velocityY, maxFallSpeed);
 
 
-        Platform stepPlatform = findStepPlatform(gameScreen.getTestGame().getPlatforms());
+        Platform stepPlatform = findStepPlatform(Game.platforms);
         if (stepPlatform != null) {
             yPos = stepPlatform.getYPos() - height;
             velocityY = 0;
@@ -164,7 +165,7 @@ public class Fire extends Entity {
 
 
     private void checkPlatformCollisions() {
-        for (Platform platform : gameScreen.getTestGame().getPlatforms()) {
+        for (Platform platform : Game.platforms) {
             if (isCollidingWithPlatform(platform)) {
                 yPos = platform.getYPos() - height;
                 velocityY = 0;
@@ -203,7 +204,7 @@ public class Fire extends Entity {
     }
 
     private Platform findPlatformAbove() {
-        return gameScreen.getTestGame().getPlatforms().stream()
+        return Game.platforms.stream()
                 .filter(platform -> platform.getYPos() <= yPos && // Buscar plataformas por encima o al mismo nivel
                         platform.getXPos() < xPos + width &&
                         platform.getXPos() + platform.getWidth() > xPos)

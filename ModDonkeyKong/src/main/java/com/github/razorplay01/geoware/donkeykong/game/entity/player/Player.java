@@ -8,6 +8,7 @@ import com.github.razorplay01.geoware.donkeykong.game.entity.barrel.Barrel;
 import com.github.razorplay01.geoware.donkeykong.game.entity.Entity;
 import com.github.razorplay01.geoware.donkeykong.game.mapobject.Ladder;
 import com.github.razorplay01.geoware.donkeykong.game.mapobject.Platform;
+import com.github.razorplay01.geoware.donkeykong.game.stages.Game;
 import com.github.razorplay01.geoware.donkeykong.game.util.Animation;
 import com.github.razorplay01.geoware.donkeykong.game.util.FloatingText;
 import com.github.razorplay01.geoware.donkeykong.game.util.records.Hitbox;
@@ -93,7 +94,7 @@ public class Player extends Entity {
         updateState();
         updateHitboxes();
 
-        checkPlatformCollision(gameScreen.getTestGame().getPlatforms());
+        checkPlatformCollision(Game.platforms);
         verifyScreenBoundsCollision();
         checkLadderContact();
         checkBarrelCollision(gameScreen.getTestGame().getBarrels());
@@ -138,7 +139,7 @@ public class Player extends Entity {
             yPos -= playerClimbSpeed;
             isClimbing = true;
         } else if (movingDown) {
-            if (PlayerCollisionHandler.canContinueClimbingDown(this, currentLadder, gameScreen.getTestGame().getPlatforms())) {
+            if (PlayerCollisionHandler.canContinueClimbingDown(this, currentLadder, Game.platforms)) {
                 yPos += playerClimbSpeed;
                 isClimbing = true;
             } else {
