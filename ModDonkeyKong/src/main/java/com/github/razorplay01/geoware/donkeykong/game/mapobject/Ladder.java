@@ -13,20 +13,17 @@ import java.util.List;
 @Getter
 public class Ladder extends MapObject {
     private static final Identifier EXTRA_TEXTURE = Identifier.of(DonkeyKong.MOD_ID, "textures/gui/game/extra.png");
-    public final List<Texture> LADDER_TEXTURES;
-    private final Animation IdleAnimation;
+    public final List<Texture> ladderTextures;
+    private final Animation animation;
     private final boolean canPassThroughPlatform;
-    private final GameScreen gameScreen;
 
-    public Ladder(float xPos, float yPos, float width, float height, boolean canPassThroughPlatform, GameScreen gameScreen) {
-        super(xPos, yPos, width, height, 0xAA00ffec);
+    public Ladder(GameScreen gameScreen, float xPos, float yPos, float width, float height, boolean canPassThroughPlatform) {
+        super(gameScreen, xPos, yPos, width, height, 0xAA00ffec);
         this.canPassThroughPlatform = canPassThroughPlatform;
-        this.gameScreen = gameScreen;
-        int textureHeight = (int) Math.ceil((height / 8.0f) * 12);
 
-        LADDER_TEXTURES = List.of(
-                new Texture(EXTRA_TEXTURE, 64, 58, 14, textureHeight, 79, 227, 1.0f));
-        IdleAnimation = new Animation(LADDER_TEXTURES, 1f, false);
+        int textureHeight = (int) Math.ceil((height / 8.0f) * 12);
+        ladderTextures = List.of(new Texture(EXTRA_TEXTURE, 64, 58, 14, textureHeight, 79, 227, 1.0f));
+        animation = new Animation(ladderTextures, 1f, false);
     }
 
     @Override
@@ -52,7 +49,7 @@ public class Ladder extends MapObject {
 
             // Si no está cubierto por una plataforma, renderizar este segmento
             if (!isCovered) {
-                renderTextureSegment(context, this, IdleAnimation, xOffset, yOffset, segmentY, segmentHeight);
+                renderTextureSegment(context, this, animation, xOffset, yOffset, segmentY, segmentHeight);
             }
         }
 
@@ -102,7 +99,7 @@ public class Ladder extends MapObject {
                 width,
                 height,
                 currentAnimation.getCurrentU(),
-                currentAnimation.getCurrentV() + segmentY, // Ajuste para el segmento
+                (float) currentAnimation.getCurrentV() + segmentY, // Ajuste para el segmento
                 currentAnimation.getFrameWidth(),
                 height,
                 currentTexture.textureWidth(),

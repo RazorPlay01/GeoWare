@@ -2,6 +2,7 @@ package com.github.razorplay01.geoware.donkeykong.game.mapobject;
 
 import com.github.razorplay01.geoware.donkeykong.game.util.Animation;
 import com.github.razorplay01.geoware.donkeykong.game.util.texture.Texture;
+import com.github.razorplay01.geoware.donkeykong.screen.GameScreen;
 import net.minecraft.client.gui.DrawContext;
 
 import static com.github.razorplay01.geoware.donkeykong.game.util.texture.TextureProvider.PLATFORM_TEXTURES;
@@ -9,8 +10,8 @@ import static com.github.razorplay01.geoware.donkeykong.game.util.texture.Textur
 public class Platform extends MapObject {
     private final Animation IdleAnimation = new Animation(PLATFORM_TEXTURES, 1f, false);
 
-    public Platform(float xPos, float yPos, float width, float height) {
-        super(xPos, yPos, width, height, 0xAAcf6800);
+    public Platform(GameScreen gameScreen, float xPos, float yPos, float width, float height) {
+        super(gameScreen, xPos, yPos, width, height, 0xAAcf6800);
     }
 
     @Override

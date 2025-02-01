@@ -71,7 +71,7 @@ public abstract class Game implements IGame {
         float currentX = startX;
         float currentY = startY;
         for (int i = 0; i < segments; i++) {
-            platforms.add(new Platform(currentX, currentY, platformWidth, platformHeight));
+            platforms.add(new Platform(screen, currentX, currentY, platformWidth, platformHeight));
             currentX += directionX * platformWidth;
             currentY += slopeY;
         }
@@ -87,7 +87,7 @@ public abstract class Game implements IGame {
      * @param canPassThroughPlatform Indica si se puede atravesar la plataforma.
      */
     public void createLadder(float xPos, float yPos, float width, float height, boolean canPassThroughPlatform) {
-        this.getLadders().add(new Ladder(xPos, yPos, width, height, canPassThroughPlatform, screen));
+        this.getLadders().add(new Ladder(screen, xPos, yPos, width, height, canPassThroughPlatform));
     }
 
     /**

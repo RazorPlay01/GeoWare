@@ -2,6 +2,7 @@ package com.github.razorplay01.geoware.donkeykong.game.mapobject;
 
 import com.github.razorplay01.geoware.donkeykong.game.util.records.Hitbox;
 import com.github.razorplay01.geoware.donkeykong.game.util.records.IHitbox;
+import com.github.razorplay01.geoware.donkeykong.screen.GameScreen;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.DrawContext;
@@ -18,13 +19,15 @@ public abstract class MapObject implements IHitbox {
     private float yPos;
     private float width;
     private float height;
+    protected final GameScreen gameScreen;
     protected final List<Hitbox> hitboxes = new ArrayList<>();
 
-    protected MapObject(float xPos, float yPos, float width, float height, int debugColor) {
+    protected MapObject(GameScreen gameScreen, float xPos, float yPos, float width, float height, int debugColor) {
         this.xPos = xPos;
         this.yPos = yPos;
         this.width = width;
         this.height = height;
+        this.gameScreen = gameScreen;
         this.hitboxes.add(new Hitbox(Hitbox.HITBOX_DEFAULT, xPos, yPos, width, height, 0, 0, debugColor));
     }
 

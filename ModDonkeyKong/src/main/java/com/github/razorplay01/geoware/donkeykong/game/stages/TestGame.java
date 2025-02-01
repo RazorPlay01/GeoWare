@@ -42,7 +42,7 @@ public class TestGame extends Game {
         this.items.add(new HammetItem(screen.getScreenXPos() + 167f, screen.getScreenYPos() + 190f, 13, 13, screen));
         this.items.add(new HammetItem(screen.getScreenXPos() + 16f, screen.getScreenYPos() + 92f, 13, 13, screen));
         //this.fires.add(new Fire(screen.getScreenXPos() + 10f, screen.getScreenYPos() + this.getScreenHeight() - 16 - platforms.getFirst().getHeight(), screen));
-        this.victoryPlatforms.add(new VictoryZone(screen.getScreenXPos() + 88f, screen.getScreenYPos() + 36f, 48, 20, 0xAAFFFFFF));
+        this.victoryPlatforms.add(new VictoryZone(screen, screen.getScreenXPos() + 88f, screen.getScreenYPos() + 36f, 48, 20, 0xAAFFFFFF));
     }
 
     private long closeScreenTime;
@@ -246,8 +246,8 @@ public class TestGame extends Game {
         createPlatformLine(screen.getScreenXPos() + 88f, screen.getScreenYPos() + 56f, PLATFORM_WIDTH, PLATFORM_HEIGHT, 3, 1, 0);
         createLadder(screen.getScreenXPos() + 128f, screen.getScreenYPos() + 56f, 8, 28, false);
 
-        platforms.add(new Platform(screen.getScreenXPos() + 64f, screen.getScreenYPos() + 24f, 8, 8));
-        platforms.add(new Platform(screen.getScreenXPos() + 80f, screen.getScreenYPos() + 24f, 8, 8));
+        platforms.add(new Platform(screen, screen.getScreenXPos() + 64f, screen.getScreenYPos() + 24f, 8, 8));
+        platforms.add(new Platform(screen, screen.getScreenXPos() + 80f, screen.getScreenYPos() + 24f, 8, 8));
         createLadder(screen.getScreenXPos() + 64f, screen.getScreenYPos() + 24f, 8, 60, false);
         createLadder(screen.getScreenXPos() + 80f, screen.getScreenYPos() + 24f, 8, 60, false);
     }
