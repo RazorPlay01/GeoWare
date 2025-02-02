@@ -34,7 +34,7 @@ public class GameScreen extends Screen {
             this.screenXPos = (width / 2) - (testGame.getScreenWidth() / 2);
             this.screenYPos = (height / 2) - (testGame.getScreenHeight() / 2);
             testGame.init();
-            this.gameStartTime = System.currentTimeMillis();
+                this.gameStartTime = System.currentTimeMillis();
         }
     }
 

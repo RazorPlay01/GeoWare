@@ -20,7 +20,7 @@ public class DonkeyKong implements ModInitializer, ClientModInitializer {
             dispatcher.register(CommandManager.literal("donkeykong")
                     .executes(context -> {
                         if (context.getSource().getPlayer() != null) {
-                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new GameScreen()));
+                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new GameScreen(0,60)));
                         }
                         return 1;
                     }));

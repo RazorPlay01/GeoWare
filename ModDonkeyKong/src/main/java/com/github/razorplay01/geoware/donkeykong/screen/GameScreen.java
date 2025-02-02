@@ -10,12 +10,13 @@ import org.lwjgl.glfw.GLFW;
 
 @Getter
 public class GameScreen extends Screen {
-    private final TestGame testGame = new TestGame(this);
+    private final TestGame testGame;
     private Integer screenXPos;
     private Integer screenYPos;
 
-    public GameScreen() {
+    public GameScreen(int actualScore, int timeLimitSeconds) {
         super(Text.empty());
+        this.testGame = new TestGame(this, actualScore, timeLimitSeconds);
     }
 
     @Override

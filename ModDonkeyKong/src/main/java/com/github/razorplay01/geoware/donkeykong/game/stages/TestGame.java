@@ -28,8 +28,16 @@ public class TestGame extends Game {
     private static final int PLATFORM_WIDTH = 16;
     private static final int PLATFORM_HEIGHT = 8;
 
-    public TestGame(GameScreen screen) {
+    private boolean showingEndGame = false;
+    private long endGameStartTime;
+    private static final long END_GAME_DURATION = 5000;
+    private final int previousScore;
+    private final int timeLimitSeconds;
+
+    public TestGame(GameScreen screen, int previousScore, int timeLimitSeconds) {
         super(Identifier.of(DonkeyKong.MOD_ID, "textures/gui/map_base.png"), screen);
+        this.previousScore = previousScore;
+        this.timeLimitSeconds = timeLimitSeconds;
     }
 
     @Override
@@ -81,7 +89,7 @@ public class TestGame extends Game {
 
         // Renderizar score y tiempo
         renderScore(context, textRenderer, player.getScore(), screen.getScreenXPos() + 10, screen.getScreenYPos() + 10, 1.0f);
-        renderTime(context, textRenderer, 60, screen.getScreenXPos() + 10, screen.getScreenYPos() + 30, 1.0f);
+        renderTime(context, textRenderer);
     }
 
     private void endGameHandle(DrawContext context) {
@@ -92,41 +100,58 @@ public class TestGame extends Game {
             } else {
                 finalScore = player.getScore();
             }
-            closeScreenTime = System.currentTimeMillis(); // Iniciar el temporizador
+            showingEndGame = true;
+            endGameStartTime = System.currentTimeMillis();
         }
 
-        // Mostrar mensaje de fin de juego
-        if (gameEnded) {
-            String endMessage = player.isWinning() ? "You Win!" : "Game Over";
-            String scoreMessage = "Final Score: " + finalScore;
+        if (showingEndGame) {
+            renderEndGameScreen(context);
 
-            // Centrar los mensajes en la pantalla
-            int centerX = screen.getScreenXPos() + getScreenWidth() / 2;
-            int centerY = screen.getScreenYPos() + getScreenHeight() / 2;
-
-            context.drawText(
-                    textRenderer,
-                    endMessage,
-                    centerX - textRenderer.getWidth(endMessage) / 2,
-                    centerY - 10,
-                    0xFFFFFF,
-                    true
-            );
-
-            context.drawText(
-                    textRenderer,
-                    scoreMessage,
-                    centerX - textRenderer.getWidth(scoreMessage) / 2,
-                    centerY + 10,
-                    0xFFFFFF,
-                    true
-            );
-
-            // Cerrar la pantalla después de 3 segundos
-            if (System.currentTimeMillis() - closeScreenTime >= 3000) {
+            // Cerrar la pantalla después del tiempo especificado
+            if (System.currentTimeMillis() - endGameStartTime >= END_GAME_DURATION) {
                 MinecraftClient.getInstance().setScreen(null);
             }
         }
+    }
+
+    public void renderTime(DrawContext context, TextRenderer textRenderer) {
+        renderTime(context, textRenderer, timeLimitSeconds,
+                screen.getScreenXPos() + 10, screen.getScreenYPos() + 30, 1.0f);
+    }
+
+    private void renderEndGameScreen(DrawContext context) {
+        // Fondo semi-transparente
+        context.fill(0, 0, screen.width, screen.height, 0xCC000000);
+
+        int centerX = screen.width / 2;
+        int centerY = screen.height / 2;
+
+        // Preparar mensajes
+        String endMessage = player.isWinning() ? "¡YOU WIN!" : "¡GAME OVER!";
+        String scoreMessage = "Game Score: " + player.getScore();
+        String prevScoreMessage = "Prev Score: " + previousScore;
+        String totalScoreMessage = "Total Score: " + (previousScore + finalScore);
+        String timeMessage = String.format("Closing in %.1f seconds...",
+                (END_GAME_DURATION - (System.currentTimeMillis() - endGameStartTime)) / 1000.0);
+
+        // Calcular anchos para centrado
+        int messageWidth = textRenderer.getWidth(endMessage);
+        int scoreWidth = textRenderer.getWidth(scoreMessage);
+        int prevScoreWidth = textRenderer.getWidth(prevScoreMessage);
+        int totalScoreWidth = textRenderer.getWidth(totalScoreMessage);
+        int timeWidth = textRenderer.getWidth(timeMessage);
+
+        // Renderizar mensajes
+        context.drawText(textRenderer, endMessage,
+                centerX - messageWidth / 2, centerY - 40, 0xFFFFFF00, true);
+        context.drawText(textRenderer, scoreMessage,
+                centerX - scoreWidth / 2, centerY, 0xFFFFFFFF, true);
+        context.drawText(textRenderer, prevScoreMessage,
+                centerX - prevScoreWidth / 2, centerY + 20, 0xFFFFFFFF, true);
+        context.drawText(textRenderer, totalScoreMessage,
+                centerX - totalScoreWidth / 2, centerY + 40, 0xFFFFFFFF, true);
+        context.drawText(textRenderer, timeMessage,
+                centerX - timeWidth / 2, centerY + 70, 0xFFAAAAAA, true);
     }
 
     private void initialDelayHandle(DrawContext context) {
