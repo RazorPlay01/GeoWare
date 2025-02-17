@@ -1,17 +1,19 @@
 package com.github.razorplay01.geoware.tetris.game.piece;
 
+import com.github.razorplay01.geoware.tetris.BlockColor;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.util.Identifier;
 
 @Getter
 @Setter
 public class TetrominoBlock implements Cloneable {
     private int x;
     private int y;
-    private int color;
+    private BlockColor color;
 
-    public TetrominoBlock(int x, int y, int color) {
+    public TetrominoBlock(int x, int y, BlockColor color) {
         this.x = x;
         this.y = y;
         this.color = color;
@@ -27,51 +29,8 @@ public class TetrominoBlock implements Cloneable {
     }
 
     public void render(DrawContext context, int offsetX, int offsetY, int size) {
-        // Dibujar el bloque principal
-        context.fill(
-                offsetX,
-                offsetY,
-                offsetX + size,
-                offsetY + size,
-                this.color
-        );
-
-        // Calcular color más oscuro para el borde
-        int borderColor = darkenColor(this.color);
-
-        // Dibujar los bordes
-        // Borde superior
-        context.fill(
-                offsetX,
-                offsetY,
-                offsetX + size,
-                offsetY + 1,
-                borderColor
-        );
-        // Borde inferior
-        context.fill(
-                offsetX,
-                offsetY + size - 1,
-                offsetX + size,
-                offsetY + size,
-                borderColor
-        );
-        // Borde izquierdo
-        context.fill(
-                offsetX,
-                offsetY,
-                offsetX + 1,
-                offsetY + size,
-                borderColor
-        );
-        // Borde derecho
-        context.fill(
-                offsetX + size - 1,
-                offsetY,
-                offsetX + size,
-                offsetY + size,
-                borderColor
-        );
+        Identifier texture = Identifier.of("tetris", "textures/gui/blocks.png");
+        context.drawTexture(texture, offsetX, offsetY, size, size, this.color.getU(), this.color.getV(), 9, 9, 63, 9);
     }
 
     private int darkenColor(int color) {
