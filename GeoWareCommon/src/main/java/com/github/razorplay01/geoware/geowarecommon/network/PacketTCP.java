@@ -5,10 +5,7 @@ import com.github.razorplay01.geoware.geowarecommon.exceptions.PacketNotFoundExc
 import com.github.razorplay01.geoware.geowarecommon.exceptions.PacketRegistrationException;
 import com.github.razorplay01.geoware.geowarecommon.exceptions.PacketSerializationException;
 import com.github.razorplay01.geoware.geowarecommon.network.network_util.PacketDataSerializer;
-import com.github.razorplay01.geoware.geowarecommon.network.packet.ArkanoidPacket;
-import com.github.razorplay01.geoware.geowarecommon.network.packet.EmptyPacket;
-import com.github.razorplay01.geoware.geowarecommon.network.packet.FinalScorePacket;
-import com.github.razorplay01.geoware.geowarecommon.network.packet.TetrisPacket;
+import com.github.razorplay01.geoware.geowarecommon.network.packet.*;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.io.ByteArrayDataInput;
@@ -30,6 +27,7 @@ public class PacketTCP {
         registerPacket("FinalScorePacket", FinalScorePacket.class);
         registerPacket("ArkanoidPacket", ArkanoidPacket.class);
         registerPacket("TetrisPacket", TetrisPacket.class);
+        registerPacket("HanoiTowersPacket", HanoiTowersPacket.class);
     }
 
     /**

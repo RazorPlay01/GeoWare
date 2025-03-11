@@ -1,7 +1,7 @@
 package com.github.razorplay01.geoware.hanoitowers.game.util;
 
 import lombok.Getter;
-import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 
 public class FloatingText {
@@ -23,7 +23,7 @@ public class FloatingText {
         this.scale = scale;
     }
 
-    public void render(DrawContext context, TextRenderer textRenderer) {
+    public void render(DrawContext context) {
         if (!isActive) return;
 
         long currentTime = System.currentTimeMillis();
@@ -49,7 +49,7 @@ public class FloatingText {
         context.getMatrices().push();
         context.getMatrices().scale(scale, scale, 1.0f);
         context.drawText(
-                textRenderer,
+                MinecraftClient.getInstance().textRenderer,
                 text,
                 (int)(xPos / scale),
                 (int)((yPos - yOffset) / scale),

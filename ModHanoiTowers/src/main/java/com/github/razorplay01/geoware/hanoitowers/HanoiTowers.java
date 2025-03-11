@@ -1,6 +1,6 @@
 package com.github.razorplay01.geoware.hanoitowers;
 
-import com.github.razorplay01.geoware.hanoitowers.screen.HanoiScreen;
+import com.github.razorplay01.geoware.hanoitowers.network.NetworkManager;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -16,11 +16,12 @@ public class HanoiTowers implements ModInitializer, ClientModInitializer {
 
     @Override
     public void onInitialize() {
+        NetworkManager.register();
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
                 dispatcher.register(CommandManager.literal("hanoi")
                         .executes(context -> {
                             if (context.getSource().getPlayer() != null) {
-                                MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new HanoiScreen(5)));
+                                MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new HanoiTowersScreen(0, 5, 60, 5)));
                             }
                             return 1;
                         })));
@@ -28,6 +29,6 @@ public class HanoiTowers implements ModInitializer, ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        // []
+        NetworkManager.registerClient();
     }
 }
