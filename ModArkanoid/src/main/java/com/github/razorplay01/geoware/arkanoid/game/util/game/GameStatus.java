@@ -1,4 +1,4 @@
-package com.github.razorplay01.geoware.arkanoid.game.util;
+package com.github.razorplay01.geoware.arkanoid.game.util.game;
 
 public enum GameStatus {
     /**

@@ -8,7 +8,8 @@ import com.github.razorplay01.geoware.arkanoid.game.entity.powerup.WidthDecrease
 import com.github.razorplay01.geoware.arkanoid.game.entity.powerup.WidthIncreasePowerUp;
 import com.github.razorplay01.geoware.arkanoid.game.mapobject.Brick;
 import com.github.razorplay01.geoware.arkanoid.game.util.BrickColor;
-import com.github.razorplay01.geoware.arkanoid.game.util.GameStatus;
+import com.github.razorplay01.geoware.arkanoid.game.util.game.Game;
+import com.github.razorplay01.geoware.arkanoid.game.util.game.GameStatus;
 import com.github.razorplay01.geoware.arkanoid.game.util.render.CustomDrawContext;
 import lombok.Getter;
 import net.minecraft.client.gui.DrawContext;

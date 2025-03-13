@@ -1,6 +1,6 @@
 package com.github.razorplay01.geoware.arkanoid.game.util.render;
 
-import com.github.razorplay01.geoware.arkanoid.game.util.GameScreen;
+import com.github.razorplay01.geoware.arkanoid.game.util.game.GameScreen;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.VertexConsumerProvider;

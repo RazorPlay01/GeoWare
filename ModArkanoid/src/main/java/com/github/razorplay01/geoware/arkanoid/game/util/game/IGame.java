@@ -1,4 +1,4 @@
-package com.github.razorplay01.geoware.arkanoid.game.stages;
+package com.github.razorplay01.geoware.arkanoid.game.util.game;
 
 import net.minecraft.client.gui.DrawContext;
 

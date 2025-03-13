@@ -1,6 +1,5 @@
-package com.github.razorplay01.geoware.arkanoid.game.util;
+package com.github.razorplay01.geoware.arkanoid.game.util.game;
 
-import com.github.razorplay01.geoware.arkanoid.game.stages.Game;
 import lombok.Getter;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
