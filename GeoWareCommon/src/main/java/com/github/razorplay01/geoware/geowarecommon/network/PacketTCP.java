@@ -8,6 +8,7 @@ import com.github.razorplay01.geoware.geowarecommon.network.network_util.PacketD
 import com.github.razorplay01.geoware.geowarecommon.network.packet.ArkanoidPacket;
 import com.github.razorplay01.geoware.geowarecommon.network.packet.EmptyPacket;
 import com.github.razorplay01.geoware.geowarecommon.network.packet.FinalScorePacket;
+import com.github.razorplay01.geoware.geowarecommon.network.packet.TetrisPacket;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.io.ByteArrayDataInput;
@@ -28,6 +29,7 @@ public class PacketTCP {
         registerPacket("EmptyPacket", EmptyPacket.class);
         registerPacket("FinalScorePacket", FinalScorePacket.class);
         registerPacket("ArkanoidPacket", ArkanoidPacket.class);
+        registerPacket("TetrisPacket", TetrisPacket.class);
     }
 
     /**
