@@ -1,6 +1,7 @@
 package com.github.razorplay01.geoware.arkanoid;
 
-import com.github.razorplay01.geoware.arkanoid.screen.GameScreen;
+import com.github.razorplay01.geoware.arkanoid.network.NetworkManager;
+import com.github.razorplay01.geoware.arkanoid.screen.ArkanoidGameScreen;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -16,18 +17,19 @@ public class Arkanoid implements ModInitializer, ClientModInitializer {
 
     @Override
     public void onInitialize() {
+        NetworkManager.register();
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) ->
                 dispatcher.register(CommandManager.literal("arkanoid")
-                .executes(context -> {
-                    if (context.getSource().getPlayer() != null) {
-                        MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new GameScreen(0, 60)));
-                    }
-                    return 1;
-                })));
+                        .executes(context -> {
+                            if (context.getSource().getPlayer() != null) {
+                                MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new ArkanoidGameScreen(0, 5, 60, 3)));
+                            }
+                            return 1;
+                        })));
     }
 
     @Override
     public void onInitializeClient() {
-        // []
+        NetworkManager.registerClient();
     }
 }
