@@ -4,10 +4,9 @@ import net.minecraft.client.gui.DrawContext;
 
 public interface IGame {
     void init();
+    void update();
     void render(DrawContext context, int mouseX, int mouseY, float delta);
     void renderBackground(DrawContext context, int mouseX, int mouseY, float delta);
-    void updateAndRenderPlayer(DrawContext context, int mouseX, int mouseY, float delta);
-    void createGameMap();
     int getScreenWidth();
     int getScreenHeight();
 }

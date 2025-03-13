@@ -2,20 +2,20 @@ package com.github.razorplay01.geoware.arkanoid.game.entity.powerup;
 
 
 import com.github.razorplay01.geoware.arkanoid.game.entity.Ball;
-import com.github.razorplay01.geoware.arkanoid.game.stages.TestGame;
-import com.github.razorplay01.geoware.arkanoid.screen.GameScreen;
+import com.github.razorplay01.geoware.arkanoid.game.stages.ArkanoidGame;
+import com.github.razorplay01.geoware.arkanoid.screen.ArkanoidGameScreen;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MultiBallPowerUp extends PowerUp {
-    public MultiBallPowerUp(float xPos, float yPos, GameScreen gameScreen) {
+    public MultiBallPowerUp(float xPos, float yPos, ArkanoidGameScreen gameScreen) {
         super(xPos, yPos, 12, 12, gameScreen, 0xFFFF0000);
     }
 
     @Override
     protected void onCollect() {
-        TestGame game = gameScreen.getTestGame();
+        ArkanoidGame game = (ArkanoidGame) gameScreen.getGame();
         List<Ball> currentBalls = new ArrayList<>(game.getBalls());
 
         for (Ball ball : currentBalls) {

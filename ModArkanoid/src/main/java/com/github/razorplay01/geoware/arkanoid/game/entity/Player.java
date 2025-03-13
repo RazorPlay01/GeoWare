@@ -2,7 +2,7 @@ package com.github.razorplay01.geoware.arkanoid.game.entity;
 
 import com.github.razorplay01.geoware.arkanoid.game.util.FloatingText;
 import com.github.razorplay01.geoware.arkanoid.game.util.records.Hitbox;
-import com.github.razorplay01.geoware.arkanoid.screen.GameScreen;
+import com.github.razorplay01.geoware.arkanoid.screen.ArkanoidGameScreen;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.DrawContext;
@@ -19,9 +19,8 @@ public class Player extends Entity {
     private final List<FloatingText> floatingTexts = new ArrayList<>();
     private boolean movingLeft;
     private boolean movingRight;
-    private int score = 0;
 
-    public Player(float xPos, float yPos, float width, float height, GameScreen gameScreen) {
+    public Player(float xPos, float yPos, float width, float height, ArkanoidGameScreen gameScreen) {
         super(xPos, yPos, width, height, gameScreen, 0xFF8300ff);
         this.speed = 1.5f;
         this.gravity = 0f;
@@ -74,16 +73,14 @@ public class Player extends Entity {
         renderHitboxes(context);
         floatingTexts.removeIf(text -> !text.isActive());
         for (FloatingText text : floatingTexts) {
-            text.render(context, gameScreen.getTestGame().getTextRenderer());
+            text.render(context);
         }
     }
 
     public void addScore(float xPos, float yPos, int points) {
-        score += points;
         float textX = xPos + (this.getWidth() / 2);
         float textY = yPos;
-        String scoreText = "" + points;
-        floatingTexts.add(new FloatingText(textX, textY, scoreText, 0.5f));
+        this.gameScreen.getGame().addScore(points, textX, textY);
     }
 
     public void updateHitboxesForResize() {

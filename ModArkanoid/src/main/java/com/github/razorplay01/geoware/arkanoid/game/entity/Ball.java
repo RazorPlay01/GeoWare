@@ -1,19 +1,22 @@
 package com.github.razorplay01.geoware.arkanoid.game.entity;
 
 import com.github.razorplay01.geoware.arkanoid.game.mapobject.Brick;
+import com.github.razorplay01.geoware.arkanoid.game.stages.ArkanoidGame;
 import com.github.razorplay01.geoware.arkanoid.game.util.records.Hitbox;
-import com.github.razorplay01.geoware.arkanoid.screen.GameScreen;
+import com.github.razorplay01.geoware.arkanoid.screen.ArkanoidGameScreen;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.gui.DrawContext;
 
 import java.util.Iterator;
 import java.util.List;
 
 @Getter
+@Setter
 public class Ball extends Entity {
     private static final float SPEED_INCREMENT = 0.05f;
     private static final float MAX_SPEED = 3.0f;
-    private static final float INITIAL_SPEED = 1.5f;
+    private static final float INITIAL_SPEED = 2f;
     private static final float MAX_ANGLE_VARIATION = 0.1f; // Máxima variación aleatoria en radianes (aproximadamente 5.7 grados)
     private static final float MIN_DISTANCE_BETWEEN_COLLISIONS = 8f; // Distancia mínima para permitir otra colisión
 
@@ -23,7 +26,11 @@ public class Ball extends Entity {
     private float lastCollisionX;
     private float lastCollisionY;
 
-    public Ball(float xPos, float yPos, float width, float height, GameScreen gameScreen) {
+    private final ArkanoidGame game;
+
+    private boolean isActive;
+
+    public Ball(float xPos, float yPos, float width, float height, ArkanoidGameScreen gameScreen) {
         super(xPos, yPos, width, height, gameScreen, 0xFFFFFFFF);
         this.currentSpeed = INITIAL_SPEED;
         this.isMoving = true;
@@ -31,6 +38,8 @@ public class Ball extends Entity {
         this.lastCollisionX = xPos;
         this.lastCollisionY = yPos;
         updateVelocities();
+        this.isActive = true;
+        this.game = (ArkanoidGame) gameScreen.getGame();
     }
 
     private void updateVelocities() {
@@ -59,7 +68,7 @@ public class Ball extends Entity {
 
     @Override
     public void update() {
-        if (!isMoving || gameScreen.getTestGame().getPlayer().isLosing()) {
+        if (!isMoving || game.getPlayer().isLosing()) {
             return;
         }
 
@@ -79,7 +88,7 @@ public class Ball extends Entity {
 
     private void checkBrickCollisions(float oldX, float oldY) {
         Hitbox ballHitbox = getDefaultHitbox();
-        List<Brick> bricks = gameScreen.getTestGame().getBricks();
+        List<Brick> bricks = game.getBricks();
         Iterator<Brick> iterator = bricks.iterator();
 
         while (iterator.hasNext()) {
@@ -127,9 +136,9 @@ public class Ball extends Entity {
 
                 // Incrementar velocidad y actualizar puntaje
                 currentSpeed = Math.min(currentSpeed + SPEED_INCREMENT, MAX_SPEED);
-                gameScreen.getTestGame().getPlayer().addScore(brick.getXPos() + brick.getWidth() / 2, brick.getYPos(), 100);
+                game.getPlayer().addScore(brick.getXPos() + brick.getWidth() / 2, brick.getYPos(), 100);
                 iterator.remove();
-                gameScreen.getTestGame().removeBrick(brick);
+                game.removeBrick(brick);
                 break;
             }
         }
@@ -137,10 +146,10 @@ public class Ball extends Entity {
 
     private void checkCollisions() {
         // Colisión con los bordes de la pantalla
-        int screenX = gameScreen.getTestGame().getScreen().getScreenXPos();
-        int screenY = gameScreen.getTestGame().getScreen().getScreenYPos();
-        int screenWidth = gameScreen.getTestGame().getScreenWidth();
-        int screenHeight = gameScreen.getTestGame().getScreenHeight();
+        int screenX = gameScreen.getGameScreenXPos();
+        int screenY = gameScreen.getGameScreenYPos();
+        int screenWidth = gameScreen.getGame().getScreenWidth();
+        int screenHeight = gameScreen.getGame().getScreenHeight();
 
         // Colisión con borde izquierdo
         if (xPos <= screenX) {
@@ -163,12 +172,12 @@ public class Ball extends Entity {
         // Colisión con borde inferior
         else if (yPos + height >= screenY + screenHeight) {
             // En lugar de hacer perder al jugador, eliminamos esta bola
-            gameScreen.getTestGame().removeBall(this);
+            this.isActive = false;
             return;
         }
 
         // Colisión con el jugador
-        Player player = gameScreen.getTestGame().getPlayer();
+        Player player = game.getPlayer();
         if (!player.isLosing()) {
             checkPlayerCollision(player);
         }
@@ -189,10 +198,10 @@ public class Ball extends Entity {
             hitPoint = Math.clamp(hitPoint, -1, 1);
 
             // Ángulo base (90 grados en radianes)
-            float baseAngle = -(float)Math.PI/2;
+            float baseAngle = -(float) Math.PI / 2;
 
             // Máxima desviación del ángulo (en radianes)
-            float maxAngleDeviation = (float)Math.PI/3; // 60 grados
+            float maxAngleDeviation = (float) Math.PI / 3; // 60 grados
 
             // Calcular el nuevo ángulo
             direction = baseAngle + (hitPoint * maxAngleDeviation);
@@ -214,7 +223,7 @@ public class Ball extends Entity {
     }
 
     public void start() {
-        if (!isMoving && !gameScreen.getTestGame().getPlayer().isLosing()) {
+        if (!isMoving && !game.getPlayer().isLosing()) {
             isMoving = true;
         }
     }

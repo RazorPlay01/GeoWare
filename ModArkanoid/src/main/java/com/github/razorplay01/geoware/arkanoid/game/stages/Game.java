@@ -1,139 +1,160 @@
 package com.github.razorplay01.geoware.arkanoid.game.stages;
 
-import com.github.razorplay01.geoware.arkanoid.game.entity.Ball;
-import com.github.razorplay01.geoware.arkanoid.game.entity.Player;
-import com.github.razorplay01.geoware.arkanoid.game.entity.powerup.PowerUp;
-import com.github.razorplay01.geoware.arkanoid.game.mapobject.Brick;
-import com.github.razorplay01.geoware.arkanoid.game.util.BrickColor;
-import com.github.razorplay01.geoware.arkanoid.game.util.GameTask;
-import com.github.razorplay01.geoware.arkanoid.screen.GameScreen;
+import com.github.razorplay01.geoware.arkanoid.game.util.*;
+import com.github.razorplay01.geoware.arkanoid.network.FabricCustomPayload;
+import com.github.razorplay01.geoware.arkanoid.screen.ArkanoidGameScreen;
+import com.github.razorplay01.geoware.geowarecommon.network.packet.FinalScorePacket;
 import lombok.Getter;
 import lombok.Setter;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.screen.Screen;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Getter
 @Setter
 public abstract class Game implements IGame {
-    protected final List<GameTask> scheduledTasks = new ArrayList<>();
-
-    protected static final Map<Character, BrickColor> BRICK_MAPPING = Map.of(
-            'R', BrickColor.RED,
-            'G', BrickColor.GREEN,
-            'B', BrickColor.BLUE,
-            'Y', BrickColor.YELLOW,
-            'M', BrickColor.MAGENTA,
-            'S', BrickColor.GRAY,
-            'C', BrickColor.CYAN
-    );
+    protected final ArkanoidGameScreen screen;
     protected final MinecraftClient client = MinecraftClient.getInstance();
     private final TextRenderer textRenderer = client.textRenderer;
-    protected final List<Brick> bricks = new ArrayList<>();
-    protected Player player;
-    protected List<Ball> balls = new ArrayList<>();
-    protected List<PowerUp> powerUps = new ArrayList<>();
 
-    protected final Identifier backgroundImage;
-    protected final GameScreen screen;
+    protected final Timer initDelay;
+    protected final Timer gameDutarion;
+    protected final Timer finalTimer;
+    protected List<GameTask> tasks = new ArrayList<>();
+    protected List<GameTask> newTasks = new ArrayList<>();
+    protected GameStatus status;
+    protected final int prevScore;
 
-    protected long startTime = 0;
-    protected int totalSeconds;
-    protected int displayValue;
-    protected boolean timeInitialized = false;
+    protected final List<FloatingText> floatingTexts = new ArrayList<>();
+    protected int gameScore;
 
-    protected boolean gameStarted = false;
-    protected int initialDelay;
-    protected long gameStartTime;
-    protected boolean gameEnded = false;
-    protected int finalScore = 0;
-
-    protected Game(Identifier backgroundImage, GameScreen screen) {
-        this.backgroundImage = backgroundImage;
-        this.screen = screen;
+    protected Game(Screen screen, int initDelay, int timeLimitSeconds, int prevScore) {
+        this.screen = (ArkanoidGameScreen) screen;
+        this.initDelay = new Timer(initDelay * 1000L);
+        this.gameDutarion = new Timer(timeLimitSeconds * 1000L);
+        this.finalTimer = new Timer(5000L);
+        this.prevScore = prevScore;
     }
 
-
-    /**
-     * Renderiza la puntuación con ceros a la izquierda.
-     *
-     * @param context El contexto de dibujo.
-     * @param score   La puntuación a renderizar.
-     * @param x       La coordenada X donde se renderizará la puntuación.
-     * @param y       La coordenada Y donde se renderizará la puntuación.
-     * @param scale   La escala del texto.
-     */
-    public void renderScore(DrawContext context, TextRenderer textRenderer, int score, int x, int y, float scale) {
-        String scoreText = String.format("%06d", score);
-        context.getMatrices().push();
-        context.getMatrices().scale(scale, scale, 1.0f);
-        context.drawText(
-                textRenderer,
-                scoreText,
-                (int) (x / scale),
-                (int) (y / scale),
-                0xFFFFFF,
-                true
-        );
-        context.getMatrices().pop();
+    @Override
+    public void init() {
+        this.status = GameStatus.INITIALIZING;
     }
 
-    /**
-     * Renderiza el tiempo con el formato especificado (SS00).
-     *
-     * @param context      El contexto de dibujo.
-     * @param totalSeconds La cantidad total de segundos que durará el temporizador.
-     * @param x            La coordenada X donde se renderizará el tiempo.
-     * @param y            La coordenada Y donde se renderizará el tiempo.
-     * @param scale        La escala del texto.
-     */
-    public void renderTime(DrawContext context, TextRenderer textRenderer, int totalSeconds, int x, int y, float scale) {
-        if (!timeInitialized) {
-            this.totalSeconds = totalSeconds;
-            this.displayValue = (totalSeconds / 2) * 100;
-            this.timeInitialized = true;
-        }
-
-        if (gameStarted && startTime == 0) {
-            this.startTime = System.currentTimeMillis();
-        }
-
-        if (gameStarted && !gameEnded) {
-            long currentTime = System.currentTimeMillis();
-            long elapsedTimeSeconds = (currentTime - startTime) / 1000;
-
-            int newValue = (totalSeconds - (int) elapsedTimeSeconds) / 2 * 100;
-            this.displayValue = Math.max(newValue, 0);
-
-            if (this.displayValue <= 0) {
-                player.setLosing(true);
+    @Override
+    public void update() {
+        switch (status) {
+            case INITIALIZING -> {
+                if (!this.initDelay.isRunning()) {
+                    this.initDelay.start();
+                }
+                if (this.initDelay.isFinished()) {
+                    this.status = GameStatus.ACTIVE;
+                }
+            }
+            case ACTIVE -> {
+                if (!this.gameDutarion.isRunning()) {
+                    this.gameDutarion.start();
+                }
+                if (this.gameDutarion.isFinished()) {
+                    this.status = GameStatus.ENDING;
+                }
+            }
+            case ENDING -> {
+                if (!this.finalTimer.isRunning()) {
+                    this.finalTimer.start();
+                }
+                if (this.finalTimer.isFinished()) {
+                    this.status = GameStatus.FINISHED;
+                    this.screen.close();
+                    ClientPlayNetworking.send(new FabricCustomPayload(new FinalScorePacket(this.gameScore)));
+                }
+            }
+            default -> {
+                // []
             }
         }
 
-        String timeText = String.format("%04d", this.displayValue);
-        context.getMatrices().push();
-        context.getMatrices().scale(scale, scale, 1.0f);
-        context.drawText(
-                textRenderer,
-                timeText,
-                (int) (x / scale),
-                (int) (y / scale),
-                0xFFFFFF,
-                true
-        );
-        context.getMatrices().pop();
+
+        // Update all FloatingTexts
+        floatingTexts.removeIf(text -> !text.isActive());
+        // Update all tasks
+        List<GameTask> tasksSnapshot = new ArrayList<>(tasks);
+        List<GameTask> tasksToRemove = new ArrayList<>();
+
+        for (GameTask task : tasksSnapshot) {
+            if (task.update()) {
+                tasksToRemove.add(task);
+            }
+        }
+        tasks.removeAll(tasksToRemove);
+
+        // Transferir nuevas tareas y limpiar newTasks
+        if (!newTasks.isEmpty()) {
+            tasks.addAll(newTasks);
+            newTasks.clear(); // Limpiar para evitar duplicados
+        }
     }
 
-    public void addScheduledTask(Runnable task, int ticks) {
-        scheduledTasks.add(new GameTask(task, ticks));
+    public void scheduleTask(Runnable action, long delayMs) {
+        newTasks.add(new GameTask(action, delayMs)); // Siempre agregar a newTasks
     }
 
-    protected void updateScheduledTasks() {
-        scheduledTasks.removeIf(GameTask::update);
+    public void pause() {
+        if (this.status == GameStatus.NOT_INITIALIZE) {
+            return;
+        }
+        this.initDelay.pause();
+        this.gameDutarion.pause();
+        this.finalTimer.pause();
+        this.status = GameStatus.PAUSED;
+    }
+
+
+    public void resume() {
+        if (this.status == GameStatus.NOT_INITIALIZE) {
+            return;
+        }
+        this.initDelay.resume();
+        this.gameDutarion.resume();
+        this.finalTimer.resume();
+        if (this.initDelay.isRunning()) {
+            this.status = GameStatus.INITIALIZING;
+        } else if (this.gameDutarion.isRunning()) {
+            this.status = GameStatus.ACTIVE;
+        } else if (this.finalTimer.isRunning()) {
+            this.status = GameStatus.ENDING;
+        } else {
+            this.status = GameStatus.NOT_INITIALIZE;
+        }
+    }
+
+    //game.update();
+    //game.scheduleTask(() -> System.out.println("¡Tarea completada después de 3 segundos!"), 3000);
+
+    /**
+     * Añade puntos al gameScore
+     *
+     * @param points Cantidad de puntos a añadir
+     */
+    public void addScore(int points, float xPos, float yPos) {
+        gameScore += points;
+        String scoreText = "" + points;
+        floatingTexts.add(new FloatingText(xPos, yPos, scoreText, 0.8f));
+    }
+
+    public void keyPressed(int keyCode, int scanCode, int modifiers) {
+
+    }
+
+    public void handleMouseInput(double mouseX, double mouseY, int button) {
+
+    }
+
+    public void keyReleased(int keyCode, int scanCode, int modifiers) {
     }
 }

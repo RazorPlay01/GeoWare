@@ -6,7 +6,7 @@ import com.github.razorplay01.geoware.arkanoid.game.util.ScreenSide;
 import com.github.razorplay01.geoware.arkanoid.game.util.records.Hitbox;
 import com.github.razorplay01.geoware.arkanoid.game.util.records.IHitbox;
 import com.github.razorplay01.geoware.arkanoid.game.util.texture.Texture;
-import com.github.razorplay01.geoware.arkanoid.screen.GameScreen;
+import com.github.razorplay01.geoware.arkanoid.screen.ArkanoidGameScreen;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.DrawContext;
@@ -27,7 +27,7 @@ public abstract class Entity implements IHitbox {
     protected float velocityX = 0;
     protected float velocityY = 0;
 
-    protected GameScreen gameScreen;
+    protected ArkanoidGameScreen gameScreen;
 
     protected final List<Hitbox> hitboxes = new ArrayList<>();
 
@@ -38,7 +38,7 @@ public abstract class Entity implements IHitbox {
 
     protected int color;
 
-    protected Entity(float xPos, float yPos, float width, float height, GameScreen gameScreen, int debugColor) {
+    protected Entity(float xPos, float yPos, float width, float height, ArkanoidGameScreen gameScreen, int debugColor) {
         this.xPos = xPos;
         this.yPos = yPos;
         this.width = width;
@@ -119,10 +119,10 @@ public abstract class Entity implements IHitbox {
      * Maneja la colisión con los bordes de la pantalla.
      */
     protected void verifyScreenBoundsCollision() {
-        int screenX = gameScreen.getTestGame().getScreen().getScreenXPos();
-        int screenY = gameScreen.getTestGame().getScreen().getScreenYPos();
-        int screenWidth = gameScreen.getTestGame().getScreenWidth();
-        int screenHeight = gameScreen.getTestGame().getScreenHeight();
+        int screenX = gameScreen.getGame().getScreen().getGameScreenXPos();
+        int screenY = gameScreen.getGame().getScreen().getGameScreenYPos();
+        int screenWidth = gameScreen.getGame().getScreenWidth();
+        int screenHeight = gameScreen.getGame().getScreenHeight();
 
         // Colisión con el borde izquierdo
         if (xPos < screenX) {
@@ -158,13 +158,13 @@ public abstract class Entity implements IHitbox {
      *
      * @param side El lado de la pantalla con el que colisiona: "left", "right", "top", o "bottom".
      */
-    protected void onScreenBoundaryCollision(ScreenSide side) {
-        if (side.equals(ScreenSide.LEFT) || side.equals(ScreenSide.RIGHT)) {
-            velocityX = 0;
-        } else if (side.equals(ScreenSide.TOP) || side.equals(ScreenSide.BOTTOM)) {
-            velocityY = 0;
+        protected void onScreenBoundaryCollision(ScreenSide side) {
+            if (side.equals(ScreenSide.LEFT) || side.equals(ScreenSide.RIGHT)) {
+                velocityX = 0;
+            } else if (side.equals(ScreenSide.TOP) || side.equals(ScreenSide.BOTTOM)) {
+                velocityY = 0;
+            }
         }
-    }
 
     /**
      * Obtiene un `Hitbox` por su nombre.
