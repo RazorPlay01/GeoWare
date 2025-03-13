@@ -8,11 +8,19 @@ allprojects {
 subprojects {
     apply plugin: 'java'
 
+    repositories {
+        flatDir {
+            dirs("libs")
+        }
+    }
+
     dependencies {
         compileOnly 'org.projectlombok:lombok:1.18.36'
         annotationProcessor 'org.projectlombok:lombok:1.18.36'
 
         testCompileOnly 'org.projectlombok:lombok:1.18.36'
         testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
+
+        implementation files('libs/PacketHandler-1.0-SNAPSHOT.jar')
     }
 }

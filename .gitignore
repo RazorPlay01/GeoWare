@@ -2,6 +2,9 @@
 .idea
 build
 
+libs
+/libs
+
 /GeoWareCommon/build
 
 /GeoWarePlugin/.gradle
@@ -32,3 +35,10 @@ build
 /ModHanoiTowers/.idea
 /ModHanoiTowers/build
 /ModHanoiTowers/run
+
+/ModBubblePuzzle/build
+/ModBubblePuzzle/.gradle
+/ModBubblePuzzle/.idea
+/ModBubblePuzzle/build
+/ModBubblePuzzle/run
+/ModBubblePuzzle/libs

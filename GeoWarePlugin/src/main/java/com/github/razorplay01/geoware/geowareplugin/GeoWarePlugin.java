@@ -26,7 +26,7 @@ public final class GeoWarePlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        if (!setupEconomy() ) {
+        if (!setupEconomy()) {
             getLogger().severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
             getServer().getPluginManager().disablePlugin(this);
             return;
@@ -60,26 +60,26 @@ public final class GeoWarePlugin extends JavaPlugin {
     }
 
     public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
-        if(!(sender instanceof Player)) {
+        if (!(sender instanceof Player)) {
             getLogger().info("Only players are supported for this Example Plugin, but you should not do this!!!");
             return true;
         }
 
         Player player = (Player) sender;
 
-        if(command.getLabel().equals("test-economy")) {
+        if (command.getLabel().equals("test-economy")) {
             // Lets give the player 1.05 currency (note that SOME economic plugins require rounding!)
             sender.sendMessage(String.format("You have %s", econ.format(econ.getBalance(player.getName()))));
             EconomyResponse r = econ.depositPlayer(player, 1.05);
-            if(r.transactionSuccess()) {
+            if (r.transactionSuccess()) {
                 sender.sendMessage(String.format("You were given %s and now have %s", econ.format(r.amount), econ.format(r.balance)));
             } else {
                 sender.sendMessage(String.format("An error occured: %s", r.errorMessage));
             }
             return true;
-        } else if(command.getLabel().equals("test-permission")) {
+        } else if (command.getLabel().equals("test-permission")) {
             // Lets test if user has the node "example.plugin.awesome" to determine if they are awesome or just suck
-            if(perms.has(player, "example.plugin.awesome")) {
+            if (perms.has(player, "example.plugin.awesome")) {
                 sender.sendMessage("You are awesome!");
             } else {
                 sender.sendMessage("You suck!");
