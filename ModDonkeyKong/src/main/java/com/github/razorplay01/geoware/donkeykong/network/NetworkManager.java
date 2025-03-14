@@ -4,6 +4,7 @@ import com.github.razorplay01.geoware.donkeykong.DonkeyKong;
 import com.github.razorplay01.geoware.donkeykong.DonkeyKongScreen;
 import com.github.razorplay01.geoware.geowarecommon.network.IPacket;
 import com.github.razorplay01.geoware.geowarecommon.network.packet.DonkeyKongPacket;
+import com.github.razorplay01.geoware.geowarecommon.network.packet.EmptyPacket;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;

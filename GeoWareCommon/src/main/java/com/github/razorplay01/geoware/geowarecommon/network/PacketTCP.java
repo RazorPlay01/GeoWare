@@ -19,7 +19,12 @@ import java.util.Optional;
  * This utility class manages a registry of packet types and provides methods for packet handling.
  */
 public class PacketTCP {
-    public static final String PACKET_CHANNEL = "razorplay01:packets_channel";
+    public static final String PACKET_BASE_CHANNEL = "razorplay01:packets_channel";
+    public static final String PACKET_ARKANOID_CHANNEL = "arkanoid:packets_channel";
+    public static final String PACKET_BUBBLEPUZZLE_CHANNEL = "bubblepuzzle:packets_channel";
+    public static final String PACKET_DONKEYKONG_CHANNEL = "donkeykong:packets_channel";
+    public static final String PACKET_HANOITOWERS_CHANNEL = "hanoitowers:packets_channel";
+    public static final String PACKET_TETRIS_CHANNEL = "tetris:packets_channel";
     private static final BiMap<String, Class<? extends IPacket>> packetRegistry = HashBiMap.create();
 
     static {

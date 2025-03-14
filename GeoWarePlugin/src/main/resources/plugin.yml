@@ -7,7 +7,6 @@ authors: [ RazorPlay ]
 website: https://github.com/RazorPlay01
 
 commands:
-  test:
-    aliases:
-      - tst
-    description: Test basic command
+  2dgame:
+    description: Envía un packet de juego 2D a jugadores
+    usage: /<command> <target> <game> [parametros]

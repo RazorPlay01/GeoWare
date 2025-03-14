@@ -1,6 +1,5 @@
 package com.github.razorplay01.geoware.donkeykong.util.game;
 
-import com.github.razorplay01.geoware.donkeykong.network.FabricCustomPayload;
 import com.github.razorplay01.geoware.donkeykong.util.FloatingText;
 import com.github.razorplay01.geoware.donkeykong.util.GameTask;
 import com.github.razorplay01.geoware.donkeykong.util.Timer;
@@ -72,7 +71,7 @@ public abstract class Game implements IGame {
                 if (this.finalTimer.isFinished()) {
                     this.status = GameStatus.FINISHED;
                     this.screen.close();
-                    ClientPlayNetworking.send(new FabricCustomPayload(new FinalScorePacket(this.gameScore)));
+                    //ClientPlayNetworking.send(new FabricCustomPayload(new FinalScorePacket(this.gameScore)));
                 }
             }
             default -> {

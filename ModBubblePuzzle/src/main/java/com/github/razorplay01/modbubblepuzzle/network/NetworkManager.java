@@ -2,7 +2,6 @@ package com.github.razorplay01.modbubblepuzzle.network;
 
 import com.github.razorplay01.geoware.geowarecommon.network.IPacket;
 import com.github.razorplay01.geoware.geowarecommon.network.packet.BubblePuzzlePacket;
-import com.github.razorplay01.geoware.geowarecommon.network.packet.TetrisPacket;
 import com.github.razorplay01.modbubblepuzzle.BubblePuzzleScreen;
 import com.github.razorplay01.modbubblepuzzle.ModBubblePuzzle;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -44,7 +43,6 @@ public class NetworkManager {
     }
 
     public static void registerServer() {
-
         ServerPlayNetworking.registerGlobalReceiver(FabricCustomPayload.CUSTOM_PAYLOAD_ID, (payload, context) -> {
             IPacket packet = payload.packet();
             ModBubblePuzzle.LOGGER.info("Packet received from client: {}", packet.getPacketId());

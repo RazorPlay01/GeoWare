@@ -1,92 +1,57 @@
 package com.github.razorplay01.geoware.geowareplugin;
 
+import com.github.razorplay01.geoware.geowarecommon.network.PacketTCP;
+import com.github.razorplay01.geoware.geowareplugin.command.TwoDGameCommand;
+import com.github.razorplay01.geoware.geowareplugin.network.PacketListener;
+import com.github.razorplay01.geoware.geowareplugin.util.UtilMessage;
 import lombok.Getter;
-import net.milkbowl.vault.chat.Chat;
-import net.milkbowl.vault.economy.Economy;
-import net.milkbowl.vault.economy.EconomyResponse;
-import net.milkbowl.vault.permission.Permission;
-
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 @Getter
 public final class GeoWarePlugin extends JavaPlugin {
-
-    private static Economy econ = null;
-    private static Permission perms = null;
-    private static Chat chat = null;
-
-    @Override
-    public void onDisable() {
-        getLogger().info(String.format("[%s] Disabled Version %s", getDescription().getName(), getDescription().getVersion()));
-    }
+    public static final String PLUGIN_NAME = "GeoWarePlugin";
+    public static final Logger LOGGER = LoggerFactory.getLogger(PLUGIN_NAME);
 
     @Override
     public void onEnable() {
-        if (!setupEconomy()) {
-            getLogger().severe(String.format("[%s] - Disabled due to no Vault dependency found!", getDescription().getName()));
-            getServer().getPluginManager().disablePlugin(this);
-            return;
-        }
-        setupPermissions();
-        setupChat();
+        //Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
+
+        registerCommands();
+
+        registerPacketChannels();
+        UtilMessage.sendStartupMessage(this);
     }
 
-    private boolean setupEconomy() {
-        if (getServer().getPluginManager().getPlugin("Vault") == null) {
-            return false;
-        }
-        RegisteredServiceProvider<Economy> rsp = getServer().getServicesManager().getRegistration(Economy.class);
-        if (rsp == null) {
-            return false;
-        }
-        econ = rsp.getProvider();
-        return econ != null;
+    private void registerPacketChannels() {
+        getServer().getMessenger().registerOutgoingPluginChannel(this, PacketTCP.PACKET_BASE_CHANNEL);
+        getServer().getMessenger().registerIncomingPluginChannel(this, PacketTCP.PACKET_BASE_CHANNEL, new PacketListener());
+        getServer().getMessenger().registerOutgoingPluginChannel(this, PacketTCP.PACKET_ARKANOID_CHANNEL);
+        getServer().getMessenger().registerIncomingPluginChannel(this, PacketTCP.PACKET_ARKANOID_CHANNEL, new PacketListener());
+        getServer().getMessenger().registerOutgoingPluginChannel(this, PacketTCP.PACKET_BUBBLEPUZZLE_CHANNEL);
+        getServer().getMessenger().registerIncomingPluginChannel(this, PacketTCP.PACKET_BUBBLEPUZZLE_CHANNEL, new PacketListener());
+        getServer().getMessenger().registerOutgoingPluginChannel(this, PacketTCP.PACKET_DONKEYKONG_CHANNEL);
+        getServer().getMessenger().registerIncomingPluginChannel(this, PacketTCP.PACKET_DONKEYKONG_CHANNEL, new PacketListener());
+        getServer().getMessenger().registerOutgoingPluginChannel(this, PacketTCP.PACKET_HANOITOWERS_CHANNEL);
+        getServer().getMessenger().registerIncomingPluginChannel(this, PacketTCP.PACKET_HANOITOWERS_CHANNEL, new PacketListener());
+        getServer().getMessenger().registerOutgoingPluginChannel(this, PacketTCP.PACKET_TETRIS_CHANNEL);
+        getServer().getMessenger().registerIncomingPluginChannel(this, PacketTCP.PACKET_TETRIS_CHANNEL, new PacketListener());
     }
 
-    private boolean setupChat() {
-        RegisteredServiceProvider<Chat> rsp = getServer().getServicesManager().getRegistration(Chat.class);
-        chat = rsp.getProvider();
-        return chat != null;
+    @Override
+    public void onDisable() {
+        UtilMessage.sendShutdownMessage(this);
     }
 
-    private boolean setupPermissions() {
-        RegisteredServiceProvider<Permission> rsp = getServer().getServicesManager().getRegistration(Permission.class);
-        perms = rsp.getProvider();
-        return perms != null;
+    public static GeoWarePlugin getInstance() {
+        return getPlugin(GeoWarePlugin.class);
     }
 
-    public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
-        if (!(sender instanceof Player)) {
-            getLogger().info("Only players are supported for this Example Plugin, but you should not do this!!!");
-            return true;
-        }
-
-        Player player = (Player) sender;
-
-        if (command.getLabel().equals("test-economy")) {
-            // Lets give the player 1.05 currency (note that SOME economic plugins require rounding!)
-            sender.sendMessage(String.format("You have %s", econ.format(econ.getBalance(player.getName()))));
-            EconomyResponse r = econ.depositPlayer(player, 1.05);
-            if (r.transactionSuccess()) {
-                sender.sendMessage(String.format("You were given %s and now have %s", econ.format(r.amount), econ.format(r.balance)));
-            } else {
-                sender.sendMessage(String.format("An error occured: %s", r.errorMessage));
-            }
-            return true;
-        } else if (command.getLabel().equals("test-permission")) {
-            // Lets test if user has the node "example.plugin.awesome" to determine if they are awesome or just suck
-            if (perms.has(player, "example.plugin.awesome")) {
-                sender.sendMessage("You are awesome!");
-            } else {
-                sender.sendMessage("You suck!");
-            }
-            return true;
-        } else {
-            return false;
-        }
+    private void registerCommands() {
+        TwoDGameCommand command = new TwoDGameCommand();
+        getCommand("2dgame").setExecutor(command);
+        getCommand("2dgame").setTabCompleter(command);
     }
 }

@@ -30,6 +30,7 @@ public class DonkeyKongPacket implements IPacket {
     public void write(PacketDataSerializer serializer) throws PacketSerializationException {
         serializer.writeInt(this.score);
         serializer.writeInt(this.timeLimitSeconds);
+        serializer.writeInt(this.spawnInterval);
         serializer.writeFloat(this.spawnProbability);
     }
 

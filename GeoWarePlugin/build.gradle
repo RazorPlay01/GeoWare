@@ -20,12 +20,13 @@ repositories {
     }
     maven { url "https://repo.dmulloy2.net/repository/public/" }
     maven { url 'https://jitpack.io' }
+    maven { url = "https://repo.aikar.co/content/groups/aikar/" }
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
     paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
-    compileOnly "com.github.MilkBowl:VaultAPI:1.7"
+    implementation('com.google.code.findbugs:jsr305:3.0.2')
 
     implementation project(':GeoWareCommon')
 }
@@ -40,15 +41,8 @@ tasks {
 }
 
 shadowJar {
-    // Configuración para generar un único JAR con todas las dependencias
-    archiveClassifier.set('') // Esto asegura que el jar final no tenga un sufijo como "-all"
-
-    // Incluir las clases del módulo común
-    dependencies {
-        include(dependency(":GeoWareCommon"))
-    }
-
-    // Asegúrate de incluir las dependencias necesarias
+    archiveClassifier.set('')
+    mergeServiceFiles()
     configurations = [project.configurations.runtimeClasspath]
 }
 

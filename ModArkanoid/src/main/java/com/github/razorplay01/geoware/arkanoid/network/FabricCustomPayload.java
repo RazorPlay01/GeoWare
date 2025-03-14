@@ -12,7 +12,7 @@ import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
 
 public record FabricCustomPayload(IPacket packet) implements CustomPayload {
-    public static final Id<FabricCustomPayload> CUSTOM_PAYLOAD_ID = new Id<>(Identifier.of(PacketTCP.PACKET_CHANNEL));
+    public static final Id<FabricCustomPayload> CUSTOM_PAYLOAD_ID = new Id<>(Identifier.of(PacketTCP.PACKET_ARKANOID_CHANNEL));
     public static final PacketCodec<RegistryByteBuf, FabricCustomPayload> CODEC = PacketCodec.tuple(
             new PacketCodec<ByteBuf, IPacket>() {
                 public IPacket decode(ByteBuf byteBuf) {
