@@ -1,7 +1,7 @@
 package com.github.razorplay01.geoware.donkeykong.game.entity;
 
 import com.github.razorplay01.geoware.donkeykong.game.util.Animation;
-import com.github.razorplay01.geoware.donkeykong.screen.GameScreen;
+import com.github.razorplay01.geoware.donkeykong.util.game.GameScreen;
 import net.minecraft.client.gui.DrawContext;
 
 public class Particle extends Entity {

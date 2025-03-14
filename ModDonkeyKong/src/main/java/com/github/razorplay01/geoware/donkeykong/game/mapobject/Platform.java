@@ -2,7 +2,7 @@ package com.github.razorplay01.geoware.donkeykong.game.mapobject;
 
 import com.github.razorplay01.geoware.donkeykong.game.util.Animation;
 import com.github.razorplay01.geoware.donkeykong.game.util.texture.Texture;
-import com.github.razorplay01.geoware.donkeykong.screen.GameScreen;
+import com.github.razorplay01.geoware.donkeykong.util.game.GameScreen;
 import net.minecraft.client.gui.DrawContext;
 
 import static com.github.razorplay01.geoware.donkeykong.game.util.texture.TextureProvider.PLATFORM_TEXTURES;

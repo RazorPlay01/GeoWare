@@ -8,11 +8,10 @@ import com.github.razorplay01.geoware.donkeykong.game.entity.barrel.Barrel;
 import com.github.razorplay01.geoware.donkeykong.game.entity.Entity;
 import com.github.razorplay01.geoware.donkeykong.game.mapobject.Ladder;
 import com.github.razorplay01.geoware.donkeykong.game.mapobject.Platform;
-import com.github.razorplay01.geoware.donkeykong.game.stages.Game;
 import com.github.razorplay01.geoware.donkeykong.game.util.Animation;
 import com.github.razorplay01.geoware.donkeykong.game.util.FloatingText;
 import com.github.razorplay01.geoware.donkeykong.game.util.records.Hitbox;
-import com.github.razorplay01.geoware.donkeykong.screen.GameScreen;
+import com.github.razorplay01.geoware.donkeykong.util.game.GameScreen;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.DrawContext;
@@ -45,7 +44,6 @@ public class Player extends Entity {
     private boolean isClimbing;
 
     // Puntuación del jugador
-    private int score = 0;
     private boolean isBarrelJumpProcessed = false;
 
     private boolean hasHammer = false;
@@ -94,11 +92,11 @@ public class Player extends Entity {
         updateState();
         updateHitboxes();
 
-        checkPlatformCollision(gameScreen.getTestGame().getPlatforms());
+        checkPlatformCollision(game.getPlatforms());
         verifyScreenBoundsCollision();
         checkLadderContact();
-        checkBarrelCollision(gameScreen.getTestGame().getBarrels());
-        checkHammerItemCollision(gameScreen.getTestGame().getItems());
+        checkBarrelCollision(game.getBarrels());
+        checkHammerItemCollision(game.getItems());
     }
 
     private void updateMovement() {
@@ -139,7 +137,7 @@ public class Player extends Entity {
             yPos -= playerClimbSpeed;
             isClimbing = true;
         } else if (movingDown) {
-            if (PlayerCollisionHandler.canContinueClimbingDown(this, currentLadder, gameScreen.getTestGame().getPlatforms())) {
+            if (PlayerCollisionHandler.canContinueClimbingDown(this, currentLadder, game.getPlatforms())) {
                 yPos += playerClimbSpeed;
                 isClimbing = true;
             } else {
@@ -273,12 +271,11 @@ public class Player extends Entity {
         if (result.hasCollision()) {
             if (result.isJumpOver()) {
                 if (!isBarrelJumpProcessed) {
-                    addScore(100);
+                    game.addScore(100, xPos, yPos);
                     isBarrelJumpProcessed = true;
                 }
             } else {
-                //TODO: disable for test
-                //setLosing(true);
+                setLosing(true);
             }
         } else {
             if (currentState != PlayerState.JUMPING) {
@@ -344,22 +341,9 @@ public class Player extends Entity {
 
         floatingTexts.removeIf(text -> !text.isActive());
         for (FloatingText text : floatingTexts) {
-            text.render(context, gameScreen.getTestGame().getTextRenderer());
+            text.render(context, game.getTextRenderer());
         }
         super.render(context);
-    }
-
-    /**
-     * Añade puntos al score yPos muestra un texto flotante con la cantidad
-     *
-     * @param points Cantidad de puntos a añadir
-     */
-    public void addScore(int points) {
-        score += points;
-        float textX = xPos + (this.getWidth() / 2);
-        float textY = yPos;
-        String scoreText = "" + points;
-        floatingTexts.add(new FloatingText(textX, textY, scoreText, 0.5f));
     }
 
     private void updateState() {
@@ -489,12 +473,12 @@ public class Player extends Entity {
 
                 float particleX = barrel.getXPos() + (barrel.getWidth() - 16) / 2;
                 float particleY = barrel.getYPos() + (barrel.getHeight() - 16) / 2;
-                gameScreen.getTestGame().getParticles().add(
+                game.getParticles().add(
                         new Particle(particleX, particleY, 16, 16, gameScreen,
                                 new Animation(PARTICLE_TEXTURES, 0.5f, false)));
 
+                game.addScore(200, barrel.getXPos(), barrel.getYPos());
                 barrel.setRemove(true);
-                addScore(200);
             }
         }
     }

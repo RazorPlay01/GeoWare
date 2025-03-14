@@ -1,7 +1,7 @@
 package com.github.razorplay01.geoware.donkeykong.game.entity.item;
 
 import com.github.razorplay01.geoware.donkeykong.game.entity.Entity;
-import com.github.razorplay01.geoware.donkeykong.screen.GameScreen;
+import com.github.razorplay01.geoware.donkeykong.util.game.GameScreen;
 
 public abstract class ItemEntity extends Entity {
     protected ItemEntity(float xPos, float yPos, float width, float height, GameScreen gameScreen, int debugColor) {

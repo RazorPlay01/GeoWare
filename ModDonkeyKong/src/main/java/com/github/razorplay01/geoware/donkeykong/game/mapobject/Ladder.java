@@ -1,9 +1,10 @@
 package com.github.razorplay01.geoware.donkeykong.game.mapobject;
 
 import com.github.razorplay01.geoware.donkeykong.DonkeyKong;
+import com.github.razorplay01.geoware.donkeykong.DonkeyKongGame;
 import com.github.razorplay01.geoware.donkeykong.game.util.Animation;
 import com.github.razorplay01.geoware.donkeykong.game.util.texture.Texture;
-import com.github.razorplay01.geoware.donkeykong.screen.GameScreen;
+import com.github.razorplay01.geoware.donkeykong.util.game.GameScreen;
 import lombok.Getter;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
@@ -40,7 +41,7 @@ public class Ladder extends MapObject {
 
             // Verificar si este segmento está cubierto por una plataforma
             boolean isCovered = false;
-            for (Platform platform : gameScreen.getTestGame().getPlatforms()) {
+            for (Platform platform : ((DonkeyKongGame) gameScreen.getGame()).getPlatforms()) {
                 if (isOverlapping(segmentTopY, segmentBottomY, platform)) {
                     isCovered = true;
                     break;

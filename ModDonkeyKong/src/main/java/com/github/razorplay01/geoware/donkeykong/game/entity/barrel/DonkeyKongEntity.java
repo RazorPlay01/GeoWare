@@ -2,7 +2,7 @@ package com.github.razorplay01.geoware.donkeykong.game.entity.barrel;
 
 import com.github.razorplay01.geoware.donkeykong.game.entity.Entity;
 import com.github.razorplay01.geoware.donkeykong.game.util.Animation;
-import com.github.razorplay01.geoware.donkeykong.screen.GameScreen;
+import com.github.razorplay01.geoware.donkeykong.util.game.GameScreen;
 import net.minecraft.client.gui.DrawContext;
 
 import java.util.ArrayList;
@@ -49,7 +49,7 @@ public class DonkeyKongEntity extends Entity {
         if (!isSpawningBarrel && !isPlayingExtra && spawnTimer >= spawnInterval) {
             spawnTimer = 0;
 
-            if (random.nextFloat() < spawnProbability && !gameScreen.getTestGame().getPlayer().isWinning()) {
+            if (random.nextFloat() < spawnProbability && !game.getPlayer().isWinning()) {
                 // Iniciar animación de barril
                 isSpawningBarrel = true;
                 currentAnimation = barrelAnimation;
@@ -64,7 +64,7 @@ public class DonkeyKongEntity extends Entity {
 
         // Verificar si la animación de barril ha terminado
         if (isSpawningBarrel && barrelAnimation.isFinished()) {
-            spawnBarrel(gameScreen.getTestGame().getScreen().getScreenXPos() + 68f, gameScreen.getTestGame().getScreen().getScreenYPos() + 70f, gameScreen);
+            spawnBarrel(game.getScreen().getGameScreenXPos() + 68f, game.getScreen().getGameScreenYPos() + 70f, gameScreen);
 
             isSpawningBarrel = false;
             currentAnimation = idleAnimation;
@@ -80,7 +80,7 @@ public class DonkeyKongEntity extends Entity {
     }
 
     public void spawnBarrel(float x, float y, GameScreen gameScreen) {
-        gameScreen.getTestGame().getBarrels().add(new Barrel(x, y, gameScreen));
+        game.getBarrels().add(new Barrel(x, y, gameScreen));
     }
 
     @Override
@@ -93,13 +93,13 @@ public class DonkeyKongEntity extends Entity {
 
     public void removeAndSpawnBarrels(DrawContext context) {
         List<Barrel> barrelsToRemove = new ArrayList<>();
-        for (Barrel barrel : gameScreen.getTestGame().getBarrels()) {
+        for (Barrel barrel : game.getBarrels()) {
             if (barrel.isRemove()) {
                 barrelsToRemove.add(barrel);
             }
             barrel.update();
             barrel.render(context);
         }
-        gameScreen.getTestGame().getBarrels().removeAll(barrelsToRemove);
+        game.getBarrels().removeAll(barrelsToRemove);
     }
 }

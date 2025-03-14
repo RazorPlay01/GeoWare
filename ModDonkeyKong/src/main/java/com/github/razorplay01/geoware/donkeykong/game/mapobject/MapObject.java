@@ -2,7 +2,7 @@ package com.github.razorplay01.geoware.donkeykong.game.mapobject;
 
 import com.github.razorplay01.geoware.donkeykong.game.util.records.Hitbox;
 import com.github.razorplay01.geoware.donkeykong.game.util.records.IHitbox;
-import com.github.razorplay01.geoware.donkeykong.screen.GameScreen;
+import com.github.razorplay01.geoware.donkeykong.util.game.GameScreen;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.DrawContext;

@@ -1,6 +1,7 @@
 package com.github.razorplay01.geoware.donkeykong.game.mapobject;
 
-import com.github.razorplay01.geoware.donkeykong.screen.GameScreen;
+
+import com.github.razorplay01.geoware.donkeykong.util.game.GameScreen;
 
 public class VictoryZone extends MapObject {
     public VictoryZone(GameScreen gameScreen, float xPos, float yPos, float width, float height, int debugColor) {

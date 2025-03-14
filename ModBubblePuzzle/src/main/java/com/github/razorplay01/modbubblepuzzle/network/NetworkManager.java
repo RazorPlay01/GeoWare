@@ -28,7 +28,7 @@ public class NetworkManager {
     }
 
     public static void registerClient() {
-        CLIENT_HANDLERS.put("ArkanoidPacket", NetworkManager::checkArkanoidPacketClient);
+        CLIENT_HANDLERS.put("BubblePuzzlePacket", NetworkManager::checkArkanoidPacketClient);
 
         ClientPlayNetworking.registerGlobalReceiver(FabricCustomPayload.CUSTOM_PAYLOAD_ID, (payload, context) -> {
             IPacket packet = payload.packet();

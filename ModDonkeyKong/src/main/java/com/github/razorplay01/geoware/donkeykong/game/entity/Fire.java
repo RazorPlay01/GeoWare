@@ -3,10 +3,9 @@ package com.github.razorplay01.geoware.donkeykong.game.entity;
 import com.github.razorplay01.geoware.donkeykong.game.entity.player.Player;
 import com.github.razorplay01.geoware.donkeykong.game.mapobject.Ladder;
 import com.github.razorplay01.geoware.donkeykong.game.mapobject.Platform;
-import com.github.razorplay01.geoware.donkeykong.game.stages.Game;
 import com.github.razorplay01.geoware.donkeykong.game.util.Animation;
 import com.github.razorplay01.geoware.donkeykong.game.util.records.Hitbox;
-import com.github.razorplay01.geoware.donkeykong.screen.GameScreen;
+import com.github.razorplay01.geoware.donkeykong.util.game.GameScreen;
 import lombok.Getter;
 import net.minecraft.client.gui.DrawContext;
 
@@ -24,8 +23,8 @@ public class Fire extends Entity {
     private final Animation horizontalLeftAnimation = new Animation(FIRE_L_TEXTURES, 0.5f, true);
 
 
-    private static final float MOVEMENT_SPEED = 0.5f;
-    private static final float LADDER_SPEED = 0.25f;
+    private static final float MOVEMENT_SPEED = 1.5f;
+    private static final float LADDER_SPEED = 0.75f;
     private static final float PLAYER_DETECTION_RANGE = 16f;
     private static final float DECISION_COOLDOWN = 1.0f;
     private static final float RANDOM_MOVEMENT_CHANCE = 0.3f;
@@ -36,7 +35,7 @@ public class Fire extends Entity {
 
     public Fire(float x, float y, GameScreen gameScreen) {
         super(x, y, 16, 16, gameScreen, 0xFFfff700); // Cambiado a 16x16
-        this.targetPlayer = gameScreen.getTestGame().getPlayer();
+        this.targetPlayer = game.getPlayer();
         this.velocityX = MOVEMENT_SPEED;
 // Hitbox más alta para las escaleras para poder engancharse mejor
         this.hitboxes.add(new Hitbox(HITBOX_LADDER, xPos, yPos, 16, 16, 0, 0, LADDER_HITBOX_COLOR));
@@ -82,7 +81,7 @@ public class Fire extends Entity {
     }
 
     private void findNearestLadder(boolean goingUp) {
-        List<Ladder> ladders = gameScreen.getTestGame().getLadders();
+        List<Ladder> ladders = game.getLadders();
         Ladder nearestLadder = null;
         float minDistance = Float.MAX_VALUE;
 
@@ -142,7 +141,7 @@ public class Fire extends Entity {
         velocityY = Math.min(velocityY, maxFallSpeed);
 
 
-        Platform stepPlatform = findStepPlatform(gameScreen.getTestGame().getPlatforms());
+        Platform stepPlatform = findStepPlatform(game.getPlatforms());
         if (stepPlatform != null) {
             yPos = stepPlatform.getYPos() - height;
             velocityY = 0;
@@ -165,7 +164,7 @@ public class Fire extends Entity {
 
 
     private void checkPlatformCollisions() {
-        for (Platform platform : gameScreen.getTestGame().getPlatforms()) {
+        for (Platform platform : game.getPlatforms()) {
             if (isCollidingWithPlatform(platform)) {
                 yPos = platform.getYPos() - height;
                 velocityY = 0;
@@ -180,7 +179,7 @@ public class Fire extends Entity {
 
 
         if (Math.abs(playerHeightDiff) > PLAYER_DETECTION_RANGE) {
-            List<Ladder> validLadders = gameScreen.getTestGame().getLadders().stream()
+            List<Ladder> validLadders = game.getLadders().stream()
                     .filter(this::canUseLadder)
                     .toList();
 
@@ -204,7 +203,7 @@ public class Fire extends Entity {
     }
 
     private Platform findPlatformAbove() {
-        return gameScreen.getTestGame().getPlatforms().stream()
+        return game.getPlatforms().stream()
                 .filter(platform -> platform.getYPos() <= yPos && // Buscar plataformas por encima o al mismo nivel
                         platform.getXPos() < xPos + width &&
                         platform.getXPos() + platform.getWidth() > xPos)

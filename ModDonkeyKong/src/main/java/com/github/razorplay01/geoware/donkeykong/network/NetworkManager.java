@@ -1,9 +1,9 @@
-package com.github.razorplay01.geoware.hanoitowers.network;
+package com.github.razorplay01.geoware.donkeykong.network;
 
+import com.github.razorplay01.geoware.donkeykong.DonkeyKong;
+import com.github.razorplay01.geoware.donkeykong.DonkeyKongScreen;
 import com.github.razorplay01.geoware.geowarecommon.network.IPacket;
-import com.github.razorplay01.geoware.geowarecommon.network.packet.HanoiTowersPacket;
-import com.github.razorplay01.geoware.hanoitowers.HanoiTowers;
-import com.github.razorplay01.geoware.hanoitowers.HanoiTowersScreen;
+import com.github.razorplay01.geoware.geowarecommon.network.packet.DonkeyKongPacket;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -27,26 +27,26 @@ public class NetworkManager {
     }
 
     public static void registerClient() {
-        CLIENT_HANDLERS.put("HanoiTowersPacket", NetworkManager::checkArkanoidPacketClient);
+        CLIENT_HANDLERS.put("DonkeyKongPacket", NetworkManager::checkArkanoidPacketClient);
 
         ClientPlayNetworking.registerGlobalReceiver(FabricCustomPayload.CUSTOM_PAYLOAD_ID, (payload, context) -> {
             IPacket packet = payload.packet();
-            HanoiTowers.LOGGER.info("Packet received from server: {}", packet.getPacketId());
-            BiConsumer<IPacket, ClientPlayNetworking.Context> handler = CLIENT_HANDLERS.getOrDefault(packet.getPacketId(), (p, c) -> HanoiTowers.LOGGER.info("Unknown server packet: {}", p.getPacketId()));
+            DonkeyKong.LOGGER.info("Packet received from server: {}", packet.getPacketId());
+            BiConsumer<IPacket, ClientPlayNetworking.Context> handler = CLIENT_HANDLERS.getOrDefault(packet.getPacketId(), (p, c) -> DonkeyKong.LOGGER.info("Unknown server packet: {}", p.getPacketId()));
             handler.accept(packet, context);
         });
     }
 
     private static void checkArkanoidPacketClient(IPacket iPacket, ClientPlayNetworking.Context context) {
-        HanoiTowersPacket pkt = (HanoiTowersPacket) iPacket;
-        context.client().execute(() -> MinecraftClient.getInstance().setScreen(new HanoiTowersScreen(pkt.getScore(), 5, pkt.getTimeLimitSeconds(), pkt.getRings())));
+        DonkeyKongPacket pkt = (DonkeyKongPacket) iPacket;
+        context.client().execute(() -> MinecraftClient.getInstance().setScreen(new DonkeyKongScreen(pkt.getScore(), 5, pkt.getTimeLimitSeconds(), pkt.getSpawnInterval(), pkt.getSpawnProbability())));
     }
 
     public static void registerServer() {
         ServerPlayNetworking.registerGlobalReceiver(FabricCustomPayload.CUSTOM_PAYLOAD_ID, (payload, context) -> {
             IPacket packet = payload.packet();
-            HanoiTowers.LOGGER.info("Packet received from client: {}", packet.getPacketId());
-            BiConsumer<IPacket, ServerPlayNetworking.Context> handler = SERVER_HANDLERS.getOrDefault(packet.getPacketId(), (p, c) -> HanoiTowers.LOGGER.info("Unknown client packet: {}", p.getPacketId()));
+            DonkeyKong.LOGGER.info("Packet received from client: {}", packet.getPacketId());
+            BiConsumer<IPacket, ServerPlayNetworking.Context> handler = SERVER_HANDLERS.getOrDefault(packet.getPacketId(), (p, c) -> DonkeyKong.LOGGER.info("Unknown client packet: {}", p.getPacketId()));
             handler.accept(packet, context);
         });
     }

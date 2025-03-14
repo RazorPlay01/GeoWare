@@ -29,6 +29,7 @@ public class PacketTCP {
         registerPacket("TetrisPacket", TetrisPacket.class);
         registerPacket("HanoiTowersPacket", HanoiTowersPacket.class);
         registerPacket("BubblePuzzlePacket", BubblePuzzlePacket.class);
+        registerPacket("DonkeyKongPacket", DonkeyKongPacket.class);
     }
 
     /**

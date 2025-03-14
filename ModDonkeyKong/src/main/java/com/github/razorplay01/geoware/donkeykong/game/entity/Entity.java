@@ -1,5 +1,6 @@
 package com.github.razorplay01.geoware.donkeykong.game.entity;
 
+import com.github.razorplay01.geoware.donkeykong.DonkeyKongGame;
 import com.github.razorplay01.geoware.donkeykong.game.mapobject.Ladder;
 import com.github.razorplay01.geoware.donkeykong.game.mapobject.MapObject;
 import com.github.razorplay01.geoware.donkeykong.game.mapobject.Platform;
@@ -8,7 +9,7 @@ import com.github.razorplay01.geoware.donkeykong.game.util.records.Hitbox;
 import com.github.razorplay01.geoware.donkeykong.game.util.records.IHitbox;
 import com.github.razorplay01.geoware.donkeykong.game.util.ScreenSide;
 import com.github.razorplay01.geoware.donkeykong.game.util.texture.Texture;
-import com.github.razorplay01.geoware.donkeykong.screen.GameScreen;
+import com.github.razorplay01.geoware.donkeykong.util.game.GameScreen;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.DrawContext;
@@ -34,13 +35,14 @@ public abstract class Entity implements IHitbox {
     protected Platform currentPlatform;
 
     protected GameScreen gameScreen;
+    protected DonkeyKongGame game;
 
     protected final List<Hitbox> hitboxes = new ArrayList<>();
 
     // Constantes comunes
-    protected float gravity = 0.5f;
-    protected float maxFallSpeed = 4f;
-    protected float speed = 1f;
+    protected float gravity = 1.5f;
+    protected float maxFallSpeed = 12f;
+    protected float speed = 3f;
 
     protected Entity(float xPos, float yPos, float width, float height, GameScreen gameScreen, int debugColor) {
         this.xPos = xPos;
@@ -48,6 +50,7 @@ public abstract class Entity implements IHitbox {
         this.width = width;
         this.height = height;
         this.gameScreen = gameScreen;
+        this.game = (DonkeyKongGame) gameScreen.getGame();
         this.hitboxes.add(new Hitbox(Hitbox.HITBOX_DEFAULT, xPos, yPos, width, height, 0, 0, debugColor));
     }
 
@@ -118,33 +121,31 @@ public abstract class Entity implements IHitbox {
      * Maneja la colisión con los bordes de la pantalla.
      */
     protected void verifyScreenBoundsCollision() {
-        int screenX = gameScreen.getTestGame().getScreen().getScreenXPos();
-        int screenY = gameScreen.getTestGame().getScreen().getScreenYPos();
-        int screenWidth = gameScreen.getTestGame().getScreenWidth();
-        int screenHeight = gameScreen.getTestGame().getScreenHeight();
+        int screenX = gameScreen.getGame().getScreen().getGameScreenXPos();
+        int screenY = gameScreen.getGame().getScreen().getGameScreenYPos();
+        int screenWidth = gameScreen.getGame().getScreenWidth();
+        int screenHeight = gameScreen.getGame().getScreenHeight();
 
-        // Colisión con el borde izquierdo
         if (xPos < screenX) {
             xPos = screenX;
-            onScreenBoundaryCollision(ScreenSide.LEFT);
+            // Solo cambiar dirección si no está cayendo
+            if (velocityY <= 0) {
+                onScreenBoundaryCollision(ScreenSide.LEFT);
+            }
             return;
         }
-
-        // Colisión con el borde derecho
         if (xPos + width > screenX + screenWidth) {
             xPos = screenX + screenWidth - width;
-            onScreenBoundaryCollision(ScreenSide.RIGHT);
+            if (velocityY <= 0) {
+                onScreenBoundaryCollision(ScreenSide.RIGHT);
+            }
             return;
         }
-
-        // Colisión con el borde superior
         if (yPos < screenY) {
             yPos = screenY;
             onScreenBoundaryCollision(ScreenSide.TOP);
             return;
         }
-
-        // Colisión con el borde inferior
         if (yPos + height > screenY + screenHeight) {
             yPos = screenY + screenHeight - height;
             onScreenBoundaryCollision(ScreenSide.BOTTOM);
