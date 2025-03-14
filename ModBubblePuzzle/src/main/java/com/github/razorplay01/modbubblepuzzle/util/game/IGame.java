@@ -1,4 +1,4 @@
-package com.github.razorplay01.modbubblepuzzle.util.stage;
+package com.github.razorplay01.modbubblepuzzle.util.game;
 
 import net.minecraft.client.gui.DrawContext;
 

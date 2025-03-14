@@ -1,4 +1,4 @@
-package com.github.razorplay01.modbubblepuzzle.util;
+package com.github.razorplay01.modbubblepuzzle.util.game;
 
 public enum GameStatus {
     /**

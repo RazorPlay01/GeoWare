@@ -34,6 +34,6 @@ public class TetrisPacket implements IPacket {
 
     @Override
     public String getPacketId() {
-        return "ArkanoidPacket";
+        return "TetrisPacket";
     }
 }

@@ -1,6 +1,5 @@
-package com.github.razorplay01.modbubblepuzzle.util.screen;
+package com.github.razorplay01.modbubblepuzzle.util.game;
 
-import com.github.razorplay01.modbubblepuzzle.util.stage.Game;
 import lombok.Getter;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -18,6 +17,7 @@ public abstract class GameScreen extends Screen {
 
     @Override
     protected void init() {
+        super.init();
         if (gameScreenXPos == null || gameScreenYPos == null) {
             this.gameScreenXPos = (width / 2) - (game.getScreenWidth() / 2);
             this.gameScreenYPos = (height / 2) - (game.getScreenHeight() / 2);
@@ -42,7 +42,7 @@ public abstract class GameScreen extends Screen {
         if (this.game.getFinalTimer().isRunning() && !this.game.getFinalTimer().isFinished()) {
             renderEndGameScreen(context);
         }
-
+        this.game.getFloatingTexts().forEach(floatingText -> floatingText.render(context));
     }
 
     @Override
@@ -52,8 +52,20 @@ public abstract class GameScreen extends Screen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        game.handleInput(keyCode);
+        game.keyPressed(keyCode, scanCode, modifiers);
         return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+        game.keyReleased(keyCode, scanCode, modifiers);
+        return super.keyReleased(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        game.handleMouseInput(mouseX, mouseY, button);
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
     private void renderGameScore(DrawContext context) {

@@ -1,12 +1,13 @@
-package com.github.razorplay01.modbubblepuzzle.util.stage;
+package com.github.razorplay01.modbubblepuzzle.util.game;
 
+import com.github.razorplay01.geoware.geowarecommon.network.packet.FinalScorePacket;
+import com.github.razorplay01.modbubblepuzzle.network.FabricCustomPayload;
 import com.github.razorplay01.modbubblepuzzle.util.FloatingText;
-import com.github.razorplay01.modbubblepuzzle.util.GameStatus;
-import com.github.razorplay01.modbubblepuzzle.util.Timer;
 import com.github.razorplay01.modbubblepuzzle.util.GameTask;
-import com.github.razorplay01.modbubblepuzzle.util.screen.GameScreen;
+import com.github.razorplay01.modbubblepuzzle.util.Timer;
 import lombok.Getter;
 import lombok.Setter;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
@@ -19,12 +20,13 @@ import java.util.List;
 public abstract class Game implements IGame {
     protected final GameScreen screen;
     protected final MinecraftClient client = MinecraftClient.getInstance();
-    protected final TextRenderer textRenderer = client.textRenderer;
+    private final TextRenderer textRenderer = client.textRenderer;
 
     protected final Timer initDelay;
     protected final Timer gameDutarion;
     protected final Timer finalTimer;
     protected List<GameTask> tasks = new ArrayList<>();
+    protected List<GameTask> newTasks = new ArrayList<>();
     protected GameStatus status;
     protected final int prevScore;
 
@@ -70,6 +72,7 @@ public abstract class Game implements IGame {
                 if (this.finalTimer.isFinished()) {
                     this.status = GameStatus.FINISHED;
                     this.screen.close();
+                    ClientPlayNetworking.send(new FabricCustomPayload(new FinalScorePacket(this.gameScore)));
                 }
             }
             default -> {
@@ -81,11 +84,25 @@ public abstract class Game implements IGame {
         // Update all FloatingTexts
         floatingTexts.removeIf(text -> !text.isActive());
         // Update all tasks
-        this.tasks.removeIf(GameTask::update);
+        List<GameTask> tasksSnapshot = new ArrayList<>(tasks);
+        List<GameTask> tasksToRemove = new ArrayList<>();
+
+        for (GameTask task : tasksSnapshot) {
+            if (task.update()) {
+                tasksToRemove.add(task);
+            }
+        }
+        tasks.removeAll(tasksToRemove);
+
+        // Transferir nuevas tareas y limpiar newTasks
+        if (!newTasks.isEmpty()) {
+            tasks.addAll(newTasks);
+            newTasks.clear(); // Limpiar para evitar duplicados
+        }
     }
 
     public void scheduleTask(Runnable action, long delayMs) {
-        this.tasks.add(new GameTask(action, (int) delayMs));
+        newTasks.add(new GameTask(action, delayMs)); // Siempre agregar a newTasks
     }
 
     public void pause() {
@@ -117,7 +134,6 @@ public abstract class Game implements IGame {
         }
     }
 
-    public abstract void handleInput(int keyCode);
     //game.update();
     //game.scheduleTask(() -> System.out.println("¡Tarea completada después de 3 segundos!"), 3000);
 
@@ -130,5 +146,19 @@ public abstract class Game implements IGame {
         gameScore += points;
         String scoreText = "" + points;
         floatingTexts.add(new FloatingText(xPos, yPos, scoreText, 0.8f));
+    }
+    public void addScore(int points) {
+        gameScore += points;
+    }
+
+    public void keyPressed(int keyCode, int scanCode, int modifiers) {
+
+    }
+
+    public void handleMouseInput(double mouseX, double mouseY, int button) {
+
+    }
+
+    public void keyReleased(int keyCode, int scanCode, int modifiers) {
     }
 }

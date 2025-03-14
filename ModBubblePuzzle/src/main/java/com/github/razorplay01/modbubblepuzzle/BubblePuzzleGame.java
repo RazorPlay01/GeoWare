@@ -1,10 +1,10 @@
 package com.github.razorplay01.modbubblepuzzle;
 
 import com.github.razorplay01.modbubblepuzzle.util.FloatingText;
-import com.github.razorplay01.modbubblepuzzle.util.GameStatus;
+import com.github.razorplay01.modbubblepuzzle.util.game.Game;
+import com.github.razorplay01.modbubblepuzzle.util.game.GameScreen;
+import com.github.razorplay01.modbubblepuzzle.util.game.GameStatus;
 import com.github.razorplay01.modbubblepuzzle.util.render.CustomDrawContext;
-import com.github.razorplay01.modbubblepuzzle.util.screen.GameScreen;
-import com.github.razorplay01.modbubblepuzzle.util.stage.Game;
 import lombok.Getter;
 import net.minecraft.client.gui.DrawContext;
 import org.lwjgl.glfw.GLFW;
@@ -20,11 +20,13 @@ public class BubblePuzzleGame extends Game {
     private static final int GAME_WIDTH = 20 * 10; // Ancho de la zona de juego
     private static final int GAME_HEIGHT = 20 * 15; // Alto de la zona de juego
     private float deathLineY;
+    private final int level;
 
-    public BubblePuzzleGame(GameScreen screen) {
-        super(screen, 5, 60 * 5, 0);
+    public BubblePuzzleGame(GameScreen screen, int prevScore, int initDelay, int timeLimitSeconds, int level) {
+        super(screen, initDelay, timeLimitSeconds, prevScore);
         this.bubbles = new CopyOnWriteArrayList<>();
         this.bubblesToRemove = new ArrayList<>();
+        this.level = level;
     }
 
     @Override
@@ -32,9 +34,12 @@ public class BubblePuzzleGame extends Game {
         super.init();
         this.player = new Player(screen.getGameScreenXPos() + GAME_WIDTH / 2f - 10, screen.getGameScreenYPos() + GAME_HEIGHT - 30f, 20, 20, screen);
         this.deathLineY = screen.getGameScreenYPos() + GAME_HEIGHT - 50f; // Ajusta la posición
-        loadLevel(LEVEL_1);
+        switch (level) {
+            case 2 -> loadLevel(LEVEL_2);
+            case 3 -> loadLevel(LEVEL_3);
+            default -> loadLevel(LEVEL_1);
+        }
     }
-
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
@@ -69,16 +74,18 @@ public class BubblePuzzleGame extends Game {
         return GAME_HEIGHT;
     }
 
-    public void handleInput(int keyCode) {
-        // Manejar entrada del teclado
-        if (keyCode == GLFW.GLFW_KEY_LEFT) {
-            player.rotateLeft(); // Rotar a la izquierda
-        } else if (keyCode == GLFW.GLFW_KEY_RIGHT) {
-            player.rotateRight(); // Rotar a la derecha
-        } else if (keyCode == GLFW.GLFW_KEY_SPACE) {
-            Bubble shotBubble = player.shoot();
-            if (shotBubble != null) {
-                bubbles.add(shotBubble); // Añadir la bola disparada a la lista de bolas en el juego
+    @Override
+    public void keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (status == GameStatus.ACTIVE) {
+            if (keyCode == GLFW.GLFW_KEY_LEFT || keyCode == GLFW.GLFW_KEY_A) {
+                player.rotateLeft();
+            } else if (keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == GLFW.GLFW_KEY_D) {
+                player.rotateRight();
+            } else if (keyCode == GLFW.GLFW_KEY_SPACE || keyCode == GLFW.GLFW_KEY_UP) {
+                Bubble shotBubble = player.shoot();
+                if (shotBubble != null) {
+                    bubbles.add(shotBubble);
+                }
             }
         }
     }
@@ -355,6 +362,30 @@ public class BubblePuzzleGame extends Game {
     }
 
     private static final String[] LEVEL_1 = {
+            "-RRYYBBGG-",
+            "-RRYYBBGG-",
+            "-BBGGRRYY-",
+            "-BBGGRRYY-",
+            "----------",
+            "----------",
+            "----------",
+            "----------",
+            "----------",
+            "----------",
+    };
+    private static final String[] LEVEL_2 = {
+            "-RRYYBBGG-",
+            "-RRYYBBGG-",
+            "-BBGGRRYY-",
+            "-BBGGRRYY-",
+            "----------",
+            "----------",
+            "----------",
+            "----------",
+            "----------",
+            "----------",
+    };
+    private static final String[] LEVEL_3 = {
             "-RRYYBBGG-",
             "-RRYYBBGG-",
             "-BBGGRRYY-",

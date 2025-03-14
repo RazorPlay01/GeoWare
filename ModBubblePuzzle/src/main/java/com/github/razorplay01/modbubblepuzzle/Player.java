@@ -1,9 +1,9 @@
 package com.github.razorplay01.modbubblepuzzle;
 
-import com.github.razorplay01.modbubblepuzzle.util.GameStatus;
+import com.github.razorplay01.modbubblepuzzle.util.game.GameScreen;
+import com.github.razorplay01.modbubblepuzzle.util.game.GameStatus;
 import com.github.razorplay01.modbubblepuzzle.util.hitbox.RectangleHitbox;
 import com.github.razorplay01.modbubblepuzzle.util.render.CustomDrawContext;
-import com.github.razorplay01.modbubblepuzzle.util.screen.GameScreen;
 import lombok.Getter;
 import net.minecraft.client.gui.DrawContext;
 

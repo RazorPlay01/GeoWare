@@ -7,7 +7,6 @@ import com.github.razorplay01.geoware.geowarecommon.network.network_util.PacketD
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Packet
 @Getter

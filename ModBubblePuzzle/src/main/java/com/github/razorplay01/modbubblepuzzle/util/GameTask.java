@@ -24,6 +24,7 @@ public class GameTask {
         this.action = action;
         this.timer = new Timer(delayMs); // Crear un temporizador con el retraso especificado
         this.isCompleted = false;
+        timer.start();
     }
 
     /**

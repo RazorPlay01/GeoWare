@@ -12,28 +12,28 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class HanoiTowersPacket implements IPacket {
+public class BubblePuzzlePacket implements IPacket {
     private int score;
     private int timeLimitSeconds;
-    private int rings;
+    private int level;
 
     @Override
     public void read(PacketDataSerializer serializer) throws PacketSerializationException {
         this.score = serializer.readInt();
         this.timeLimitSeconds = serializer.readInt();
-        this.rings = serializer.readInt();
+        this.level = serializer.readInt();
     }
 
     @Override
     public void write(PacketDataSerializer serializer) throws PacketSerializationException {
         serializer.writeInt(this.score);
         serializer.writeInt(this.timeLimitSeconds);
-        serializer.writeInt(this.rings);
+        serializer.writeInt(this.level);
     }
 
 
     @Override
     public String getPacketId() {
-        return "HanoiTowersPacket";
+        return "BubblePuzzlePacket";
     }
 }

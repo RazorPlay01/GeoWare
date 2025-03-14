@@ -1,7 +1,7 @@
 package com.github.razorplay01.modbubblepuzzle;
 
+import com.github.razorplay01.modbubblepuzzle.util.game.GameScreen;
 import com.github.razorplay01.modbubblepuzzle.util.hitbox.CircleHitbox;
-import com.github.razorplay01.modbubblepuzzle.util.screen.GameScreen;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.DrawContext;
