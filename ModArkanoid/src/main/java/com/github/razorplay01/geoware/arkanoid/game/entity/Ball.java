@@ -15,8 +15,8 @@ import java.util.List;
 @Setter
 public class Ball extends Entity {
     private static final float SPEED_INCREMENT = 0.05f;
-    private static final float MAX_SPEED = 3.0f;
-    private static final float INITIAL_SPEED = 2f;
+    private static final float MAX_SPEED = 5.0f;
+    private static final float INITIAL_SPEED = 3f;
     private static final float MAX_ANGLE_VARIATION = 0.1f; // Máxima variación aleatoria en radianes (aproximadamente 5.7 grados)
     private static final float MIN_DISTANCE_BETWEEN_COLLISIONS = 8f; // Distancia mínima para permitir otra colisión
 

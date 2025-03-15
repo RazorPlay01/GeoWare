@@ -15,9 +15,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class TwoDGameCommand implements CommandExecutor, TabCompleter {
+    private static final String PERMISSION = "geoware.2dgame";
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+        // Verificar permiso
+        if (!sender.hasPermission(PERMISSION)) {
+            sender.sendMessage("§cNo tienes permiso para usar este comando.");
+            return true;
+        }
+
         if (args.length < 2) {
             sender.sendMessage("§cUso: /2dgame <target> <game> [parametros]");
             return true;
@@ -80,8 +87,41 @@ public class TwoDGameCommand implements CommandExecutor, TabCompleter {
                     sender.sendMessage("§aPacket Arkanoid enviado a " + targets.size() + " jugador(es)");
                     break;
 
+                case "fruitfocus":
+                    int fruitTime = args.length > 2 ? Integer.parseInt(args[2]) : 60;
+                    for (Player player : targets) {
+                        PacketSender.sendFruitFocusPacketToClient(player, 0, fruitTime);
+                    }
+                    sender.sendMessage("§aPacket FruitFocus enviado a " + targets.size() + " jugador(es)");
+                    break;
+
+                case "galaga":
+                    int galagaTime = args.length > 2 ? Integer.parseInt(args[2]) : 60;
+                    int galagaLevel = args.length > 3 ? Integer.parseInt(args[3]) : 1;
+                    for (Player player : targets) {
+                        PacketSender.sendGalagaPacketToClient(player, 0, galagaTime, galagaLevel);
+                    }
+                    sender.sendMessage("§aPacket Galaga enviado a " + targets.size() + " jugador(es)");
+                    break;
+
+                case "keybind":
+                    int keyTime = args.length > 2 ? Integer.parseInt(args[2]) : 60;
+                    for (Player player : targets) {
+                        PacketSender.sendKeyBindPacketToClient(player, 0, keyTime);
+                    }
+                    sender.sendMessage("§aPacket KeyBind enviado a " + targets.size() + " jugador(es)");
+                    break;
+
+                case "robotfactory":
+                    int robotTime = args.length > 2 ? Integer.parseInt(args[2]) : 60;
+                    for (Player player : targets) {
+                        PacketSender.sendRobotFactoryPacketToClient(player, 0, robotTime);
+                    }
+                    sender.sendMessage("§aPacket RobotFactory enviado a " + targets.size() + " jugador(es)");
+                    break;
+
                 default:
-                    sender.sendMessage("§cJuego inválido. Usa: tetris, hanoitowers, donkeykong, bubblepuzzle o arkanoid");
+                    sender.sendMessage("§cJuego inválido. Usa: tetris, hanoitowers, donkeykong, bubblepuzzle, arkanoid, fruitfocus, galaga, keybind o robotfactory");
                     return true;
             }
         } catch (NumberFormatException e) {
@@ -94,6 +134,11 @@ public class TwoDGameCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        // Verificar permiso para tab completion
+        if (!sender.hasPermission(PERMISSION)) {
+            return new ArrayList<>();
+        }
+
         List<String> completions = new ArrayList<>();
 
         if (args.length == 1) {
@@ -111,6 +156,10 @@ public class TwoDGameCommand implements CommandExecutor, TabCompleter {
             completions.add("donkeykong");
             completions.add("bubblepuzzle");
             completions.add("arkanoid");
+            completions.add("fruitfocus");
+            completions.add("galaga");
+            completions.add("keybind");
+            completions.add("robotfactory");
         } else if (args.length == 3) {
             // Completar timeLimit
             completions.add("60");
@@ -129,6 +178,7 @@ public class TwoDGameCommand implements CommandExecutor, TabCompleter {
                     break;
                 case "bubblepuzzle":
                 case "arkanoid":
+                case "galaga":
                     completions.add("1");
                     completions.add("2");
                     completions.add("3");

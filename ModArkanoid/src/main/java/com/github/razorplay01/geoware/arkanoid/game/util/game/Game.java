@@ -5,7 +5,6 @@ import com.github.razorplay01.geoware.arkanoid.game.util.GameTask;
 import com.github.razorplay01.geoware.arkanoid.game.util.Timer;
 import com.github.razorplay01.geoware.arkanoid.network.FabricCustomPayload;
 import com.github.razorplay01.geoware.arkanoid.screen.ArkanoidGameScreen;
-import com.github.razorplay01.geoware.geowarecommon.network.packet.FinalScorePacket;
 import lombok.Getter;
 import lombok.Setter;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -73,7 +72,6 @@ public abstract class Game implements IGame {
                 if (this.finalTimer.isFinished()) {
                     this.status = GameStatus.FINISHED;
                     this.screen.close();
-                    ClientPlayNetworking.send(new FabricCustomPayload(new FinalScorePacket(this.gameScore)));
                 }
             }
             default -> {

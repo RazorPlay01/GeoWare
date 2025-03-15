@@ -4,6 +4,7 @@ import com.github.razorplay01.geoware.geowarecommon.exceptions.PacketInstantiati
 import com.github.razorplay01.geoware.geowarecommon.exceptions.PacketSerializationException;
 import com.github.razorplay01.geoware.geowarecommon.network.IPacket;
 import com.github.razorplay01.geoware.geowarecommon.network.PacketTCP;
+import com.github.razorplay01.geoware.geowarecommon.network.packet.ScorePacket;
 import com.github.razorplay01.geoware.geowareplugin.GeoWarePlugin;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
@@ -20,23 +21,11 @@ public class PacketListener implements PluginMessageListener {
             try {
                 IPacket packet = PacketTCP.read(buf);
                 GeoWarePlugin.getInstance().getLogger().info("Packet received from the user: " + player.getName() + ", type: " + packet.getPacketId());
-                /*if (packet instanceof CustomLayerIsPremiumPacket) {
-                    MySQLConnector.databaseManager.getUser(player.getUniqueId()).thenAccept(user -> {
-                        if (user == null) {
-                            User newUser = new User(
-                                    0,
-                                    player.getUniqueId(),
-                                    LocalDateTime.now()
-                            );
-                            MySQLConnector.databaseManager.insertUser(newUser);
-                            MinecraftEventsUtilesPlugin.getInstance().getLogger().info("Nuevo jugador premium registrado en la base de datos!");
-                        }
-                    });
-                } else if (packet instanceof CustomLayerChangeLayerPacket pkt) {
-                    User user = MySQLConnector.databaseManager.getUser(player.getUniqueId()).join();
-                    Layer layer = MySQLConnector.databaseManager.getLayerById(pkt.getLayer_id()).join();
-                    MySQLConnector.databaseManager.equipLayer(user, layer, pkt.isVanilla());
-                }*/
+                if (packet instanceof ScorePacket pkt) {
+                    int score = pkt.getScore();
+                    GeoWarePlugin.getInstance().getLogger().info("score: " + score);
+                    GeoWarePlugin.getInstance().getPointsManager().sumarPuntos(player, score);
+                }
             } catch (PacketSerializationException | PacketInstantiationException e) {
                 throw new RuntimeException(e);
             }

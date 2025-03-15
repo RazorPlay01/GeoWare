@@ -7,6 +7,11 @@ libs
 
 /GeoWareCommon/build
 
+/GeoWareMod/.gradle
+/GeoWareMod/.idea
+/GeoWareMod/build
+/GeoWareMod/run
+
 /GeoWarePlugin/.gradle
 /GeoWarePlugin/.idea
 /GeoWarePlugin/build
@@ -15,30 +20,25 @@ libs
 /ModDonkeyKong/build
 /ModDonkeyKong/.gradle
 /ModDonkeyKong/.idea
-/ModDonkeyKong/build
 /ModDonkeyKong/run
 
 /ModTetris/build
 /ModTetris/.gradle
 /ModTetris/.idea
-/ModTetris/build
 /ModTetris/run
 
 /ModArkanoid/build
 /ModArkanoid/.gradle
 /ModArkanoid/.idea
-/ModArkanoid/build
 /ModArkanoid/run
 
 /ModHanoiTowers/build
 /ModHanoiTowers/.gradle
 /ModHanoiTowers/.idea
-/ModHanoiTowers/build
 /ModHanoiTowers/run
 
 /ModBubblePuzzle/build
 /ModBubblePuzzle/.gradle
 /ModBubblePuzzle/.idea
-/ModBubblePuzzle/build
 /ModBubblePuzzle/run
 /ModBubblePuzzle/libs

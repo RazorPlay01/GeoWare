@@ -1,6 +1,6 @@
 package com.github.razorplay01.geoware.hanoitowers.game.util.game;
 
-import com.github.razorplay01.geoware.geowarecommon.network.packet.FinalScorePacket;
+import com.github.razorplay01.geoware.geowarecommon.network.packet.ScorePacket;
 import com.github.razorplay01.geoware.hanoitowers.game.util.FloatingText;
 import com.github.razorplay01.geoware.hanoitowers.game.util.GameTask;
 import com.github.razorplay01.geoware.hanoitowers.game.util.Timer;
@@ -72,7 +72,7 @@ public abstract class Game implements IGame {
                 if (this.finalTimer.isFinished()) {
                     this.status = GameStatus.FINISHED;
                     this.screen.close();
-                    ClientPlayNetworking.send(new FabricCustomPayload(new FinalScorePacket(this.gameScore)));
+                    ClientPlayNetworking.send(new FabricCustomPayload(new ScorePacket(this.gameScore)));
                 }
             }
             default -> {

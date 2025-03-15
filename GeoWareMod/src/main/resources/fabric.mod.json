@@ -1,0 +1,28 @@
+{
+  "schemaVersion": 1,
+  "id": "geowaremod",
+  "version": "${version}",
+  "name": "GeoWareMod",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/geowaremod/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.github.razorplay01.geowaremod.GeoWareMod"
+    ],
+    "main": [
+      "com.github.razorplay01.geowaremod.GeoWareMod"
+    ]
+  },
+  "mixins": [
+    "geowaremod.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

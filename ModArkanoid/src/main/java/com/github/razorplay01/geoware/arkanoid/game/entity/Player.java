@@ -22,7 +22,7 @@ public class Player extends Entity {
 
     public Player(float xPos, float yPos, float width, float height, ArkanoidGameScreen gameScreen) {
         super(xPos, yPos, width, height, gameScreen, 0xFF8300ff);
-        this.speed = 1.5f;
+        this.speed = 2.5f;
         this.gravity = 0f;
         this.maxFallSpeed = 0f;
 

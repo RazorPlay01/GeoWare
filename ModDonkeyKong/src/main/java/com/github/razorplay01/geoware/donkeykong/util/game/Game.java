@@ -1,9 +1,10 @@
 package com.github.razorplay01.geoware.donkeykong.util.game;
 
+import com.github.razorplay01.geoware.donkeykong.network.FabricCustomPayload;
 import com.github.razorplay01.geoware.donkeykong.util.FloatingText;
 import com.github.razorplay01.geoware.donkeykong.util.GameTask;
 import com.github.razorplay01.geoware.donkeykong.util.Timer;
-import com.github.razorplay01.geoware.geowarecommon.network.packet.FinalScorePacket;
+import com.github.razorplay01.geoware.geowarecommon.network.packet.ScorePacket;
 import lombok.Getter;
 import lombok.Setter;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -71,7 +72,7 @@ public abstract class Game implements IGame {
                 if (this.finalTimer.isFinished()) {
                     this.status = GameStatus.FINISHED;
                     this.screen.close();
-                    //ClientPlayNetworking.send(new FabricCustomPayload(new FinalScorePacket(this.gameScore)));
+                    ClientPlayNetworking.send(new FabricCustomPayload(new ScorePacket(this.gameScore)));
                 }
             }
             default -> {

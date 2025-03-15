@@ -6,6 +6,11 @@ import com.github.razorplay01.geoware.geowarecommon.exceptions.PacketRegistratio
 import com.github.razorplay01.geoware.geowarecommon.exceptions.PacketSerializationException;
 import com.github.razorplay01.geoware.geowarecommon.network.network_util.PacketDataSerializer;
 import com.github.razorplay01.geoware.geowarecommon.network.packet.*;
+import com.github.razorplay01.geoware.geowarecommon.network.packet.ArkanoidPacket;
+import com.github.razorplay01.geoware.geowarecommon.network.packet.BubblePuzzlePacket;
+import com.github.razorplay01.geoware.geowarecommon.network.packet.DonkeyKongPacket;
+import com.github.razorplay01.geoware.geowarecommon.network.packet.HanoiTowersPacket;
+import com.github.razorplay01.geoware.geowarecommon.network.packet.TetrisPacket;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.io.ByteArrayDataInput;
@@ -19,22 +24,24 @@ import java.util.Optional;
  * This utility class manages a registry of packet types and provides methods for packet handling.
  */
 public class PacketTCP {
-    public static final String PACKET_BASE_CHANNEL = "razorplay01:packets_channel";
+    public static final String PACKET_BASE_CHANNEL = "geoware:packets_channel";
     public static final String PACKET_ARKANOID_CHANNEL = "arkanoid:packets_channel";
-    public static final String PACKET_BUBBLEPUZZLE_CHANNEL = "bubblepuzzle:packets_channel";
     public static final String PACKET_DONKEYKONG_CHANNEL = "donkeykong:packets_channel";
     public static final String PACKET_HANOITOWERS_CHANNEL = "hanoitowers:packets_channel";
-    public static final String PACKET_TETRIS_CHANNEL = "tetris:packets_channel";
     private static final BiMap<String, Class<? extends IPacket>> packetRegistry = HashBiMap.create();
 
     static {
-        registerPacket("EmptyPacket", EmptyPacket.class);
-        registerPacket("FinalScorePacket", FinalScorePacket.class);
         registerPacket("ArkanoidPacket", ArkanoidPacket.class);
-        registerPacket("TetrisPacket", TetrisPacket.class);
-        registerPacket("HanoiTowersPacket", HanoiTowersPacket.class);
         registerPacket("BubblePuzzlePacket", BubblePuzzlePacket.class);
         registerPacket("DonkeyKongPacket", DonkeyKongPacket.class);
+        registerPacket("EmptyPacket", EmptyPacket.class);
+        registerPacket("FruitFocusPacket", FruitFocusPacket.class);
+        registerPacket("GalagaPacket", GalagaPacket.class);
+        registerPacket("HanoiTowersPacket", HanoiTowersPacket.class);
+        registerPacket("KeyBindGamePacket", KeyBindPacket.class);
+        registerPacket("RobotFactoryPacket", RobotFactoryPacket.class);
+        registerPacket("ScorePacket", ScorePacket.class);
+        registerPacket("TetrisPacket", TetrisPacket.class);
     }
 
     /**

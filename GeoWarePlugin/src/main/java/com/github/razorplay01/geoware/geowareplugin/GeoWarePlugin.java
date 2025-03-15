@@ -9,19 +9,28 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.sql.SQLException;
+
 
 @Getter
 public final class GeoWarePlugin extends JavaPlugin {
     public static final String PLUGIN_NAME = "GeoWarePlugin";
     public static final Logger LOGGER = LoggerFactory.getLogger(PLUGIN_NAME);
 
+    private PointsManager pointsManager;
+
     @Override
     public void onEnable() {
-        //Bukkit.getPluginManager().registerEvents(new PlayerListener(), this);
-
         registerCommands();
-
         registerPacketChannels();
+
+        try {
+            pointsManager = new PointsManager(getDataFolder());
+            getLogger().info("Sistema de puntos iniciado correctamente.");
+        } catch (SQLException e) {
+            getLogger().severe("Error al iniciar la base de datos: " + e.getMessage());
+            getServer().getPluginManager().disablePlugin(this);
+        }
         UtilMessage.sendStartupMessage(this);
     }
 
@@ -30,18 +39,20 @@ public final class GeoWarePlugin extends JavaPlugin {
         getServer().getMessenger().registerIncomingPluginChannel(this, PacketTCP.PACKET_BASE_CHANNEL, new PacketListener());
         getServer().getMessenger().registerOutgoingPluginChannel(this, PacketTCP.PACKET_ARKANOID_CHANNEL);
         getServer().getMessenger().registerIncomingPluginChannel(this, PacketTCP.PACKET_ARKANOID_CHANNEL, new PacketListener());
-        getServer().getMessenger().registerOutgoingPluginChannel(this, PacketTCP.PACKET_BUBBLEPUZZLE_CHANNEL);
-        getServer().getMessenger().registerIncomingPluginChannel(this, PacketTCP.PACKET_BUBBLEPUZZLE_CHANNEL, new PacketListener());
         getServer().getMessenger().registerOutgoingPluginChannel(this, PacketTCP.PACKET_DONKEYKONG_CHANNEL);
         getServer().getMessenger().registerIncomingPluginChannel(this, PacketTCP.PACKET_DONKEYKONG_CHANNEL, new PacketListener());
         getServer().getMessenger().registerOutgoingPluginChannel(this, PacketTCP.PACKET_HANOITOWERS_CHANNEL);
         getServer().getMessenger().registerIncomingPluginChannel(this, PacketTCP.PACKET_HANOITOWERS_CHANNEL, new PacketListener());
-        getServer().getMessenger().registerOutgoingPluginChannel(this, PacketTCP.PACKET_TETRIS_CHANNEL);
-        getServer().getMessenger().registerIncomingPluginChannel(this, PacketTCP.PACKET_TETRIS_CHANNEL, new PacketListener());
     }
 
     @Override
     public void onDisable() {
+        getLogger().info(pointsManager.topMejores().toString());
+
+        if (pointsManager != null) {
+            pointsManager.cerrarConexion();
+            getLogger().info("Conexión a la base de datos cerrada.");
+        }
         UtilMessage.sendShutdownMessage(this);
     }
 

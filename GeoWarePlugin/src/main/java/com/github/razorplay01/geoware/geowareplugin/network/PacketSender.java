@@ -12,11 +12,51 @@ public class PacketSender {
         //[]
     }
 
-    public static void sendTetrisPacketToClient(Player targetPlayer, int prevScore, int timeLimitSeconds, float speedMultiplier) {
+    public static void sendArkanoidPacketToClient(Player targetPlayer, int prevScore, int timeLimitSeconds, int level) {
         try {
-            IPacket packet = new TetrisPacket(prevScore, timeLimitSeconds, speedMultiplier);
+            IPacket packet = new ArkanoidPacket(prevScore, timeLimitSeconds, level);
             packetSendInfo(packet, targetPlayer);
-            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_TETRIS_CHANNEL, PacketTCP.write(packet));
+            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_ARKANOID_CHANNEL, PacketTCP.write(packet));
+        } catch (PacketSerializationException e) {
+            GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());
+        }
+    }
+
+    public static void sendBubblePuzzlePacketToClient(Player targetPlayer, int prevScore, int timeLimitSeconds, int level) {
+        try {
+            IPacket packet = new BubblePuzzlePacket(prevScore, timeLimitSeconds, level);
+            packetSendInfo(packet, targetPlayer);
+            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_BASE_CHANNEL, PacketTCP.write(packet));
+        } catch (PacketSerializationException e) {
+            GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());
+        }
+    }
+
+    public static void sendDonkeyKongPacketToClient(Player targetPlayer, int prevScore, int timeLimitSeconds, int spawnInterval, float spawnProbability) {
+        try {
+            IPacket packet = new DonkeyKongPacket(prevScore, timeLimitSeconds, spawnInterval, spawnProbability);
+            packetSendInfo(packet, targetPlayer);
+            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_DONKEYKONG_CHANNEL, PacketTCP.write(packet));
+        } catch (PacketSerializationException e) {
+            GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());
+        }
+    }
+
+    public static void sendFruitFocusPacketToClient(Player targetPlayer, int prevScore, int timeLimitSeconds) {
+        try {
+            IPacket packet = new FruitFocusPacket(prevScore, timeLimitSeconds);
+            packetSendInfo(packet, targetPlayer);
+            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_BASE_CHANNEL, PacketTCP.write(packet));
+        } catch (PacketSerializationException e) {
+            GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());
+        }
+    }
+
+    public static void sendGalagaPacketToClient(Player targetPlayer, int prevScore, int timeLimitSeconds, int level) {
+        try {
+            IPacket packet = new GalagaPacket(prevScore, timeLimitSeconds, level);
+            packetSendInfo(packet, targetPlayer);
+            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {
             GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());
         }
@@ -32,36 +72,36 @@ public class PacketSender {
         }
     }
 
-
-    public static void sendDonkeyKongPacketToClient(Player targetPlayer, int prevScore, int timeLimitSeconds, int spawnInterval, float spawnProbability) {
+    public static void sendKeyBindPacketToClient(Player targetPlayer, int prevScore, int timeLimitSeconds) {
         try {
-            IPacket packet = new DonkeyKongPacket(prevScore, timeLimitSeconds, spawnInterval, spawnProbability);
+            IPacket packet = new KeyBindPacket(prevScore, timeLimitSeconds);
             packetSendInfo(packet, targetPlayer);
-            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_DONKEYKONG_CHANNEL, PacketTCP.write(packet));
+            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {
             GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());
         }
     }
 
-    public static void sendBubblePuzzlePacketToClient(Player targetPlayer, int prevScore, int timeLimitSeconds, int level) {
+    public static void sendRobotFactoryPacketToClient(Player targetPlayer, int prevScore, int timeLimitSeconds) {
         try {
-            IPacket packet = new BubblePuzzlePacket(prevScore, timeLimitSeconds, level);
+            IPacket packet = new RobotFactoryPacket(prevScore, timeLimitSeconds);
             packetSendInfo(packet, targetPlayer);
-            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_BUBBLEPUZZLE_CHANNEL, PacketTCP.write(packet));
+            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {
             GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());
         }
     }
 
-    public static void sendArkanoidPacketToClient(Player targetPlayer, int prevScore, int timeLimitSeconds, int level) {
+    public static void sendTetrisPacketToClient(Player targetPlayer, int prevScore, int timeLimitSeconds, float speedMultiplier) {
         try {
-            IPacket packet = new ArkanoidPacket(prevScore, timeLimitSeconds, level);
+            IPacket packet = new TetrisPacket(prevScore, timeLimitSeconds, speedMultiplier);
             packetSendInfo(packet, targetPlayer);
-            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_ARKANOID_CHANNEL, PacketTCP.write(packet));
+            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {
             GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());
         }
     }
+
 
     private static void packetSendInfo(IPacket packet, Player targetPlayer) {
         GeoWarePlugin.getInstance().getLogger().info("Packet: " + packet.getPacketId() + ", sent to the client: " + targetPlayer.getName());

@@ -1,0 +1,11 @@
+package com.github.razorplay01.geowaremod.robotfactory;
+
+import com.github.razorplay01.razorplayapi.util.screen.GameScreen;
+import net.minecraft.text.Text;
+
+public class RobotFactoryScreen extends GameScreen {
+    public RobotFactoryScreen(int timeLimitSeconds, int prevScore) {
+        super(Text.of("Robot Factory"));
+        this.game = new RobotFactoryGame(this, timeLimitSeconds, prevScore);
+    }
+}

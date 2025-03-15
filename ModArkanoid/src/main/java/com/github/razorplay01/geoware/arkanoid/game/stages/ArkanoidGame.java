@@ -77,13 +77,16 @@ public class ArkanoidGame extends Game {
                 8,
                 screen
         );
-        //ball.setMoving(false);
+        ball.setMoving(false);
         balls.add(ball);
     }
 
     @Override
     public void update() {
         super.update();
+        if (initDelay.isFinished()) {
+            balls.getFirst().setMoving(true);
+        }
         if (status == GameStatus.ACTIVE && (player.isLosing() || player.isWinning())) {
             status = GameStatus.ENDING;
         }
@@ -107,9 +110,11 @@ public class ArkanoidGame extends Game {
         }
 
         // Verificar si hay bolas activas después de eliminar
-        boolean hasActiveBalls = balls.stream().anyMatch(Ball::isMoving);
-        if (!hasActiveBalls) {
-            player.setLosing(true);
+        if (status == GameStatus.ACTIVE) {
+            boolean hasActiveBalls = balls.stream().anyMatch(Ball::isMoving);
+            if (!hasActiveBalls) {
+                player.setLosing(true);
+            }
         }
     }
 

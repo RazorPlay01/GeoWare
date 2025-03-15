@@ -27,6 +27,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
     paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
     implementation('com.google.code.findbugs:jsr305:3.0.2')
+    implementation 'org.xerial:sqlite-jdbc:3.7.2'
 
     implementation project(':GeoWareCommon')
 }
