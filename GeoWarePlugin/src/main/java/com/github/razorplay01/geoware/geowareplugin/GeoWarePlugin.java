@@ -37,12 +37,8 @@ public final class GeoWarePlugin extends JavaPlugin {
     private void registerPacketChannels() {
         getServer().getMessenger().registerOutgoingPluginChannel(this, PacketTCP.PACKET_BASE_CHANNEL);
         getServer().getMessenger().registerIncomingPluginChannel(this, PacketTCP.PACKET_BASE_CHANNEL, new PacketListener());
-        getServer().getMessenger().registerOutgoingPluginChannel(this, PacketTCP.PACKET_ARKANOID_CHANNEL);
-        getServer().getMessenger().registerIncomingPluginChannel(this, PacketTCP.PACKET_ARKANOID_CHANNEL, new PacketListener());
         getServer().getMessenger().registerOutgoingPluginChannel(this, PacketTCP.PACKET_DONKEYKONG_CHANNEL);
         getServer().getMessenger().registerIncomingPluginChannel(this, PacketTCP.PACKET_DONKEYKONG_CHANNEL, new PacketListener());
-        getServer().getMessenger().registerOutgoingPluginChannel(this, PacketTCP.PACKET_HANOITOWERS_CHANNEL);
-        getServer().getMessenger().registerIncomingPluginChannel(this, PacketTCP.PACKET_HANOITOWERS_CHANNEL, new PacketListener());
     }
 
     @Override

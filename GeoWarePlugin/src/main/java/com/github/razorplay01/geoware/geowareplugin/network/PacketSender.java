@@ -66,7 +66,7 @@ public class PacketSender {
         try {
             IPacket packet = new HanoiTowersPacket(prevScore, timeLimitSeconds, rings);
             packetSendInfo(packet, targetPlayer);
-            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_HANOITOWERS_CHANNEL, PacketTCP.write(packet));
+            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {
             GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());
         }
