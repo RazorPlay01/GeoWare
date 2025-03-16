@@ -1,5 +1,6 @@
 package com.github.razorplay01.geowaremod;
 
+import com.github.razorplay01.geowaremod.arkanoid.ArkanoidGameScreen;
 import com.github.razorplay01.geowaremod.bubblepuzzle.BubblePuzzleScreen;
 import com.github.razorplay01.geowaremod.fruitfocus.FruitFocusGameScreen;
 import com.github.razorplay01.geowaremod.galaga.GalagaScreen;
@@ -83,6 +84,13 @@ public class GeoWareMod implements ModInitializer, ClientModInitializer {
                     .executes(context -> {
                         if (context.getSource().getPlayer() != null) {
                             MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new TetrisGameScreen(0, 5, 60, 3.0f)));
+                        }
+                        return 1;
+                    }));
+            dispatcher.register(CommandManager.literal("arkanoid")
+                    .executes(context -> {
+                        if (context.getSource().getPlayer() != null) {
+                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new ArkanoidGameScreen(0, 5, 60, 3)));
                         }
                         return 1;
                     }));

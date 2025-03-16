@@ -16,7 +16,7 @@ public class PacketSender {
         try {
             IPacket packet = new ArkanoidPacket(prevScore, timeLimitSeconds, level);
             packetSendInfo(packet, targetPlayer);
-            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_ARKANOID_CHANNEL, PacketTCP.write(packet));
+            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {
             GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());
         }

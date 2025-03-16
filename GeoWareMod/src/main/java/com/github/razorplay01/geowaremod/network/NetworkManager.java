@@ -3,6 +3,7 @@ package com.github.razorplay01.geowaremod.network;
 import com.github.razorplay01.geoware.geowarecommon.network.IPacket;
 import com.github.razorplay01.geoware.geowarecommon.network.packet.*;
 import com.github.razorplay01.geowaremod.GeoWareMod;
+import com.github.razorplay01.geowaremod.arkanoid.ArkanoidGameScreen;
 import com.github.razorplay01.geowaremod.bubblepuzzle.BubblePuzzleScreen;
 import com.github.razorplay01.geowaremod.fruitfocus.FruitFocusGameScreen;
 import com.github.razorplay01.geowaremod.galaga.GalagaScreen;
@@ -29,6 +30,7 @@ public class NetworkManager {
             IPacket packet = payload.packet();
             GeoWareMod.LOGGER.info("Packet received from server: {}", packet.getPacketId());
             switch (packet) {
+                case ArkanoidPacket pkt -> checkArkanoidPacketClient(pkt, context);
                 case BubblePuzzlePacket pkt -> checkBubblePuzzlePacketClient(pkt, context);
                 case FruitFocusPacket pkt -> checkFruitFocusPacketClient(pkt, context);
                 case GalagaPacket pkt -> checkGalagaPacketClient(pkt, context);
@@ -38,6 +40,10 @@ public class NetworkManager {
                 default -> GeoWareMod.LOGGER.info("Packet received from server: UnknownPacket");
             }
         }));
+    }
+
+    private static void checkArkanoidPacketClient(ArkanoidPacket iPacket, ClientPlayNetworking.Context context) {
+        context.client().execute(() -> MinecraftClient.getInstance().setScreen(new ArkanoidGameScreen(iPacket.getScore(), 5, iPacket.getTimeLimitSeconds(), iPacket.getLevel())));
     }
 
     private static void checkBubblePuzzlePacketClient(BubblePuzzlePacket iPacket, ClientPlayNetworking.Context context) {
