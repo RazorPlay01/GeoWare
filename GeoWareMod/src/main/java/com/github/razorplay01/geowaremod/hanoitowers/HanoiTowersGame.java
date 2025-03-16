@@ -1,10 +1,8 @@
-package com.github.razorplay01.geoware.hanoitowers;
+package com.github.razorplay01.geowaremod.hanoitowers;
 
-import com.github.razorplay01.geoware.hanoitowers.game.Ring;
-import com.github.razorplay01.geoware.hanoitowers.game.Tower;
-import com.github.razorplay01.geoware.hanoitowers.game.util.game.Game;
-import com.github.razorplay01.geoware.hanoitowers.game.util.game.GameStatus;
-import com.github.razorplay01.geoware.hanoitowers.game.util.render.CustomDrawContext;
+import com.github.razorplay01.razorplayapi.util.GameStatus;
+import com.github.razorplay01.razorplayapi.util.render.CustomDrawContext;
+import com.github.razorplay01.razorplayapi.util.stage.Game;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 

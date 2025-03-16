@@ -1,6 +1,6 @@
-package com.github.razorplay01.geoware.hanoitowers;
+package com.github.razorplay01.geowaremod.hanoitowers;
 
-import com.github.razorplay01.geoware.hanoitowers.game.util.game.GameScreen;
+import com.github.razorplay01.razorplayapi.util.screen.GameScreen;
 import net.minecraft.text.Text;
 
 public class HanoiTowersScreen extends GameScreen {

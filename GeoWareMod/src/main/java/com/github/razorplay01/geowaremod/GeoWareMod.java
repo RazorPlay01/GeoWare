@@ -4,6 +4,7 @@ import com.github.razorplay01.geowaremod.arkanoid.ArkanoidGameScreen;
 import com.github.razorplay01.geowaremod.bubblepuzzle.BubblePuzzleScreen;
 import com.github.razorplay01.geowaremod.fruitfocus.FruitFocusGameScreen;
 import com.github.razorplay01.geowaremod.galaga.GalagaScreen;
+import com.github.razorplay01.geowaremod.hanoitowers.HanoiTowersScreen;
 import com.github.razorplay01.geowaremod.keybind.KeyBindGameScreen;
 import com.github.razorplay01.geowaremod.network.NetworkManager;
 import com.github.razorplay01.geowaremod.robotfactory.RobotFactoryScreen;
@@ -91,6 +92,13 @@ public class GeoWareMod implements ModInitializer, ClientModInitializer {
                     .executes(context -> {
                         if (context.getSource().getPlayer() != null) {
                             MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new ArkanoidGameScreen(0, 5, 60, 3)));
+                        }
+                        return 1;
+                    }));
+            dispatcher.register(CommandManager.literal("hanoi")
+                    .executes(context -> {
+                        if (context.getSource().getPlayer() != null) {
+                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new HanoiTowersScreen(0, 5, 60, 5)));
                         }
                         return 1;
                     }));
