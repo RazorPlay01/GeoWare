@@ -49,13 +49,22 @@ public class PointsManager {
     private void modificarPuntos(Player player, int cantidad, boolean sumar) {
         String uuid = player.getUniqueId().toString();
         String nombre = player.getName();
-        try (PreparedStatement ps = connection.prepareStatement(
-                "INSERT OR REPLACE INTO Puntos (uuid, nombre, puntos) VALUES (?, ?, COALESCE((SELECT puntos FROM Puntos WHERE uuid = ?) " + (sumar ? "+" : "-") + " ?, 0))")) {
-            ps.setString(1, uuid);
-            ps.setString(2, nombre);
-            ps.setString(3, uuid);
-            ps.setInt(4, cantidad);
-            ps.executeUpdate();
+        try {
+            // Primero, obtenemos los puntos actuales (si existen)
+            int puntosActuales = obtenerPuntos(player);
+            int nuevosPuntos = sumar ? puntosActuales + cantidad : puntosActuales - cantidad;
+
+            // Aseguramos que los puntos no sean negativos (opcional, según tus reglas)
+            if (nuevosPuntos < 0) nuevosPuntos = 0;
+
+            // Insertamos o actualizamos los puntos
+            try (PreparedStatement ps = connection.prepareStatement(
+                    "INSERT OR REPLACE INTO Puntos (uuid, nombre, puntos) VALUES (?, ?, ?)")) {
+                ps.setString(1, uuid);
+                ps.setString(2, nombre);
+                ps.setInt(3, nuevosPuntos);
+                ps.executeUpdate();
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
