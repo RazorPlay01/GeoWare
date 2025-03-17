@@ -27,19 +27,17 @@ public class Platform extends MapObject {
 
     public static void renderTexture(DrawContext context, MapObject entity, Animation currentAnimation, int xOffset, int yOffset) {
         Texture currentTexture = currentAnimation.getCurrentTexture();
-
-        // Calcular dimensiones escaladas de la textura
         int width = 8;
         int height = 8;
 
-        // Calculo para centrar la textura en la entidad
-        int centeredX = (int) (entity.getXPos() + xOffset + (entity.getWidth() - width) / 2.0);
-        int centeredY = (int) (entity.getYPos() + yOffset + (entity.getHeight() - height) / 2.0);
+        // Usar la posición exacta de la plataforma sin centrado adicional
+        int renderX = (int) (entity.getXPos() + xOffset);
+        int renderY = (int) (entity.getYPos() + yOffset);
 
         context.drawTexture(
                 currentTexture.identifier(),
-                centeredX,
-                centeredY,
+                renderX,
+                renderY,
                 width,
                 height,
                 currentAnimation.getCurrentU(),

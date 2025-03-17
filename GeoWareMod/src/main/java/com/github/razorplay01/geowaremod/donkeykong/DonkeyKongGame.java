@@ -114,6 +114,9 @@ public class DonkeyKongGame extends Game {
 
             if (player.isLosing() || player.isWinning()) {
                 getGameDutarion().stop();
+                if (player.isWinning()) {
+                    calculateVictoryBonus();
+                }
                 setStatus(GameStatus.ENDING);
             }
         }
@@ -179,6 +182,14 @@ public class DonkeyKongGame extends Game {
             } else if (keyCode == GLFW.GLFW_KEY_DOWN || keyCode == GLFW.GLFW_KEY_S) {
                 getPlayer().stopMovingDown();
             }
+        }
+    }
+
+    private void calculateVictoryBonus() {
+        if (player.isWinning()) {
+            long remainingTimeSeconds = gameDutarion.getRemainingTime() / 1000;  // Convert to seconds
+            int timeBonus = (int) remainingTimeSeconds * 100;  // 100 points per remaining second
+            addScore(timeBonus);
         }
     }
 

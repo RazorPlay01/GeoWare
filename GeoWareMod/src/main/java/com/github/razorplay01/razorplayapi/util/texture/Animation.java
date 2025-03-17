@@ -46,7 +46,7 @@ public class Animation {
         return textures.get(currentFrame);
     }
 
-    public int getCurrentU() {
+    public float getCurrentU() {
         return getCurrentTexture().u();
     }
 
