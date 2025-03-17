@@ -6,7 +6,15 @@ prefix: GeoWare
 authors: [ RazorPlay ]
 website: https://github.com/RazorPlay01
 
+softdepend:
+  - "PlaceholderAPI"
+
 commands:
   2dgame:
     description: Envía un packet de juego 2D a jugadores
     usage: /<command> <target> <game> [parametros]
+    permission: geoware.2dgame
+  2dgamepoints:
+    description: Gestiona los puntos del juego 2D.
+    usage: /<command> <top10|add|subtract|reset> [opciones]
+    permission: geoware.2dgame.points

@@ -1,6 +1,7 @@
 package com.github.razorplay01.geoware.geowareplugin;
 
 import com.github.razorplay01.geoware.geowarecommon.network.PacketTCP;
+import com.github.razorplay01.geoware.geowareplugin.command.PointsCommand;
 import com.github.razorplay01.geoware.geowareplugin.command.TwoDGameCommand;
 import com.github.razorplay01.geoware.geowareplugin.network.PacketListener;
 import com.github.razorplay01.geoware.geowareplugin.util.UtilMessage;
@@ -31,6 +32,14 @@ public final class GeoWarePlugin extends JavaPlugin {
             getLogger().severe("Error al iniciar la base de datos: " + e.getMessage());
             getServer().getPluginManager().disablePlugin(this);
         }
+
+        if (getServer().getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            new PointsPlaceholderExpansion().register();
+            getLogger().info("Expansión de PlaceholderAPI registrada correctamente.");
+        } else {
+            getLogger().warning("PlaceholderAPI no encontrado. Los placeholders no estarán disponibles.");
+        }
+
         UtilMessage.sendStartupMessage(this);
     }
 
@@ -55,8 +64,12 @@ public final class GeoWarePlugin extends JavaPlugin {
     }
 
     private void registerCommands() {
-        TwoDGameCommand command = new TwoDGameCommand();
-        getCommand("2dgame").setExecutor(command);
-        getCommand("2dgame").setTabCompleter(command);
+        TwoDGameCommand gameCommand = new TwoDGameCommand();
+        getCommand("2dgame").setExecutor(gameCommand);
+        getCommand("2dgame").setTabCompleter(gameCommand);
+
+        PointsCommand gamePointsCommand = new PointsCommand();
+        getCommand("2dgamepoints").setExecutor(gamePointsCommand);
+        getCommand("2dgamepoints").setTabCompleter(gamePointsCommand);
     }
 }
