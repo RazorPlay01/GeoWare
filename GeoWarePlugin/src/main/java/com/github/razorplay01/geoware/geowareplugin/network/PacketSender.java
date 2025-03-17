@@ -36,7 +36,7 @@ public class PacketSender {
         try {
             IPacket packet = new DonkeyKongPacket(prevScore, timeLimitSeconds, spawnInterval, spawnProbability);
             packetSendInfo(packet, targetPlayer);
-            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_DONKEYKONG_CHANNEL, PacketTCP.write(packet));
+            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {
             GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());
         }

@@ -5,8 +5,10 @@ import com.github.razorplay01.geoware.geowarecommon.network.packet.*;
 import com.github.razorplay01.geowaremod.GeoWareMod;
 import com.github.razorplay01.geowaremod.arkanoid.ArkanoidGameScreen;
 import com.github.razorplay01.geowaremod.bubblepuzzle.BubblePuzzleScreen;
+import com.github.razorplay01.geowaremod.donkeykong.DonkeyKongScreen;
 import com.github.razorplay01.geowaremod.fruitfocus.FruitFocusGameScreen;
 import com.github.razorplay01.geowaremod.galaga.GalagaScreen;
+import com.github.razorplay01.geowaremod.hanoitowers.HanoiTowersScreen;
 import com.github.razorplay01.geowaremod.keybind.KeyBindGameScreen;
 import com.github.razorplay01.geowaremod.robotfactory.RobotFactoryScreen;
 import com.github.razorplay01.geowaremod.tetris.TetrisGameScreen;
@@ -32,8 +34,10 @@ public class NetworkManager {
             switch (packet) {
                 case ArkanoidPacket pkt -> checkArkanoidPacketClient(pkt, context);
                 case BubblePuzzlePacket pkt -> checkBubblePuzzlePacketClient(pkt, context);
+                case DonkeyKongPacket pkt -> checkDonkeyKongPacketClient(pkt, context);
                 case FruitFocusPacket pkt -> checkFruitFocusPacketClient(pkt, context);
                 case GalagaPacket pkt -> checkGalagaPacketClient(pkt, context);
+                case HanoiTowersPacket pkt -> checkHanoiTowersPacketClient(pkt, context);
                 case KeyBindPacket pkt -> checkKeyBindPacketClient(pkt, context);
                 case RobotFactoryPacket pkt -> checkRobotFactoryPacketClient(pkt, context);
                 case TetrisPacket pkt -> checkTetrisPacketClient(pkt, context);
@@ -50,12 +54,20 @@ public class NetworkManager {
         context.client().execute(() -> MinecraftClient.getInstance().setScreen(new BubblePuzzleScreen(iPacket.getScore(), 5, iPacket.getTimeLimitSeconds(), iPacket.getLevel())));
     }
 
+    private static void checkDonkeyKongPacketClient(DonkeyKongPacket iPacket, ClientPlayNetworking.Context context) {
+        context.client().execute(() -> MinecraftClient.getInstance().setScreen(new DonkeyKongScreen(iPacket.getScore(), 5, iPacket.getTimeLimitSeconds(), iPacket.getSpawnInterval(), iPacket.getSpawnProbability())));
+    }
+
     private static void checkFruitFocusPacketClient(FruitFocusPacket iPacket, ClientPlayNetworking.Context context) {
         context.client().execute(() -> MinecraftClient.getInstance().setScreen(new FruitFocusGameScreen(iPacket.getTimeLimitSeconds(), iPacket.getScore())));
     }
 
     private static void checkGalagaPacketClient(GalagaPacket iPacket, ClientPlayNetworking.Context context) {
         context.client().execute(() -> MinecraftClient.getInstance().setScreen(new GalagaScreen(iPacket.getLevel(), iPacket.getTimeLimitSeconds(), iPacket.getScore())));
+    }
+
+    private static void checkHanoiTowersPacketClient(HanoiTowersPacket iPacket, ClientPlayNetworking.Context context) {
+        context.client().execute(() -> MinecraftClient.getInstance().setScreen(new HanoiTowersScreen(iPacket.getScore(), 5, iPacket.getTimeLimitSeconds(), iPacket.getRings())));
     }
 
     private static void checkKeyBindPacketClient(KeyBindPacket iPacket, ClientPlayNetworking.Context context) {

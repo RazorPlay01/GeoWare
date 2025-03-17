@@ -2,6 +2,7 @@ package com.github.razorplay01.geowaremod.galaga;
 
 import com.github.razorplay01.geowaremod.GeoWareMod;
 import com.github.razorplay01.razorplayapi.util.Entity;
+import com.github.razorplay01.razorplayapi.util.ScreenSide;
 import com.github.razorplay01.razorplayapi.util.hitbox.RectangleHitbox;
 import com.github.razorplay01.razorplayapi.util.screen.GameScreen;
 import com.github.razorplay01.razorplayapi.util.texture.Animation;
@@ -15,6 +16,9 @@ import net.minecraft.util.Identifier;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import static com.github.razorplay01.razorplayapi.util.ScreenSide.onScreenBoundaryCollision;
+import static com.github.razorplay01.razorplayapi.util.ScreenSide.verifyScreenBoundsCollision;
 
 @Getter
 @Setter
@@ -49,7 +53,7 @@ public class Player extends Entity {
         }
         xPos += velocityX;
         this.hitbox.updatePosition(this.xPos, this.yPos);
-        verifyScreenBoundsCollision();
+        verifyScreenBoundsCollision(this, gameScreen, hitbox);
         updateBullets(); // Actualiza las balas
     }
 
@@ -94,58 +98,5 @@ public class Player extends Entity {
                 iterator.remove();
             }
         }
-    }
-
-    public void verifyScreenBoundsCollision() {
-        int screenX = gameScreen.getGame().getScreen().getGameScreenXPos();
-        int screenY = gameScreen.getGame().getScreen().getGameScreenYPos();
-        int screenWidth = gameScreen.getGame().getScreenWidth();
-        int screenHeight = gameScreen.getGame().getScreenHeight();
-
-        // Colisión con el borde izquierdo
-        if (xPos < screenX) {
-            xPos = screenX;
-            onScreenBoundaryCollision(ScreenSide.LEFT);
-            return;
-        }
-
-        // Colisión con el borde derecho
-        if (xPos + hitbox.getWidth() > screenX + screenWidth) {
-            xPos = screenX + screenWidth - hitbox.getWidth();
-            onScreenBoundaryCollision(ScreenSide.RIGHT);
-            return;
-        }
-
-        // Colisión con el borde superior
-        if (yPos < screenY) {
-            yPos = screenY;
-            onScreenBoundaryCollision(ScreenSide.TOP);
-            return;
-        }
-
-        // Colisión con el borde inferior
-        if (yPos + hitbox.getHeight() > screenY + screenHeight) {
-            yPos = screenY + screenHeight - hitbox.getHeight();
-            onScreenBoundaryCollision(ScreenSide.BOTTOM);
-        }
-    }
-
-    public void onScreenBoundaryCollision(ScreenSide side) {
-        if (side.equals(ScreenSide.LEFT) || side.equals(ScreenSide.RIGHT)) {
-            velocityX = 0;
-        } else if (side.equals(ScreenSide.TOP) || side.equals(ScreenSide.BOTTOM)) {
-            velocityY = 0;
-        }
-    }
-
-
-    @Getter
-    @AllArgsConstructor
-    public enum ScreenSide {
-        TOP("top"),
-        BOTTOM("bottom"),
-        LEFT("left"),
-        RIGHT("right");
-        private final String side;
     }
 }

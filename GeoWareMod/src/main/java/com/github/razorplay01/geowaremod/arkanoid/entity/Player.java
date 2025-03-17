@@ -9,6 +9,8 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.DrawContext;
 
+import static com.github.razorplay01.razorplayapi.util.ScreenSide.verifyScreenBoundsCollision;
+
 @Getter
 @Setter
 public class Player extends ArkanoidEntity {
@@ -45,7 +47,7 @@ public class Player extends ArkanoidEntity {
 
         xPos += velocityX;
         updateHitboxes();
-        verifyScreenBoundsCollision();
+        verifyScreenBoundsCollision(this, gameScreen, (RectangleHitbox) getDefaultHitbox());
     }
 
     public void moveLeft() {

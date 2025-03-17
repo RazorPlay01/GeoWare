@@ -114,82 +114,84 @@ public class GalagaGame extends Game {
                 updateParticles(); // Actualizar partículas mientras se muestra la muerte del jugador
             }
         } else if (playerAlive) {
-            if (currentPattern == 1) spawnPatron1(screen);
-            else if (currentPattern == 2) spawnPatron2(screen);
-            else if (currentPattern == 3) spawnPatron3(screen);
-            player.update();
-            updateEnemies();
+            if (status == GameStatus.ACTIVE) {
+                if (currentPattern == 1) spawnPatron1(screen);
+                else if (currentPattern == 2) spawnPatron2(screen);
+                else if (currentPattern == 3) spawnPatron3(screen);
+                player.update();
+                updateEnemies();
 
-            // Manejar disparos enemigos cada 5 segundos
-            long currentTime = System.currentTimeMillis();
-            if (currentTime - lastEnemyShotTime >= ENEMY_SHOOT_DELAY) {
-                List<Enemy> shootingEnemies = new ArrayList<>();
-                for (Enemy enemy : enemies) {
-                    if (Math.random() * 100 <= 10) { // 10% de probabilidad por enemigo
-                        shootingEnemies.add(enemy);
-                    }
-                }
-
-                // Determinar cuántos disparos por enemigo (1 a 5, con distribución de probabilidad)
-                Random random = new Random();
-                for (Enemy enemy : shootingEnemies) {
-                    int shotCount = 1; // Por defecto 1 disparo (70% probabilidad)
-                    double roll = random.nextDouble();
-                    if (roll <= 0.20) shotCount = 2; // 20% probabilidad
-                    else if (roll <= 0.25) shotCount = 3; // 5% probabilidad
-                    else if (roll <= 0.28) shotCount = 4; // 3% probabilidad
-                    else if (roll <= 0.30) shotCount = 5; // 2% probabilidad
-                    shotCount = Math.min(shotCount, 5); // Máximo 5 disparos
-
-                    for (int i = 0; i < shotCount; i++) {
-                        enemy.shoot(player, enemyBullets); // Añadir balas a la lista global
-                    }
-                }
-                lastEnemyShotTime = currentTime;
-            }
-
-            Iterator<Enemy> enemyIterator = enemies.iterator();
-            while (enemyIterator.hasNext()) {
-                Enemy enemy = enemyIterator.next();
-                Iterator<Bullet> bulletIterator = player.getBullets().iterator();
-                while (bulletIterator.hasNext()) {
-                    Bullet bullet = bulletIterator.next();
-                    if (enemy.collidesWith(bullet)) {
-                        if (enemy.takeDamage()) {
-                            addScore(25, enemy.getXPos(), enemy.getYPos());
-                            particles.add(new Particle(enemy.getXPos(), enemy.getYPos(), 16, 16, screen, enemyDeathParticle));
-                            enemyIterator.remove();
+                // Manejar disparos enemigos cada 5 segundos
+                long currentTime = System.currentTimeMillis();
+                if (currentTime - lastEnemyShotTime >= ENEMY_SHOOT_DELAY) {
+                    List<Enemy> shootingEnemies = new ArrayList<>();
+                    for (Enemy enemy : enemies) {
+                        if (Math.random() * 100 <= 10) { // 10% de probabilidad por enemigo
+                            shootingEnemies.add(enemy);
                         }
-                        bulletIterator.remove();
+                    }
+
+                    // Determinar cuántos disparos por enemigo (1 a 5, con distribución de probabilidad)
+                    Random random = new Random();
+                    for (Enemy enemy : shootingEnemies) {
+                        int shotCount = 1; // Por defecto 1 disparo (70% probabilidad)
+                        double roll = random.nextDouble();
+                        if (roll <= 0.20) shotCount = 2; // 20% probabilidad
+                        else if (roll <= 0.25) shotCount = 3; // 5% probabilidad
+                        else if (roll <= 0.28) shotCount = 4; // 3% probabilidad
+                        else if (roll <= 0.30) shotCount = 5; // 2% probabilidad
+                        shotCount = Math.min(shotCount, 5); // Máximo 5 disparos
+
+                        for (int i = 0; i < shotCount; i++) {
+                            enemy.shoot(player, enemyBullets); // Añadir balas a la lista global
+                        }
+                    }
+                    lastEnemyShotTime = currentTime;
+                }
+
+                Iterator<Enemy> enemyIterator = enemies.iterator();
+                while (enemyIterator.hasNext()) {
+                    Enemy enemy = enemyIterator.next();
+                    Iterator<Bullet> bulletIterator = player.getBullets().iterator();
+                    while (bulletIterator.hasNext()) {
+                        Bullet bullet = bulletIterator.next();
+                        if (enemy.collidesWith(bullet)) {
+                            if (enemy.takeDamage()) {
+                                addScore(25, enemy.getXPos(), enemy.getYPos());
+                                particles.add(new Particle(enemy.getXPos(), enemy.getYPos(), 16, 16, screen, enemyDeathParticle));
+                                enemyIterator.remove();
+                            }
+                            bulletIterator.remove();
+                            break;
+                        }
+                    }
+                    if (enemy.collidesWith(player)) {
+                        particles.add(new Particle(player.getXPos(), player.getYPos(), 16, 16, screen, playerDeathParticle));
+                        playerAlive = false;
                         break;
                     }
                 }
-                if (enemy.collidesWith(player)) {
-                    particles.add(new Particle(player.getXPos(), player.getYPos(), 16, 16, screen, playerDeathParticle));
-                    playerAlive = false;
-                    break;
-                }
-            }
 
-            // Actualizar y manejar colisiones de balas enemigas
-            Iterator<EnemyBullet> enemyBulletIterator = enemyBullets.iterator();
-            while (enemyBulletIterator.hasNext()) {
-                EnemyBullet enemyBullet = enemyBulletIterator.next();
-                enemyBullet.update();
-                if (enemyBullet.collidesWith(player)) {
-                    particles.add(new Particle(player.getXPos(), player.getYPos(), 16, 16, screen, playerDeathParticle));
-                    playerAlive = false;
-                    enemyBulletIterator.remove();
-                } else if (enemyBullet.isOffScreen()) {
-                    enemyBulletIterator.remove();
+                // Actualizar y manejar colisiones de balas enemigas
+                Iterator<EnemyBullet> enemyBulletIterator = enemyBullets.iterator();
+                while (enemyBulletIterator.hasNext()) {
+                    EnemyBullet enemyBullet = enemyBulletIterator.next();
+                    enemyBullet.update();
+                    if (enemyBullet.collidesWith(player)) {
+                        particles.add(new Particle(player.getXPos(), player.getYPos(), 16, 16, screen, playerDeathParticle));
+                        playerAlive = false;
+                        enemyBulletIterator.remove();
+                    } else if (enemyBullet.isOffScreen()) {
+                        enemyBulletIterator.remove();
+                    }
                 }
-            }
 
-            updateParticles();
-            if (spawnPhase == 5 && enemies.isEmpty()) {
-                showPlayerDeath = false;
-                particles.clear();
-                status = GameStatus.ENDING;
+                updateParticles();
+                if (spawnPhase == 5 && enemies.isEmpty()) {
+                    showPlayerDeath = false;
+                    particles.clear();
+                    status = GameStatus.ENDING;
+                }
             }
         }
     }
@@ -212,6 +214,8 @@ public class GalagaGame extends Game {
 
     @Override
     public void keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (status != GameStatus.ACTIVE) return;
+
         if (keyCode == GLFW.GLFW_KEY_LEFT || keyCode == client.options.leftKey.getDefaultKey().getCode()) {
             player.moveLeft();
         } else if (keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == client.options.rightKey.getDefaultKey().getCode()) {
@@ -223,6 +227,8 @@ public class GalagaGame extends Game {
 
     @Override
     public void keyReleased(int keyCode, int scanCode, int modifiers) {
+        if (status != GameStatus.ACTIVE) return;
+
         if (keyCode == GLFW.GLFW_KEY_LEFT || keyCode == GLFW.GLFW_KEY_A) {
             player.stopMovingLeft();
         } else if (keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == GLFW.GLFW_KEY_D) {

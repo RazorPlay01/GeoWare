@@ -25,7 +25,6 @@ import java.util.Optional;
  */
 public class PacketTCP {
     public static final String PACKET_BASE_CHANNEL = "geoware:packets_channel";
-    public static final String PACKET_DONKEYKONG_CHANNEL = "donkeykong:packets_channel";
     private static final BiMap<String, Class<? extends IPacket>> packetRegistry = HashBiMap.create();
 
     static {

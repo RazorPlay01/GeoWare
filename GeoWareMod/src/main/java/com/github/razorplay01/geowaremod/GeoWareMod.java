@@ -2,6 +2,7 @@ package com.github.razorplay01.geowaremod;
 
 import com.github.razorplay01.geowaremod.arkanoid.ArkanoidGameScreen;
 import com.github.razorplay01.geowaremod.bubblepuzzle.BubblePuzzleScreen;
+import com.github.razorplay01.geowaremod.donkeykong.DonkeyKongScreen;
 import com.github.razorplay01.geowaremod.fruitfocus.FruitFocusGameScreen;
 import com.github.razorplay01.geowaremod.galaga.GalagaScreen;
 import com.github.razorplay01.geowaremod.hanoitowers.HanoiTowersScreen;
@@ -99,6 +100,13 @@ public class GeoWareMod implements ModInitializer, ClientModInitializer {
                     .executes(context -> {
                         if (context.getSource().getPlayer() != null) {
                             MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new HanoiTowersScreen(0, 5, 60, 5)));
+                        }
+                        return 1;
+                    }));
+            dispatcher.register(CommandManager.literal("donkeykong")
+                    .executes(context -> {
+                        if (context.getSource().getPlayer() != null) {
+                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new DonkeyKongScreen(0, 5, 60, 80, 0.7f)));
                         }
                         return 1;
                     }));
