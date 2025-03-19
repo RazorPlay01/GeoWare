@@ -1,10 +1,12 @@
 package com.github.razorplay01.geowaremod.hanoitowers;
 
+import com.github.razorplay01.geowaremod.GeoWareMod;
 import com.github.razorplay01.razorplayapi.util.GameStatus;
-import com.github.razorplay01.razorplayapi.util.render.CustomDrawContext;
 import com.github.razorplay01.razorplayapi.util.stage.Game;
+import com.github.razorplay01.razorplayapi.util.texture.Texture;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +18,8 @@ public class HanoiTowersGame extends Game {
     private final int numRings;
     private int movesCounter;
 
-    private static final int GAME_WIDTH = 560; //margin + maxRingWidth + separation + maxRingWidth + separation + maxRingWidth + margin;
-    private static final int GAME_HEIGHT = 240; //towerHeight + (margin * 2);
+    private static final int GAME_WIDTH = 420;
+    private static final int GAME_HEIGHT = 255;
 
     public HanoiTowersGame(Screen screen, int initDelay, int timeLimitSeconds, int prevScore, int rings) {
         super(screen, initDelay, timeLimitSeconds, prevScore);
@@ -28,22 +30,12 @@ public class HanoiTowersGame extends Game {
     @Override
     public void init() {
         super.init();
-        int maxRingWidth = 160;
-        int towerWidth = 20;
-        int towerHeight = 200;
-        int margin = 20;
-        int separation = 20;
+        int towerWidth = 93;
+        int towerHeight = 147;
 
-        // Posicionar las torres centradas en sus respectivos espacios
-        int firstTowerX = screen.getGameScreenXPos() + margin + (maxRingWidth / 2);
-        int secondTowerX = firstTowerX + maxRingWidth + separation;
-        int thirdTowerX = secondTowerX + maxRingWidth + separation;
-        int towerY = screen.getGameScreenYPos() + margin;
-
-        // Crear las torres en sus posiciones calculadas
-        towers.add(new Tower(firstTowerX - ((float) towerWidth / 2), towerY, towerWidth, towerHeight, 0xFF844000));
-        towers.add(new Tower(secondTowerX - ((float) towerWidth / 2), towerY, towerWidth, towerHeight, 0xFF844000));
-        towers.add(new Tower(thirdTowerX - ((float) towerWidth / 2), towerY, towerWidth, towerHeight, 0xFF00FF00));
+        towers.add(new Tower(screen.getGameScreenXPos() + 32, screen.getGameScreenYPos() + 80, towerWidth, towerHeight, 0xFF844000));
+        towers.add(new Tower(screen.getGameScreenXPos() + 165, screen.getGameScreenYPos() + 80, towerWidth, towerHeight, 0xFF844000));
+        towers.add(new Tower(screen.getGameScreenXPos() + 295, screen.getGameScreenYPos() + 80, towerWidth, towerHeight, 0xFF00FF00));
 
         // Inicializar los anillos en la primera torre
         inicializarAnillos(towers.getFirst());
@@ -72,8 +64,8 @@ public class HanoiTowersGame extends Game {
 
     @Override
     public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-        CustomDrawContext customDrawContext = CustomDrawContext.wrap(context);
-        customDrawContext.drawBasicBackground(screen);
+        Identifier backgroundTexture = Identifier.of(GeoWareMod.MOD_ID, "textures/games/hanoitowers/fondo.png");
+        context.drawTexture(backgroundTexture, screen.getGameScreenXPos(), screen.getGameScreenYPos(), 0, 0, GAME_WIDTH, GAME_HEIGHT, GAME_WIDTH, GAME_HEIGHT);
     }
 
     @Override
@@ -134,20 +126,113 @@ public class HanoiTowersGame extends Game {
     }
 
     private void inicializarAnillos(Tower torre) {
-        for (int i = 0; i < numRings; i++) {
-            int anilloWidth = 160 - (i * 20); // El ancho disminuye con cada anillo
-            int anilloHeight = 20;
-            int color = 0xFF0000FF + (i * 0x00001100); // Cambia el color para cada anillo
+        Identifier texture = Identifier.of(GeoWareMod.MOD_ID, "textures/games/hanoitowers/rings.png");
+        int textureWidth = 150;
+        int textureHeight = 150;
+        int scale = 1;
+        int height = 10;
+        int yOffSet = -6;
 
-            Ring anillo = new Ring(
-                    torre.getXPos() - ((float) anilloWidth / 2) + (torre.getWidth() / 2), // Centrado en la torre
-                    torre.getYPos() + torre.getHeight() - (i + 1) * anilloHeight, // yPos: base de la torre
-                    anilloWidth,
-                    anilloHeight,
-                    color
-            );
+        Ring ring1 = new Ring(
+                torre.getXPos() - ((float) 87 / 2) + (torre.getWidth() / 2),
+                torre.getYPos() + torre.getHeight() - 1 * height + yOffSet,
+                87,
+                10,
+                new Texture(texture, 35, 106, 87, height, textureWidth, textureHeight, scale));
+        Ring ring2 = new Ring(
+                torre.getXPos() - ((float) 75 / 2) + (torre.getWidth() / 2),
+                torre.getYPos() + torre.getHeight() - 2 * height + yOffSet,
+                75,
+                10,
+                new Texture(texture, 41, 96, 75, height, textureWidth, textureHeight, scale));
+        Ring ring3 = new Ring(
+                torre.getXPos() - ((float) 63 / 2) + (torre.getWidth() / 2),
+                torre.getYPos() + torre.getHeight() - 3 * height + yOffSet,
+                63,
+                10,
+                new Texture(texture, 47, 86, 63, height, textureWidth, textureHeight, scale));
+        Ring ring4 = new Ring(
+                torre.getXPos() - ((float) 51 / 2) + (torre.getWidth() / 2),
+                torre.getYPos() + torre.getHeight() - 4 * height + yOffSet,
+                51,
+                10,
+                new Texture(texture, 53, 76, 51, height, textureWidth, textureHeight, scale));
+        Ring ring5 = new Ring(
+                torre.getXPos() - ((float) 39 / 2) + (torre.getWidth() / 2),
+                torre.getYPos() + torre.getHeight() - 5 * height + yOffSet,
+                39,
+                10,
+                new Texture(texture, 59, 66, 39, height, textureWidth, textureHeight, scale));
+        Ring ring6 = new Ring(
+                torre.getXPos() - ((float) 29 / 2) + (torre.getWidth() / 2),
+                torre.getYPos() + torre.getHeight() - 6 * height + yOffSet,
+                29,
+                10,
+                new Texture(texture, 64, 56, 29, height, textureWidth, textureHeight, scale));
+        Ring ring7 = new Ring(
+                torre.getXPos() - ((float) 21 / 2) + (torre.getWidth() / 2),
+                torre.getYPos() + torre.getHeight() - 7 * height + yOffSet,
+                21,
+                10,
+                new Texture(texture, 68, 46, 21, height, textureWidth, textureHeight, scale));
+        Ring ring8 = new Ring(
+                torre.getXPos() - ((float) 14 / 2) + (torre.getWidth() / 2),
+                torre.getYPos() + torre.getHeight() - 8 * height + yOffSet,
+                14,
+                10,
+                new Texture(texture, 71, 36, 39, height, textureWidth, textureHeight, scale));
 
-            torre.addRing(anillo);
+        switch (numRings){
+            case 2 -> {
+                torre.addRing(ring1);
+                torre.addRing(ring2);
+            }
+            case 3 -> {
+                torre.addRing(ring1);
+                torre.addRing(ring2);
+                torre.addRing(ring3);
+            }
+            case 4 -> {
+                torre.addRing(ring1);
+                torre.addRing(ring2);
+                torre.addRing(ring3);
+                torre.addRing(ring4);
+            }
+            case 5 -> {
+                torre.addRing(ring1);
+                torre.addRing(ring2);
+                torre.addRing(ring3);
+                torre.addRing(ring4);
+                torre.addRing(ring5);
+            }
+            case 6 -> {
+                torre.addRing(ring1);
+                torre.addRing(ring2);
+                torre.addRing(ring3);
+                torre.addRing(ring4);
+                torre.addRing(ring5);
+                torre.addRing(ring6);
+            }
+            case 7 -> {
+                torre.addRing(ring1);
+                torre.addRing(ring2);
+                torre.addRing(ring3);
+                torre.addRing(ring4);
+                torre.addRing(ring5);
+                torre.addRing(ring6);
+                torre.addRing(ring7);
+            }
+            case 8 -> {
+                torre.addRing(ring1);
+                torre.addRing(ring2);
+                torre.addRing(ring3);
+                torre.addRing(ring4);
+                torre.addRing(ring5);
+                torre.addRing(ring6);
+                torre.addRing(ring7);
+                torre.addRing(ring8);
+            }
+            default -> torre.addRing(ring1);
         }
     }
 }

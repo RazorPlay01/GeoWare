@@ -1,6 +1,7 @@
 package com.github.razorplay01.geowaremod.hanoitowers;
 
 import com.github.razorplay01.razorplayapi.util.hitbox.RectangleHitbox;
+import com.github.razorplay01.razorplayapi.util.texture.Texture;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.DrawContext;
@@ -13,18 +14,18 @@ public class Ring {
     private float width;
     private float height;
     private RectangleHitbox hitbox;
-    private int color;
+    private Texture texture;
 
-    public Ring(float xPos, float yPos, float width, float height, int color) {
+    public Ring(float xPos, float yPos, float width, float height, Texture texture) {
         this.xPos = xPos;
         this.yPos = yPos;
         this.width = width;
         this.height = height;
-        this.color = color;
-        this.hitbox = new RectangleHitbox("ring", xPos, yPos, width, height, 0, 0, color);
+        this.texture = texture;
+        this.hitbox = new RectangleHitbox("ring", xPos, yPos, width, height, 0, 0, 0xffffffff);
     }
 
     public void render(DrawContext context) {
-        context.fill((int) xPos, (int) yPos, (int) (xPos + width), (int) (yPos + height), color);
+        context.drawTexture(texture.identifier(), (int) xPos, (int) yPos, texture.u(), texture.v(), texture.width(), texture.height(), texture.textureWidth(), texture.textureHeight());
     }
 }

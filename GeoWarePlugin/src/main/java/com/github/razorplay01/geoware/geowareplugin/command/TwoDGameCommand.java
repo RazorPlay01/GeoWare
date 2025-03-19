@@ -171,10 +171,17 @@ public class TwoDGameCommand implements CommandExecutor, TabCompleter {
                     completions.add("3.0");
                     break;
                 case "hanoitowers":
+                    completions.add("1");
+                    completions.add("2");
+                    completions.add("3");
+                    completions.add("4");
                     completions.add("5");
+                    completions.add("6");
+                    completions.add("7");
+                    completions.add("8");
                     break;
                 case "donkeykong":
-                    completions.add("80");
+                    completions.add("500");
                     break;
                 case "bubblepuzzle":
                 case "arkanoid":

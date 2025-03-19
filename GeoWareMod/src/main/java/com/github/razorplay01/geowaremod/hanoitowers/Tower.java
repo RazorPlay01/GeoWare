@@ -38,8 +38,6 @@ public class Tower {
     }
 
     public void render(DrawContext context) {
-        context.fill((int) xPos, (int) yPos, (int) (xPos + width), (int) (yPos + height), color);
-
         for (Ring ring : rings) {
             ring.render(context);
         }
@@ -53,34 +51,32 @@ public class Tower {
         return ring.getWidth() < topRing.getWidth();
     }
 
-    public boolean moveRingTo(Tower destinationTower, Ring ring) {
+    public void moveRingTo(Tower destinationTower, Ring ring) {
         if (destinationTower.isValidMove(ring)) {
             this.removeRing(ring);
             ring.setXPos(destinationTower.getXPos() - (ring.getWidth() / 2) + (destinationTower.getWidth() / 2));
             ring.setYPos(destinationTower.getYPosForNewRing());
             destinationTower.addRing(ring);
-            return true;
         } else {
             this.addRing(ring);
-            return false;
         }
     }
 
     public int getYPosForNewRing() {
         if (rings.isEmpty()) {
-            return (int) (yPos + height - 20); // Ring height
+            return (int) (yPos + height - 10 - 6); // Ring height
         } else {
             Ring topRing = rings.get(rings.size() - 1);
-            return (int) (topRing.getYPos() - 20); // Ring height
+            return (int) (topRing.getYPos() - 10); // Ring height
         }
     }
 
     public int getYPosForRelocateRing() {
         if (rings.isEmpty() || rings.size() == 1) {
-            return (int) (yPos + height - 20); // Ring height
+            return (int) (yPos + height - 10 - 6); // Ring height
         } else {
             Ring secondTopRing = rings.get(rings.size() - 2);
-            return (int) (secondTopRing.getYPos() - 20); // Ring height
+            return (int) (secondTopRing.getYPos() - 10); // Ring height
         }
     }
 }
