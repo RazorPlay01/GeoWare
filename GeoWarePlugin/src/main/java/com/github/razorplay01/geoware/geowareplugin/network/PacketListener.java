@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class PacketListener implements PluginMessageListener {
     @Override
-    public void onPluginMessageReceived(@NotNull String channel, @NotNull Player player, @NotNull byte[] message) {
+    public void onPluginMessageReceived(@NotNull String channel, @NotNull Player player, byte @NotNull [] message) {
         if (channel.equals(PacketTCP.PACKET_BASE_CHANNEL)) {
             ByteArrayDataInput buf = ByteStreams.newDataInput(message);
 
@@ -23,8 +23,7 @@ public class PacketListener implements PluginMessageListener {
                 GeoWarePlugin.getInstance().getLogger().info("Packet received from the user: " + player.getName() + ", type: " + packet.getPacketId());
                 if (packet instanceof ScorePacket pkt) {
                     int score = pkt.getScore();
-                    GeoWarePlugin.getInstance().getLogger().info("score: " + score);
-                    GeoWarePlugin.getInstance().getPointsManager().sumarPuntos(player, score);
+                    GeoWarePlugin.getInstance().getPointsManager().addPoints(player, score);
                 }
             } catch (PacketSerializationException | PacketInstantiationException e) {
                 throw new RuntimeException(e);

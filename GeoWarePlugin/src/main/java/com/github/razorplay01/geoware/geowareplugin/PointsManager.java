@@ -7,129 +7,193 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ * Gestiona los puntos de los jugadores en un servidor de Minecraft utilizando una base de datos SQLite.
+ */
 public class PointsManager {
-    private final Connection connection;
+    private final Connection databaseConnection;
+    private static final String TABLE_NAME = "Puntos";
+    private static final String POINTS_COLUMN = "puntos";
+    private static final int TOP_LIMIT = 10;
 
+    /**
+     * Crea una nueva instancia de PointsManager y establece la conexión a la base de datos.
+     *
+     * @param dataFolder Carpeta donde se almacenará el archivo de la base de datos
+     * @throws SQLException Si ocurre un error al conectar con la base de datos
+     */
     public PointsManager(File dataFolder) throws SQLException {
-        File dbFile = new File(dataFolder, "puntos.db");
-        if (!dbFile.getParentFile().exists()) {
-            dbFile.getParentFile().mkdirs();
-        }
-        String url = "jdbc:sqlite:" + dbFile.getAbsolutePath();
-        connection = DriverManager.getConnection(url);
-        inicializarBaseDeDatos();
+        File databaseFile = new File(dataFolder, "puntos.db");
+        databaseFile.getParentFile().mkdirs();
+        String url = "jdbc:sqlite:" + databaseFile.getAbsolutePath();
+        databaseConnection = DriverManager.getConnection(url);
+        initializeDatabase();
     }
 
-    private void inicializarBaseDeDatos() throws SQLException {
-        try (Statement stmt = connection.createStatement()) {
-            stmt.execute("CREATE TABLE IF NOT EXISTS Puntos (uuid TEXT PRIMARY KEY, nombre TEXT, puntos INTEGER)");
+    /**
+     * Inicializa la tabla de puntos en la base de datos si no existe.
+     *
+     * @throws SQLException Si ocurre un error al crear la tabla
+     */
+    private void initializeDatabase() throws SQLException {
+        String createTableQuery = "CREATE TABLE IF NOT EXISTS " + TABLE_NAME +
+                " (uuid TEXT PRIMARY KEY, nombre TEXT, " + POINTS_COLUMN + " INTEGER)";
+        try (Statement statement = databaseConnection.createStatement()) {
+            statement.execute(createTableQuery);
         }
     }
 
-    public void cerrarConexion() {
+    /**
+     * Cierra la conexión a la base de datos de manera segura.
+     */
+    public void closeConnection() {
         try {
-            if (connection != null && !connection.isClosed()) {
-                connection.close();
+            if (databaseConnection != null && !databaseConnection.isClosed()) {
+                databaseConnection.close();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            GeoWarePlugin.LOGGER.error("Error closing database connection", e);
         }
     }
 
-    // Sumar puntos a un jugador
-    public void sumarPuntos(Player player, int puntos) {
-        modificarPuntos(player, puntos, true);
+    /**
+     * Añade puntos al total de un jugador.
+     *
+     * @param player Jugador al que se añadirán los puntos
+     * @param amount Cantidad de puntos a añadir
+     */
+    public void addPoints(Player player, int amount) {
+        modifyPoints(player, amount, true);
     }
 
-    // Restar puntos a un jugador
-    public void restarPuntos(Player player, int puntos) {
-        modificarPuntos(player, puntos, false);
+    /**
+     * Resta puntos del total de un jugador.
+     *
+     * @param player Jugador al que se restarán los puntos
+     * @param amount Cantidad de puntos a restar
+     */
+    public void subtractPoints(Player player, int amount) {
+        modifyPoints(player, amount, false);
     }
 
-    private void modificarPuntos(Player player, int cantidad, boolean sumar) {
+    /**
+     * Modifica los puntos de un jugador (suma o resta).
+     *
+     * @param player     Jugador cuyos puntos serán modificados
+     * @param amount     Cantidad de puntos a modificar
+     * @param isAddition Indica si se suma (true) o resta (false)
+     */
+    private void modifyPoints(Player player, int amount, boolean isAddition) {
         String uuid = player.getUniqueId().toString();
-        String nombre = player.getName();
+        String playerName = player.getName();
+
         try {
-            // Primero, obtenemos los puntos actuales (si existen)
-            int puntosActuales = obtenerPuntos(player);
-            int nuevosPuntos = sumar ? puntosActuales + cantidad : puntosActuales - cantidad;
+            int currentPoints = getPlayerPoints(player);
+            int updatedPoints = isAddition ? currentPoints + amount : Math.max(0, currentPoints - amount);
 
-            // Aseguramos que los puntos no sean negativos (opcional, según tus reglas)
-            if (nuevosPuntos < 0) nuevosPuntos = 0;
-
-            // Insertamos o actualizamos los puntos
-            try (PreparedStatement ps = connection.prepareStatement(
-                    "INSERT OR REPLACE INTO Puntos (uuid, nombre, puntos) VALUES (?, ?, ?)")) {
-                ps.setString(1, uuid);
-                ps.setString(2, nombre);
-                ps.setInt(3, nuevosPuntos);
-                ps.executeUpdate();
+            String upsertQuery = "INSERT OR REPLACE INTO " + TABLE_NAME +
+                    " (uuid, nombre, " + POINTS_COLUMN + ") VALUES (?, ?, ?)";
+            try (PreparedStatement statement = databaseConnection.prepareStatement(upsertQuery)) {
+                statement.setString(1, uuid);
+                statement.setString(2, playerName);
+                statement.setInt(3, updatedPoints);
+                statement.executeUpdate();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            GeoWarePlugin.LOGGER.error("Error modifying points for player {}", playerName, e);
         }
     }
 
-    // Reiniciar puntos de un jugador
-    public void reiniciarPuntos(Player player) {
+    /**
+     * Restablece los puntos de un jugador a cero.
+     *
+     * @param player Jugador cuyos puntos serán reiniciados
+     */
+    public void resetPlayerPoints(Player player) {
         String uuid = player.getUniqueId().toString();
-        try (PreparedStatement ps = connection.prepareStatement("UPDATE Puntos SET puntos = 0 WHERE uuid = ?")) {
-            ps.setString(1, uuid);
-            ps.executeUpdate();
+        String resetQuery = "UPDATE " + TABLE_NAME + " SET " + POINTS_COLUMN + " = 0 WHERE uuid = ?";
+
+        try (PreparedStatement statement = databaseConnection.prepareStatement(resetQuery)) {
+            statement.setString(1, uuid);
+            statement.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            GeoWarePlugin.LOGGER.error("Error resetting points for player {}", player.getName(), e);
         }
     }
 
-    // Reiniciar puntos de todos los jugadores
-    public void reiniciarTodos() {
-        try (Statement stmt = connection.createStatement()) {
-            stmt.execute("UPDATE Puntos SET puntos = 0");
+    /**
+     * Restablece los puntos de todos los jugadores a cero.
+     */
+    public void resetAllPoints() {
+        String resetAllQuery = "UPDATE " + TABLE_NAME + " SET " + POINTS_COLUMN + " = 0";
+        try (Statement statement = databaseConnection.createStatement()) {
+            statement.execute(resetAllQuery);
         } catch (SQLException e) {
-            e.printStackTrace();
+            GeoWarePlugin.LOGGER.error("Error resetting all players' points", e);
         }
     }
 
-    // Obtener puntos de un jugador
-    public int obtenerPuntos(Player player) {
+    /**
+     * Obtiene los puntos actuales de un jugador.
+     *
+     * @param player Jugador cuyos puntos se consultarán
+     * @return Cantidad de puntos del jugador, 0 si no tiene registro o en caso de error
+     */
+    public int getPlayerPoints(Player player) {
         String uuid = player.getUniqueId().toString();
-        try (PreparedStatement ps = connection.prepareStatement("SELECT puntos FROM Puntos WHERE uuid = ?")) {
-            ps.setString(1, uuid);
-            ResultSet rs = ps.executeQuery();
-            int puntos = rs.next() ? rs.getInt("puntos") : 0;
-            rs.close();
-            return puntos;
+        String selectQuery = "SELECT " + POINTS_COLUMN + " FROM " + TABLE_NAME + " WHERE uuid = ?";
+
+        try (PreparedStatement statement = databaseConnection.prepareStatement(selectQuery)) {
+            statement.setString(1, uuid);
+            try (ResultSet result = statement.executeQuery()) {
+                return result.next() ? result.getInt(POINTS_COLUMN) : 0;
+            }
         } catch (SQLException e) {
-            e.printStackTrace();
+            GeoWarePlugin.LOGGER.error("Error retrieving points for player {}", player.getName(), e);
             return 0;
         }
     }
 
-    // Obtener top 10 mejores
-    public List<String> topMejores() {
-        List<String> top = new ArrayList<>();
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT nombre, puntos FROM Puntos ORDER BY puntos DESC LIMIT 10")) {
-            while (rs.next()) {
-                top.add(rs.getString("nombre") + ": " + rs.getInt("puntos"));
+    /**
+     * Obtiene la lista de los 10 jugadores con más puntos.
+     *
+     * @return Lista de cadenas con formato "nombre: puntos"
+     */
+    public List<String> getTopPlayers() {
+        List<String> topPlayers = new ArrayList<>();
+        String topQuery = "SELECT nombre, " + POINTS_COLUMN + " FROM " + TABLE_NAME +
+                " ORDER BY " + POINTS_COLUMN + " DESC LIMIT " + TOP_LIMIT;
+
+        try (Statement statement = databaseConnection.createStatement();
+             ResultSet result = statement.executeQuery(topQuery)) {
+            while (result.next()) {
+                topPlayers.add(result.getString("nombre") + ": " + result.getInt(POINTS_COLUMN));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            GeoWarePlugin.LOGGER.error("Error retrieving top players", e);
         }
-        return top;
+        return topPlayers;
     }
 
-    // Obtener top 10 peores
-    public List<String> topPeores() {
-        List<String> top = new ArrayList<>();
-        try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery("SELECT nombre, puntos FROM Puntos WHERE puntos > 0 ORDER BY puntos ASC LIMIT 10")) {
-            while (rs.next()) {
-                top.add(rs.getString("nombre") + ": " + rs.getInt("puntos"));
+    /**
+     * Obtiene la lista de los 10 jugadores con menos puntos (excluyendo cero).
+     *
+     * @return Lista de cadenas con formato "nombre: puntos"
+     */
+    public List<String> getBottomPlayers() {
+        List<String> bottomPlayers = new ArrayList<>();
+        String bottomQuery = "SELECT nombre, " + POINTS_COLUMN + " FROM " + TABLE_NAME +
+                " WHERE " + POINTS_COLUMN + " > 0 ORDER BY " + POINTS_COLUMN + " ASC LIMIT " + TOP_LIMIT;
+
+        try (Statement statement = databaseConnection.createStatement();
+             ResultSet result = statement.executeQuery(bottomQuery)) {
+            while (result.next()) {
+                bottomPlayers.add(result.getString("nombre") + ": " + result.getInt(POINTS_COLUMN));
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            GeoWarePlugin.LOGGER.error("Error retrieving bottom players", e);
         }
-        return top;
+        return bottomPlayers;
     }
 }

@@ -8,6 +8,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +19,7 @@ public class PointsCommand implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         if (args.length == 0) {
             sender.sendMessage(ChatColor.RED + "Uso: /2dgamepoints <top10|add|subtract|reset> [opciones]");
             return true;
@@ -62,7 +63,7 @@ public class PointsCommand implements CommandExecutor, TabCompleter {
 
     private void enviarTop10(CommandSender sender) {
         sender.sendMessage(ChatColor.GOLD + "=== Top 10 Mejores ===");
-        List<String> topMejores = GeoWarePlugin.getInstance().getPointsManager().topMejores();
+        List<String> topMejores = GeoWarePlugin.getInstance().getPointsManager().getTopPlayers();
         if (topMejores.isEmpty()) {
             sender.sendMessage(ChatColor.YELLOW + "No hay jugadores con puntos aún.");
         } else {
@@ -72,7 +73,7 @@ public class PointsCommand implements CommandExecutor, TabCompleter {
         }
 
         sender.sendMessage(ChatColor.GOLD + "=== Top 10 Peores ===");
-        List<String> topPeores = GeoWarePlugin.getInstance().getPointsManager().topPeores();
+        List<String> topPeores = GeoWarePlugin.getInstance().getPointsManager().getBottomPlayers();
         if (topPeores.isEmpty()) {
             sender.sendMessage(ChatColor.YELLOW + "No hay jugadores con puntos positivos aún.");
         } else {
@@ -98,8 +99,8 @@ public class PointsCommand implements CommandExecutor, TabCompleter {
             return;
         }
 
-        GeoWarePlugin.getInstance().getPointsManager().sumarPuntos(target, amount);
-        sender.sendMessage(ChatColor.GREEN + "Se han añadido " + amount + " puntos a " + username + ". Total: " + GeoWarePlugin.getInstance().getPointsManager().obtenerPuntos(target));
+        GeoWarePlugin.getInstance().getPointsManager().addPoints(target, amount);
+        sender.sendMessage(ChatColor.GREEN + "Se han añadido " + amount + " puntos a " + username + ". Total: " + GeoWarePlugin.getInstance().getPointsManager().getPlayerPoints(target));
     }
 
     private void manejarSubtract(CommandSender sender, String username, String amountStr) {
@@ -118,13 +119,13 @@ public class PointsCommand implements CommandExecutor, TabCompleter {
             return;
         }
 
-        GeoWarePlugin.getInstance().getPointsManager().restarPuntos(target, amount);
-        sender.sendMessage(ChatColor.GREEN + "Se han restado " + amount + " puntos a " + username + ". Total: " + GeoWarePlugin.getInstance().getPointsManager().obtenerPuntos(target));
+        GeoWarePlugin.getInstance().getPointsManager().subtractPoints(target, amount);
+        sender.sendMessage(ChatColor.GREEN + "Se han restado " + amount + " puntos a " + username + ". Total: " + GeoWarePlugin.getInstance().getPointsManager().getPlayerPoints(target));
     }
 
     private void manejarReset(CommandSender sender, String target) {
         if (target.equalsIgnoreCase("all")) {
-            GeoWarePlugin.getInstance().getPointsManager().reiniciarTodos();
+            GeoWarePlugin.getInstance().getPointsManager().resetAllPoints();
             sender.sendMessage(ChatColor.GREEN + "Se han reiniciado los puntos de todos los jugadores.");
         } else {
             Player player = Bukkit.getPlayerExact(target);
@@ -132,7 +133,7 @@ public class PointsCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage(ChatColor.RED + "Jugador '" + target + "' no encontrado o no está en línea.");
                 return;
             }
-            GeoWarePlugin.getInstance().getPointsManager().reiniciarPuntos(player);
+            GeoWarePlugin.getInstance().getPointsManager().resetPlayerPoints(player);
             sender.sendMessage(ChatColor.GREEN + "Se han reiniciado los puntos de " + target + ".");
         }
     }
@@ -141,7 +142,7 @@ public class PointsCommand implements CommandExecutor, TabCompleter {
     private static final List<String> SUBCOMMANDS = Arrays.asList("top10", "add", "subtract", "reset");
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         List<String> completions = new ArrayList<>();
 
         if (args.length == 1) {

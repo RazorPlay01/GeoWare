@@ -39,12 +39,9 @@ public class PointsPlaceholderExpansion extends PlaceholderExpansion {
             return ""; // Retorna vacío si no hay jugador (por ejemplo, en consola)
         }
 
-        switch (identifier.toLowerCase()) {
-            case "points":
-                // Placeholder %2dgamepoints_points%
-                return String.valueOf(GeoWarePlugin.getInstance().getPointsManager().obtenerPuntos(player));
-            default:
-                return null; // Retorna null si el placeholder no es reconocido
+        if (identifier.toLowerCase().equals("points")) {// Placeholder %2dgamepoints_points%
+            return String.valueOf(GeoWarePlugin.getInstance().getPointsManager().getPlayerPoints(player));
         }
+        return null; // Retorna null si el placeholder no es reconocido
     }
 }

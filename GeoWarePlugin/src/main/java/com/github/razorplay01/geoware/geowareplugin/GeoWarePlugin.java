@@ -50,10 +50,8 @@ public final class GeoWarePlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        getLogger().info(pointsManager.topMejores().toString());
-
         if (pointsManager != null) {
-            pointsManager.cerrarConexion();
+            pointsManager.closeConnection();
             getLogger().info("Conexión a la base de datos cerrada.");
         }
         UtilMessage.sendShutdownMessage(this);
