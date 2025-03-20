@@ -1,12 +1,15 @@
 package com.github.razorplay01.geowaremod.bubblepuzzle;
 
+import com.github.razorplay01.geowaremod.GeoWareMod;
 import com.github.razorplay01.razorplayapi.util.FloatingText;
 import com.github.razorplay01.razorplayapi.util.GameStatus;
 import com.github.razorplay01.razorplayapi.util.render.CustomDrawContext;
 import com.github.razorplay01.razorplayapi.util.screen.GameScreen;
 import com.github.razorplay01.razorplayapi.util.stage.Game;
+import com.github.razorplay01.razorplayapi.util.texture.Texture;
 import lombok.Getter;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
@@ -60,8 +63,10 @@ public class BubblePuzzleGame extends Game {
 
     @Override
     public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-        CustomDrawContext customDrawContext = CustomDrawContext.wrap(context);
-        customDrawContext.drawBasicBackground(this.screen);
+        Identifier backgroundTexture = Identifier.of(GeoWareMod.MOD_ID, "textures/games/bubblepuzzle/fondo.png");
+
+        context.drawTexture(backgroundTexture, screen.getGameScreenXPos(), screen.getGameScreenYPos() - 10,
+                getScreenWidth(), getScreenHeight() + 10, 0, 0, 255, 415, 255, 415);
     }
 
     @Override
@@ -310,7 +315,7 @@ public class BubblePuzzleGame extends Game {
             for (int col = 0; col < cols; col++) {
                 char bubbleType = level[row].charAt(col);
                 if (bubbleType != '-') { // '-' representa un espacio vacío
-                    int color = getColor(bubbleType); // Método para obtener el color
+                    Texture color = getColor(bubbleType); // Método para obtener el color
                     float x = startX + col * bubbleRadius * 2 + (row % 2 == 0 ? 0 : bubbleRadius); // Offset para filas pares
                     float y = startY + row * (bubbleRadius - 2) * 2;
                     Bubble bubble = new Bubble(x, y, bubbleRadius, color, screen);
@@ -352,12 +357,17 @@ public class BubblePuzzleGame extends Game {
         }
     }
 
-    private int getColor(char type) {
+    private Texture getColor(char type) {
         return switch (type) {
-            case 'R' -> BubbleColor.RED.getColor();
-            case 'B' -> BubbleColor.BLUE.getColor();
-            case 'G' -> BubbleColor.GREEN.getColor();
-            default -> BubbleColor.YELLOW.getColor();
+            case 'B' -> BubbleColor.BLUE.getTexture();
+            case 'W' -> BubbleColor.WHITE.getTexture();
+            case 'P' -> BubbleColor.PURPLE.getTexture();
+            case 'O' -> BubbleColor.ORANGE.getTexture();
+            case 'V' -> BubbleColor.BLACK.getTexture();
+            case 'R' -> BubbleColor.RED.getTexture();
+            case 'K' -> BubbleColor.PINK.getTexture();
+            case 'G' -> BubbleColor.GREEN.getTexture();
+            default -> BubbleColor.YELLOW.getTexture();
         };
     }
 

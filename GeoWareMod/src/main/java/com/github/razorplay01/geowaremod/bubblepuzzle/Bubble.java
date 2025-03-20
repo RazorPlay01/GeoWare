@@ -1,7 +1,10 @@
 package com.github.razorplay01.geowaremod.bubblepuzzle;
 
+import com.github.razorplay01.razorplayapi.util.Entity;
 import com.github.razorplay01.razorplayapi.util.hitbox.CircleHitbox;
 import com.github.razorplay01.razorplayapi.util.screen.GameScreen;
+import com.github.razorplay01.razorplayapi.util.texture.Animation;
+import com.github.razorplay01.razorplayapi.util.texture.Texture;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.DrawContext;
@@ -16,7 +19,7 @@ public class Bubble {
     private float x;
     private float y;
     private float radius; // Radio de la burbuja
-    private int color; // Color de la burbuja
+    private Texture color; // Color de la burbuja
     private CircleHitbox hitbox; // Hitbox circular
     private float velocityX, velocityY; // Velocidad de la burbuja
     private boolean isMoving; // Indica si la burbuja está en movimiento
@@ -25,12 +28,12 @@ public class Bubble {
     private List<Bubble> connections; // Lista de burbujas conectadas
     private BubblePuzzleScreen screen;
 
-    public Bubble(float x, float y, float radius, int color, GameScreen screen) {
+    public Bubble(float x, float y, float radius, Texture color, GameScreen screen) {
         this.x = x;
         this.y = y;
         this.radius = radius;
         this.color = color;
-        this.hitbox = new CircleHitbox("bubble", x, y, radius, 0, 0, color);
+        this.hitbox = new CircleHitbox("bubble", x, y, radius, 0, 0, 0xffffffff);
         this.velocityX = 0;
         this.velocityY = 0;
         this.isMoving = false;
@@ -56,8 +59,6 @@ public class Bubble {
         if (isMoving && !isFalling) {
             float originalX = x;
             float originalY = y;
-            float remainingX = velocityX;
-            float remainingY = velocityY;
             int steps = 30; // Aumentar la granularidad
             float stepX = velocityX / steps;
             float stepY = velocityY / steps;
@@ -143,6 +144,31 @@ public class Bubble {
     }
 
     public void draw(DrawContext context) {
-        hitbox.draw(context); // Dibujar la burbuja
+        renderTexture(context, this, new Animation(List.of(color), 1.0f, false), -9, -9);
+        //hitbox.draw(context); // Dibujar la burbuja
+    }
+
+    public static void renderTexture(DrawContext context, Bubble bubble, Animation currentAnimation, int xOffset, int yOffset) {
+        Texture currentTexture = currentAnimation.getCurrentTexture();
+
+        int width = (int) (currentAnimation.getFrameWidth() * currentTexture.scale());
+        int height = (int) (currentAnimation.getFrameHeight() * currentTexture.scale());
+
+        int centeredX = (int) (bubble.getX() + xOffset + (20 - width) / 2.0);
+        int centeredY = (int) (bubble.getY() + yOffset + (20 - height) / 2.0);
+
+        context.drawTexture(
+                currentTexture.identifier(),
+                centeredX,
+                centeredY,
+                width,
+                height,
+                currentAnimation.getCurrentU(),
+                currentAnimation.getCurrentV(),
+                currentAnimation.getFrameWidth(),
+                currentAnimation.getFrameHeight(),
+                currentTexture.textureWidth(),
+                currentTexture.textureHeight()
+        );
     }
 }

@@ -4,6 +4,7 @@ import com.github.razorplay01.razorplayapi.util.GameStatus;
 import com.github.razorplay01.razorplayapi.util.hitbox.RectangleHitbox;
 import com.github.razorplay01.razorplayapi.util.render.CustomDrawContext;
 import com.github.razorplay01.razorplayapi.util.screen.GameScreen;
+import com.github.razorplay01.razorplayapi.util.texture.Texture;
 import lombok.Getter;
 import net.minecraft.client.gui.DrawContext;
 
@@ -63,9 +64,9 @@ public class Player {
         return null;
     }
 
-    private int generateRandomColor() {
-        int[] colors = {0xFFFF0000, 0xFF00FF00, 0xFF0000FF, 0xFFFFFF00}; // Rojo, verde, azul, amarillo
-        return colors[random.nextInt(colors.length)];
+    private Texture generateRandomColor() {
+        BubbleColor[] colors = BubbleColor.values();
+        return colors[random.nextInt(colors.length)].getTexture();
     }
 
     /*private int generateRandomColor() {
