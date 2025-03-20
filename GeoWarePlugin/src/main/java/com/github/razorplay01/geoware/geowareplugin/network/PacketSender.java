@@ -1,11 +1,13 @@
 package com.github.razorplay01.geoware.geowareplugin.network;
 
-import com.github.razorplay01.geoware.geowarecommon.exceptions.PacketSerializationException;
-import com.github.razorplay01.geoware.geowarecommon.network.IPacket;
-import com.github.razorplay01.geoware.geowarecommon.network.PacketTCP;
+import com.github.razorplay.packet_handler.exceptions.PacketSerializationException;
+import com.github.razorplay.packet_handler.network.IPacket;
+import com.github.razorplay.packet_handler.network.PacketTCP;
 import com.github.razorplay01.geoware.geowarecommon.network.packet.*;
 import com.github.razorplay01.geoware.geowareplugin.GeoWarePlugin;
 import org.bukkit.entity.Player;
+
+import static com.github.razorplay01.geoware.geowarecommon.GeoWareCommon.PACKET_BASE_CHANNEL;
 
 public class PacketSender {
     private PacketSender() {
@@ -16,7 +18,7 @@ public class PacketSender {
         try {
             IPacket packet = new ArkanoidPacket(prevScore, timeLimitSeconds, level);
             packetSendInfo(packet, targetPlayer);
-            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_BASE_CHANNEL, PacketTCP.write(packet));
+            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {
             GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());
         }
@@ -26,7 +28,7 @@ public class PacketSender {
         try {
             IPacket packet = new BubblePuzzlePacket(prevScore, timeLimitSeconds, level);
             packetSendInfo(packet, targetPlayer);
-            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_BASE_CHANNEL, PacketTCP.write(packet));
+            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {
             GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());
         }
@@ -36,7 +38,7 @@ public class PacketSender {
         try {
             IPacket packet = new DonkeyKongPacket(prevScore, timeLimitSeconds, spawnInterval, spawnProbability);
             packetSendInfo(packet, targetPlayer);
-            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_BASE_CHANNEL, PacketTCP.write(packet));
+            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {
             GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());
         }
@@ -46,7 +48,7 @@ public class PacketSender {
         try {
             IPacket packet = new FruitFocusPacket(prevScore, timeLimitSeconds);
             packetSendInfo(packet, targetPlayer);
-            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_BASE_CHANNEL, PacketTCP.write(packet));
+            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {
             GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());
         }
@@ -56,7 +58,7 @@ public class PacketSender {
         try {
             IPacket packet = new GalagaPacket(prevScore, timeLimitSeconds, level);
             packetSendInfo(packet, targetPlayer);
-            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_BASE_CHANNEL, PacketTCP.write(packet));
+            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {
             GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());
         }
@@ -66,7 +68,7 @@ public class PacketSender {
         try {
             IPacket packet = new HanoiTowersPacket(prevScore, timeLimitSeconds, rings);
             packetSendInfo(packet, targetPlayer);
-            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_BASE_CHANNEL, PacketTCP.write(packet));
+            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {
             GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());
         }
@@ -76,7 +78,7 @@ public class PacketSender {
         try {
             IPacket packet = new KeyBindPacket(prevScore, timeLimitSeconds);
             packetSendInfo(packet, targetPlayer);
-            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_BASE_CHANNEL, PacketTCP.write(packet));
+            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {
             GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());
         }
@@ -86,7 +88,7 @@ public class PacketSender {
         try {
             IPacket packet = new RobotFactoryPacket(prevScore, timeLimitSeconds);
             packetSendInfo(packet, targetPlayer);
-            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_BASE_CHANNEL, PacketTCP.write(packet));
+            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {
             GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());
         }
@@ -96,7 +98,7 @@ public class PacketSender {
         try {
             IPacket packet = new TetrisPacket(prevScore, timeLimitSeconds, speedMultiplier);
             packetSendInfo(packet, targetPlayer);
-            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PacketTCP.PACKET_BASE_CHANNEL, PacketTCP.write(packet));
+            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {
             GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());
         }

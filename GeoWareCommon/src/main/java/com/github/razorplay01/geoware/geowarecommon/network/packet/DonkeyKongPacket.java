@@ -1,14 +1,12 @@
 package com.github.razorplay01.geoware.geowarecommon.network.packet;
 
-import com.github.razorplay01.geoware.geowarecommon.exceptions.PacketSerializationException;
-import com.github.razorplay01.geoware.geowarecommon.network.IPacket;
-import com.github.razorplay01.geoware.geowarecommon.network.Packet;
-import com.github.razorplay01.geoware.geowarecommon.network.network_util.PacketDataSerializer;
+import com.github.razorplay.packet_handler.network.IPacket;
+import com.github.razorplay.packet_handler.network.network_util.PacketDataSerializer;
+import com.github.razorplay.packet_handler.exceptions.PacketSerializationException;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-@Packet
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor

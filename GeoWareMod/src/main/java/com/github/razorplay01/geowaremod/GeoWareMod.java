@@ -1,5 +1,8 @@
 package com.github.razorplay01.geowaremod;
 
+import com.github.razorplay.packet_handler.network.PacketTCP;
+import com.github.razorplay01.geoware.geowarecommon.GeoWareCommon;
+import com.github.razorplay01.geoware.geowarecommon.network.packet.ArkanoidPacket;
 import com.github.razorplay01.geowaremod.arkanoid.ArkanoidGameScreen;
 import com.github.razorplay01.geowaremod.bubblepuzzle.BubblePuzzleScreen;
 import com.github.razorplay01.geowaremod.donkeykong.DonkeyKongScreen;
@@ -24,6 +27,7 @@ public class GeoWareMod implements ModInitializer, ClientModInitializer {
 
     @Override
     public void onInitialize() {
+        GeoWareCommon.registerPackets();
         NetworkManager.register();
     }
 

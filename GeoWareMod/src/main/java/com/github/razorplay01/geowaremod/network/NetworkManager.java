@@ -1,6 +1,6 @@
 package com.github.razorplay01.geowaremod.network;
 
-import com.github.razorplay01.geoware.geowarecommon.network.IPacket;
+import com.github.razorplay.packet_handler.network.IPacket;
 import com.github.razorplay01.geoware.geowarecommon.network.packet.*;
 import com.github.razorplay01.geowaremod.GeoWareMod;
 import com.github.razorplay01.geowaremod.arkanoid.ArkanoidGameScreen;

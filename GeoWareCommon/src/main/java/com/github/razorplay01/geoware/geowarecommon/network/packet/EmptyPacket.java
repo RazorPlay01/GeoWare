@@ -1,9 +1,8 @@
 package com.github.razorplay01.geoware.geowarecommon.network.packet;
 
-import com.github.razorplay01.geoware.geowarecommon.exceptions.PacketSerializationException;
-import com.github.razorplay01.geoware.geowarecommon.network.IPacket;
-import com.github.razorplay01.geoware.geowarecommon.network.Packet;
-import com.github.razorplay01.geoware.geowarecommon.network.network_util.PacketDataSerializer;
+import com.github.razorplay.packet_handler.network.IPacket;
+import com.github.razorplay.packet_handler.network.network_util.PacketDataSerializer;
+import com.github.razorplay.packet_handler.exceptions.PacketSerializationException;
 import lombok.NoArgsConstructor;
 
 /**
@@ -37,9 +36,7 @@ import lombok.NoArgsConstructor;
  * }</pre>
  *
  * @see IPacket
- * @see Packet
  */
-@Packet
 @NoArgsConstructor
 public class EmptyPacket implements IPacket {
 

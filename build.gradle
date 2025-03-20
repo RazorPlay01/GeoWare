@@ -12,9 +12,17 @@ subprojects {
         flatDir {
             dirs("libs")
         }
+        maven {
+            url "https://jitpack.io"
+            credentials {
+                username = authToken
+            }
+        }
     }
 
     dependencies {
+        implementation 'com.github.RazorPlay01:PacketHandler:1.0.0'
+
         compileOnly 'org.projectlombok:lombok:1.18.36'
         annotationProcessor 'org.projectlombok:lombok:1.18.36'
 

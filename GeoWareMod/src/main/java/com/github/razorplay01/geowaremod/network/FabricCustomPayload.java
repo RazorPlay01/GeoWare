@@ -1,8 +1,8 @@
 package com.github.razorplay01.geowaremod.network;
 
-import com.github.razorplay01.geoware.geowarecommon.exceptions.PacketSerializationException;
-import com.github.razorplay01.geoware.geowarecommon.network.IPacket;
-import com.github.razorplay01.geoware.geowarecommon.network.PacketTCP;
+import com.github.razorplay.packet_handler.exceptions.PacketSerializationException;
+import com.github.razorplay.packet_handler.network.IPacket;
+import com.github.razorplay.packet_handler.network.PacketTCP;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import io.netty.buffer.ByteBuf;
@@ -11,8 +11,10 @@ import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
 
+import static com.github.razorplay01.geoware.geowarecommon.GeoWareCommon.PACKET_BASE_CHANNEL;
+
 public record FabricCustomPayload(IPacket packet) implements CustomPayload {
-    public static final Id<FabricCustomPayload> CUSTOM_PAYLOAD_ID = new Id<>(Identifier.of(PacketTCP.PACKET_BASE_CHANNEL));
+    public static final Id<FabricCustomPayload> CUSTOM_PAYLOAD_ID = new Id<>(Identifier.of(PACKET_BASE_CHANNEL));
     public static final PacketCodec<RegistryByteBuf, FabricCustomPayload> CODEC = PacketCodec.tuple(
             new PacketCodec<ByteBuf, IPacket>() {
                 public IPacket decode(ByteBuf byteBuf) {

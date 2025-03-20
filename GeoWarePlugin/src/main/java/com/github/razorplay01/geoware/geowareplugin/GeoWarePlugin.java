@@ -1,6 +1,6 @@
 package com.github.razorplay01.geoware.geowareplugin;
 
-import com.github.razorplay01.geoware.geowarecommon.network.PacketTCP;
+import com.github.razorplay01.geoware.geowarecommon.GeoWareCommon;
 import com.github.razorplay01.geoware.geowareplugin.command.PointsCommand;
 import com.github.razorplay01.geoware.geowareplugin.command.TwoDGameCommand;
 import com.github.razorplay01.geoware.geowareplugin.network.PacketListener;
@@ -12,6 +12,8 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.SQLException;
 
+import static com.github.razorplay01.geoware.geowarecommon.GeoWareCommon.PACKET_BASE_CHANNEL;
+
 
 @Getter
 public final class GeoWarePlugin extends JavaPlugin {
@@ -22,6 +24,7 @@ public final class GeoWarePlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        GeoWareCommon.registerPackets();
         registerCommands();
         registerPacketChannels();
 
@@ -44,8 +47,8 @@ public final class GeoWarePlugin extends JavaPlugin {
     }
 
     private void registerPacketChannels() {
-        getServer().getMessenger().registerOutgoingPluginChannel(this, PacketTCP.PACKET_BASE_CHANNEL);
-        getServer().getMessenger().registerIncomingPluginChannel(this, PacketTCP.PACKET_BASE_CHANNEL, new PacketListener());
+        getServer().getMessenger().registerOutgoingPluginChannel(this, PACKET_BASE_CHANNEL);
+        getServer().getMessenger().registerIncomingPluginChannel(this, PACKET_BASE_CHANNEL, new PacketListener());
     }
 
     @Override

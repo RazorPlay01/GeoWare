@@ -28,6 +28,7 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     implementation project(':GeoWareCommon')
+    include 'com.github.RazorPlay01:PacketHandler:1.0.0'
 }
 
 processResources {
