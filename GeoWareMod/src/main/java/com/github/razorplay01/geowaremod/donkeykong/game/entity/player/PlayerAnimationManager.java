@@ -31,20 +31,20 @@ public class PlayerAnimationManager {
 
     public PlayerAnimationManager(Player player) {
         // Inicialización de todas las animaciones
-        walkAnimationR = new Animation(PLAYER_WALK_R_TEXTURES, 0.2f, true);
-        walkAnimationL = new Animation(PLAYER_WALK_L_TEXTURES, 0.2f, true);
+        walkAnimationR = new Animation(PLAYER_WALK_R_TEXTURES, 0.01f, true);
+        walkAnimationL = new Animation(PLAYER_WALK_L_TEXTURES, 0.01f, true);
         climbAnimation = new Animation(PLAYER_CLIMB_TEXTURES, 0.01f, true);
-        idleAnimationR = new Animation(PLAYER_IDLE_R_TEXTURES, 0.1f, true);
-        idleAnimationL = new Animation(PLAYER_IDLE_L_TEXTURES, 0.1f, true);
-        jumpAnimationR = new Animation(PLAYER_JUMP_R_TEXTURES, 0.1f, true);
-        jumpAnimationL = new Animation(PLAYER_JUMP_L_TEXTURES, 0.1f, true);
-        winAnimationR = new Animation(PLAYER_WIN_R_TEXTURES, 0.1f, true);
-        winAnimationL = new Animation(PLAYER_WIN_L_TEXTURES, 0.1f, true);
-        loseAnimation = new Animation(PLAYER_DIE_TEXTURES, 0.5f, false);
-        hammetAnimationR = new Animation(PLAYER_IDLE_HAMMET_R_TEXTURES, 0.1f, true);
-        hammetAnimationL = new Animation(PLAYER_IDLE_HAMMET_L_TEXTURES, 0.1f, true);
-        hammetWalkAnimationR = new Animation(PLAYER_WALK_HAMMET_R_TEXTURES, 0.1f, true);
-        hammetWalkAnimationL = new Animation(PLAYER_WALK_HAMMET_L_TEXTURES, 0.1f, true);
+        idleAnimationR = new Animation(PLAYER_IDLE_R_TEXTURES, 1f, true);
+        idleAnimationL = new Animation(PLAYER_IDLE_L_TEXTURES, 1f, true);
+        jumpAnimationR = new Animation(PLAYER_JUMP_R_TEXTURES, 1f, true);
+        jumpAnimationL = new Animation(PLAYER_JUMP_L_TEXTURES, 1f, true);
+        winAnimationR = new Animation(PLAYER_WIN_R_TEXTURES, 1f, true);
+        winAnimationL = new Animation(PLAYER_WIN_L_TEXTURES, 1f, true);
+        loseAnimation = new Animation(PLAYER_DIE_TEXTURES, 0.05f, false);
+        hammetAnimationR = new Animation(PLAYER_IDLE_HAMMET_R_TEXTURES, 0.01f, true);
+        hammetAnimationL = new Animation(PLAYER_IDLE_HAMMET_L_TEXTURES, 0.01f, true);
+        hammetWalkAnimationR = new Animation(PLAYER_WALK_HAMMET_R_TEXTURES, 0.01f, true);
+        hammetWalkAnimationL = new Animation(PLAYER_WALK_HAMMET_L_TEXTURES, 0.01f, true);
 
         this.facingRight = true;
         this.currentAnimation = idleAnimationR;
@@ -90,7 +90,7 @@ public class PlayerAnimationManager {
             case WITH_HAMMER -> {
                 if (Math.abs(player.getVelocityX()) > 0) {  // Si se está moviendo
                     yield facingRight ? hammetWalkAnimationR : hammetWalkAnimationL;
-                } else {  // Si está quieto
+                } else {
                     yield facingRight ? hammetAnimationR : hammetAnimationL;
                 }
             }

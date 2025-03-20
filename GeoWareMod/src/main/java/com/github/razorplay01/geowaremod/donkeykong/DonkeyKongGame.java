@@ -3,7 +3,7 @@ package com.github.razorplay01.geowaremod.donkeykong;
 import com.github.razorplay01.geowaremod.GeoWareMod;
 import com.github.razorplay01.geowaremod.donkeykong.game.entity.Fire;
 import com.github.razorplay01.geowaremod.donkeykong.game.entity.barrel.Barrel;
-import com.github.razorplay01.geowaremod.donkeykong.game.entity.barrel.DonkeyKongEntity;
+import com.github.razorplay01.geowaremod.donkeykong.game.entity.barrel.DonkeyKong;
 import com.github.razorplay01.geowaremod.donkeykong.game.entity.item.HammetItem;
 import com.github.razorplay01.geowaremod.donkeykong.game.entity.item.ItemEntity;
 import com.github.razorplay01.geowaremod.donkeykong.game.entity.player.Player;
@@ -46,7 +46,7 @@ public class DonkeyKongGame extends Game {
     protected final List<ItemEntity> items = new ArrayList<>();
     protected final List<Particle> particles = new ArrayList<>();
     protected Player player;
-    protected DonkeyKongEntity donkeyKong;
+    protected DonkeyKong donkeyKong;
     protected final Identifier backgroundImage;
 
     private final int spawnInterval;
@@ -66,39 +66,16 @@ public class DonkeyKongGame extends Game {
             createGameMap();
         }
         this.player = new Player(screen.getGameScreenXPos() + 36f, screen.getGameScreenYPos() + getScreenHeight() - 16f - PLATFORM_HEIGHT, screen);
-        this.donkeyKong = new DonkeyKongEntity(screen.getGameScreenXPos() + 18f, screen.getGameScreenYPos() + 52f, screen, spawnInterval, spawnProbability);
+        this.donkeyKong = new DonkeyKong(screen.getGameScreenXPos() + 18f, screen.getGameScreenYPos() + 52f, screen, spawnInterval, spawnProbability);
         this.items.add(new HammetItem(screen.getGameScreenXPos() + 167f, screen.getGameScreenYPos() + 190f, 13, 13, screen));
         this.items.add(new HammetItem(screen.getGameScreenXPos() + 16f, screen.getGameScreenYPos() + 92f, 13, 13, screen));
         this.victoryPlatforms.add(new VictoryZone(screen, screen.getGameScreenXPos() + 88f, screen.getGameScreenYPos() + 36f, 48, 20, 0xAAFFFFFF));
         //this.fires.add(new Fire(screen.getGameScreenXPos() + 50f, screen.getGameScreenYPos() + getScreenHeight() - 16 - PLATFORM_HEIGHT, screen));
     }
 
-    private void updateBarrels() {
-        List<Barrel> barrelsToRemove = new ArrayList<>();
-        for (Barrel barrel : getBarrels()) {
-            if (barrel.isRemove()) {
-                barrelsToRemove.add(barrel);
-            }
-            barrel.update();
-        }
-        getBarrels().removeAll(barrelsToRemove);
-    }
-
-    private void updateParticles() {
-        List<Particle> particles = getParticles();
-        Iterator<Particle> iterator = particles.iterator();
-
-        while (iterator.hasNext()) {
-            Particle particle = iterator.next();
-            particle.update(); // Actualizamos la partícula
-            if (particle.isFinished()) {
-                iterator.remove(); // Eliminamos partículas finalizadas
-            }
-        }
-    }
-
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void update() {
+        super.update();
         if (getStatus() == GameStatus.ACTIVE) {
             player.update();
             donkeyKong.update();
@@ -106,11 +83,6 @@ public class DonkeyKongGame extends Game {
             for (VictoryZone victoryPlatform : getVictoryPlatforms()) {
                 player.checkVictoryPlatform(victoryPlatform);
             }
-            updateParticles();
-            updateBarrels();
-
-            fires.forEach(Fire::update);
-
 
             if (player.isLosing() || player.isWinning()) {
                 getGameDutarion().stop();
@@ -120,7 +92,13 @@ public class DonkeyKongGame extends Game {
                 setStatus(GameStatus.ENDING);
             }
         }
+        updateParticles();
+        updateBarrels();
+        fires.forEach(Fire::update);
+    }
 
+    @Override
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         platforms.forEach(platform -> platform.render(context));
         ladders.forEach(ladder -> ladder.render(context));
         items.forEach(item -> item.render(context));
@@ -190,6 +168,30 @@ public class DonkeyKongGame extends Game {
             long remainingTimeSeconds = gameDutarion.getRemainingTime() / 1000;  // Convert to seconds
             int timeBonus = (int) remainingTimeSeconds * 100;  // 100 points per remaining second
             addScore(timeBonus);
+        }
+    }
+
+    private void updateBarrels() {
+        List<Barrel> barrelsToRemove = new ArrayList<>();
+        for (Barrel barrel : getBarrels()) {
+            barrel.update();
+            if (barrel.isRemove()) {
+                barrelsToRemove.add(barrel);
+            }
+        }
+        getBarrels().removeAll(barrelsToRemove);
+    }
+
+    private void updateParticles() {
+        List<Particle> particles = getParticles();
+        Iterator<Particle> iterator = particles.iterator();
+
+        while (iterator.hasNext()) {
+            Particle particle = iterator.next();
+            particle.update(); // Actualizamos la partícula
+            if (particle.isFinished()) {
+                iterator.remove(); // Eliminamos partículas finalizadas
+            }
         }
     }
 

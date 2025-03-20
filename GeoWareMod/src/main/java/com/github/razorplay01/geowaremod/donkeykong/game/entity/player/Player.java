@@ -16,7 +16,6 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.DrawContext;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -54,8 +53,8 @@ public class Player extends DonkeyKongEntity {
 
     public Player(float x, float y, GameScreen gameScreen) {
         super(x, y, 12, 16, gameScreen, 0xFF8300ff);
-        this.speed = 1f;
-        this.gravity = 0.2f;
+        this.speed = 2.5f;
+        this.gravity = 0.3f;
         this.maxFallSpeed = 4f;
 
         this.hitboxes.add(new RectangleHitbox(HITBOX_LADDER, xPos, yPos + (this.getHeight() - 2), this.getWidth(), 2, 0, (this.getHeight() - 2), LADDER_HITBOX_COLOR));
@@ -77,8 +76,6 @@ public class Player extends DonkeyKongEntity {
 
     @Override
     public void update() {
-        animationManager.updateAnimation(currentState, movingUp || movingDown || movingLeft || movingRight);
-
         if (isWinning || isLosing) {
             updateState();
             return;
@@ -128,7 +125,7 @@ public class Player extends DonkeyKongEntity {
 
     private void updateLadderMovement() {
         if (currentLadder == null) return;
-        float playerClimbSpeed = 0.6f;
+        float playerClimbSpeed = 1.5f;
 
         velocityX = 0;
         velocityY = 0;
@@ -337,6 +334,8 @@ public class Player extends DonkeyKongEntity {
 
     @Override
     public void render(DrawContext context) {
+        animationManager.updateAnimation(currentState, movingUp || movingDown || movingLeft || movingRight);
+
         this.animationManager.render(context, this);
     }
 
@@ -469,7 +468,7 @@ public class Player extends DonkeyKongEntity {
                 float particleY = barrel.getYPos() + (barrel.getHeight() - 16) / 2;
                 game.getParticles().add(
                         new Particle(particleX, particleY, 16, 16, gameScreen,
-                                new Animation(PARTICLE_TEXTURES, 0.5f, false)));
+                                new Animation(PARTICLE_TEXTURES, 0.05f, false)));
 
                 game.addScore(200, barrel.getXPos(), barrel.getYPos());
                 barrel.setRemove(true);

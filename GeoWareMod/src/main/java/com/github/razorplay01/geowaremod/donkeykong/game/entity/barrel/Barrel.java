@@ -1,5 +1,6 @@
 package com.github.razorplay01.geowaremod.donkeykong.game.entity.barrel;
 
+import com.github.razorplay01.geowaremod.donkeykong.game.entity.DonkeyKongEntity;
 import com.github.razorplay01.geowaremod.donkeykong.game.mapobject.Ladder;
 import com.github.razorplay01.geowaremod.donkeykong.game.mapobject.Platform;
 import com.github.razorplay01.razorplayapi.util.ScreenSide;
@@ -17,17 +18,18 @@ import static com.github.razorplay01.geowaremod.donkeykong.game.util.TextureProv
 import static com.github.razorplay01.geowaremod.donkeykong.DonkeyKongGame.*;
 
 @Getter
-public class Barrel extends com.github.razorplay01.geowaremod.donkeykong.game.entity.DonkeyKongEntity {
-    private final Animation horizontalRightAnimation = new Animation(BARREL_R_TEXTURES, 0.8f, true);
-    private final Animation horizontalLeftAnimation = new Animation(BARREL_L_TEXTURES, 0.8f, true);
-    private final Animation verticalAnimation = new Animation(BARREL_V_TEXTURES, 1f, true);
+public class Barrel extends DonkeyKongEntity {
+    private final Animation horizontalRightAnimation = new Animation(BARREL_R_TEXTURES, 0.01f, true);
+    private final Animation horizontalLeftAnimation = new Animation(BARREL_L_TEXTURES, 0.01f, true);
+    private final Animation verticalAnimation = new Animation(BARREL_V_TEXTURES, 0.05f, true);
 
-    private static final float LADDER_DESCENT_SPEED = 0.5f;
+    private static final float LADDER_DESCENT_SPEED = 1.0f;
     private static final float PROBABILITY_TO_USE_LADDER = 0.25f;
     private static final float ALIGNMENT_TOLERANCE = 4f;
-    private static final float PLATFORM_DETECTION_THRESHOLD = 4f;
-    private static final float PLATFORM_SEGMENT_WIDTH = 16f;  // Cada segmento de plataforma es de 16 píxeles
-    private static final float SLOPE_Y = 1f;  // Pendiente confirmada: 1 píxel por segmento
+    private static final float PLATFORM_DETECTION_THRESHOLD = 2f;
+    private static final float PLATFORM_SEGMENT_WIDTH = 16f;
+    private static final float SLOPE_Y = 1f;
+    private static final int FALL_GRACE_TICKS = 2; // Ticks durante los cuales se ignoran colisiones al salir
 
     private final Random random = new Random(System.currentTimeMillis());
     private final Set<Ladder> checkedLadders = new HashSet<>();
@@ -36,10 +38,11 @@ public class Barrel extends com.github.razorplay01.geowaremod.donkeykong.game.en
     private boolean remove = false;
     private boolean shouldChangeDirectionAfterLadder;
     private boolean hasJumpedOverBarrel = false;
+    private int fallGraceCounter = 0; // Contador para ticks de gracia después de salir
 
     public Barrel(float x, float y, GameScreen gameScreen) {
-        super(x, y, 12, 12, gameScreen,0xffffaaff);
-        this.velocityX = 1f;  // Restaurado para que ruede hacia la derecha inicialmente
+        super(x, y, 12, 12, gameScreen, 0xffffaaff);
+        this.velocityX = 2.5f; // Dirección inicial hacia la derecha
 
         this.hitboxes.add(new RectangleHitbox(HITBOX_LADDER, xPos - 2, yPos - 2, 16, 16, -2, -2, LADDER_HITBOX_COLOR));
         this.hitboxes.add(new RectangleHitbox(HITBOX_PLAYER, xPos + (this.width - 8) / 2, yPos + (this.height - 8) / 2, 8, 8, (this.width - 8) / 2, (this.height - 8) / 2, PLAYER_HITBOX_COLOR));
@@ -54,6 +57,10 @@ public class Barrel extends com.github.razorplay01.geowaremod.donkeykong.game.en
         }
         updateHitboxes();
         verifyScreenBoundsCollision();
+        // Manejar el contador de ticks de gracia
+        if (fallGraceCounter > 0) {
+            fallGraceCounter--;
+        }
     }
 
     private void handleLadderMovement() {
@@ -64,11 +71,12 @@ public class Barrel extends com.github.razorplay01.geowaremod.donkeykong.game.en
 
         if (yPos + height >= currentLadder.getYPos() + currentLadder.getHeight() - PLATFORM_DETECTION_THRESHOLD) {
             Platform nextPlatform = findNextPlatform(game.getPlatforms());
-
             if (nextPlatform != null && Math.abs(nextPlatform.getYPos() - (yPos + height)) <= PLATFORM_DETECTION_THRESHOLD) {
+                // Si hay una plataforma inmediata al final de la escalera
                 yPos = nextPlatform.getYPos() - height;
                 exitLadder();
             } else {
+                // Si la escalera es rota, salir y comenzar a caer
                 exitLadder();
             }
         }
@@ -78,8 +86,8 @@ public class Barrel extends com.github.razorplay01.geowaremod.donkeykong.game.en
     private void exitLadder() {
         isOnLadder = false;
         currentLadder = null;
-        velocityY = 0.1f;
-
+        velocityY = 2.0f; // Impulso inicial más fuerte para asegurar la caída
+        fallGraceCounter = FALL_GRACE_TICKS; // Iniciar el período de gracia
         if (shouldChangeDirectionAfterLadder) {
             velocityX = -velocityX;
             shouldChangeDirectionAfterLadder = false;
@@ -87,42 +95,44 @@ public class Barrel extends com.github.razorplay01.geowaremod.donkeykong.game.en
     }
 
     private void handleNormalMovement() {
-        // Aplicar gravedad y mover verticalmente
+        // Aplicar gravedad
         velocityY += gravity;
         velocityY = Math.min(velocityY, maxFallSpeed);
-        yPos += velocityY;
 
-        // Mover horizontalmente
-        xPos += velocityX;
+        // Predecir próxima posición
+        float nextX = xPos + velocityX;
+        float nextY = yPos + velocityY;
 
-        // Verificar colisión con plataformas
+        // Verificar colisión con plataformas solo si no estamos en el período de gracia
         Platform platformBeneath = null;
-        for (Platform platform : game.getPlatforms()) {
-            if (isCollidingWithPlatform(platform)) {
-                platformBeneath = platform;
-                break;
+        if (fallGraceCounter == 0) {
+            for (Platform platform : game.getPlatforms()) {
+                if (willCollideWithPlatform(platform, nextX, nextY)) {
+                    platformBeneath = platform;
+                    break;
+                }
             }
         }
 
         if (platformBeneath != null) {
-            // Ajustar posición vertical según la inclinación
+            // Ajustar posición al nivel de la plataforma con inclinación
             float platformStartX = platformBeneath.getXPos();
             float platformStartY = platformBeneath.getYPos();
-            float relativeX = xPos - platformStartX;
-            int segment = (int) (relativeX / PLATFORM_SEGMENT_WIDTH);  // Determinar en qué segmento está el barril
-            float slopeAdjustment = segment * SLOPE_Y;  // Ajuste vertical basado en la inclinación
+            float relativeX = nextX - platformStartX;
+            int segment = (int) (relativeX / PLATFORM_SEGMENT_WIDTH);
+            float effectiveSlopeY = platformStartX > 100f ? -SLOPE_Y : SLOPE_Y;
+            float slopeAdjustment = segment * effectiveSlopeY;
 
-            float effectiveSlopeY = SLOPE_Y;
-            if (platformBeneath.getXPos() > 100f) {  // Hack temporal: asumimos que plataformas que empiezan a la derecha (como createThirdPlatform) tienen inclinación inversa
-                effectiveSlopeY = -SLOPE_Y;
-            }
-            slopeAdjustment = segment * effectiveSlopeY;
-
+            // Fijar posición sobre la plataforma
             yPos = platformStartY - height + slopeAdjustment;
-            velocityY = 0;  // Restablecer velocidad vertical para evitar vibración
+            xPos = nextX;
+            velocityY = 0;
             currentPlatform = platformBeneath;
             checkLadderCollision(game.getLadders());
         } else {
+            // Si no hay plataforma o estamos en período de gracia, mover normalmente
+            xPos = nextX;
+            yPos = nextY;
             currentPlatform = null;
         }
 
@@ -134,6 +144,25 @@ public class Barrel extends com.github.razorplay01.geowaremod.donkeykong.game.en
         }
     }
 
+    private boolean willCollideWithPlatform(Platform platform, float nextX, float nextY) {
+        RectangleHitbox barrelHitbox = (RectangleHitbox) this.getDefaultHitbox();
+        if (barrelHitbox == null) return false;
+
+        // Actualizar hitbox temporalmente para la predicción
+        barrelHitbox.updatePosition(nextX, nextY);
+
+        Hitbox platformHitbox = platform.getDefaultHitbox();
+        if (platformHitbox == null) return false;
+
+        if (barrelHitbox.intersects(platformHitbox)) {
+            float barrelBottom = nextY + height;
+            float platformTop = platformHitbox.getYPos();
+            // Solo detectar colisiones con plataformas debajo del barril
+            return velocityY >= 0 && barrelBottom >= platformTop && yPos < platformTop;
+        }
+        return false;
+    }
+
     protected void verifyScreenBoundsCollision() {
         int screenX = gameScreen.getGame().getScreen().getGameScreenXPos();
         int screenY = gameScreen.getGame().getScreen().getGameScreenYPos();
@@ -142,38 +171,32 @@ public class Barrel extends com.github.razorplay01.geowaremod.donkeykong.game.en
 
         if (xPos < screenX) {
             xPos = screenX;
-            if (velocityY <= 0) {  // Solo cambiar dirección si no está cayendo
+            if (velocityY <= 0) {
                 onScreenBoundaryCollision(ScreenSide.LEFT);
             }
-            return;
-        }
-        if (xPos + width > screenX + screenWidth) {
+        } else if (xPos + width > screenX + screenWidth) {
             xPos = screenX + screenWidth - width;
             if (velocityY <= 0) {
                 onScreenBoundaryCollision(ScreenSide.RIGHT);
             }
-            return;
-        }
-        if (yPos < screenY) {
+        } else if (yPos < screenY) {
             yPos = screenY;
             onScreenBoundaryCollision(ScreenSide.TOP);
-            return;
-        }
-        if (yPos + height > screenY + screenHeight) {
+        } else if (yPos + height > screenY + screenHeight) {
             yPos = screenY + screenHeight - height;
             onScreenBoundaryCollision(ScreenSide.BOTTOM);
         }
     }
 
     protected void onScreenBoundaryCollision(ScreenSide side) {
-        if (side.equals(ScreenSide.LEFT) || side.equals(ScreenSide.RIGHT)) {
+        if (side == ScreenSide.LEFT || side == ScreenSide.RIGHT) {
             if (this.yPos > game.getPlayer().getYPos() + 32) {
                 remove = true;
             } else {
                 this.velocityX *= -1;
                 this.xPos = Math.clamp(xPos, game.getScreen().getGameScreenXPos(), game.getScreen().getGameScreenXPos() + game.getScreenWidth() - width);
             }
-        } else if (side.equals(ScreenSide.TOP) || side.equals(ScreenSide.BOTTOM)) {
+        } else if (side == ScreenSide.TOP || side == ScreenSide.BOTTOM) {
             remove = true;
             velocityY = 0;
         }
@@ -185,7 +208,7 @@ public class Barrel extends com.github.razorplay01.geowaremod.donkeykong.game.en
         float barrelBottom = yPos + height;
 
         for (Platform platform : platforms) {
-            if (platform.getYPos() > barrelBottom) { // Solo plataformas debajo del barril
+            if (platform.getYPos() > barrelBottom) { // Solo plataformas debajo
                 float distance = platform.getYPos() - barrelBottom;
                 if (distance < minDistance &&
                         xPos + width > platform.getXPos() &&
@@ -198,29 +221,11 @@ public class Barrel extends com.github.razorplay01.geowaremod.donkeykong.game.en
         return closest;
     }
 
-    private boolean isCollidingWithPlatform(Platform platform) {
-        if (isOnLadder && currentLadder != null && currentLadder.isCanPassThroughPlatform()) {
-            return false;
-        }
-        RectangleHitbox barrelDefaultHitbox = (RectangleHitbox) this.getDefaultHitbox();
-        Hitbox platformHitbox = platform.getDefaultHitbox();
-        if (barrelDefaultHitbox == null || platformHitbox == null) {
-            return false;
-        }
-        if (barrelDefaultHitbox.intersects(platformHitbox)) {
-            float barrelBottom = barrelDefaultHitbox.getYPos() + barrelDefaultHitbox.getHeight();
-            float platformTop = platformHitbox.getYPos();
-            return Math.abs(barrelBottom - platformTop) <= Math.abs(velocityY);
-        }
-        return false;
-    }
-
     private void checkLadderCollision(List<Ladder> ladders) {
         List<Ladder> validLadders = new ArrayList<>();
         Hitbox barrelLadderHitbox = getHitboxByName(HITBOX_LADDER);
-        if (barrelLadderHitbox == null) {
-            return;
-        }
+        if (barrelLadderHitbox == null) return;
+
         for (Ladder ladder : ladders) {
             if (!checkedLadders.contains(ladder) && ladder.isCanPassThroughPlatform() && canUseLadder(this, ladder, ALIGNMENT_TOLERANCE)) {
                 validLadders.add(ladder);
@@ -242,12 +247,9 @@ public class Barrel extends com.github.razorplay01.geowaremod.donkeykong.game.en
     public boolean canUseLadder(Barrel barrel, Ladder ladder, float alignmentTolerance) {
         RectangleHitbox barrelLadderHitbox = (RectangleHitbox) barrel.getHitboxByName(HITBOX_LADDER);
         RectangleHitbox ladderHitbox = (RectangleHitbox) ladder.getDefaultHitbox();
-        if (barrelLadderHitbox == null || ladderHitbox == null) {
-            return false;
-        }
-        if (!barrelLadderHitbox.intersects(ladderHitbox)) {
-            return false;
-        }
+        if (barrelLadderHitbox == null || ladderHitbox == null) return false;
+        if (!barrelLadderHitbox.intersects(ladderHitbox)) return false;
+
         float barrelCenterX = barrelLadderHitbox.getXPos() + barrelLadderHitbox.getWidth() / 2;
         float ladderCenterX = ladderHitbox.getXPos() + ladderHitbox.getWidth() / 2;
         float horizontalAlignment = Math.abs(barrelCenterX - ladderCenterX);
