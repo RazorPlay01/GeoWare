@@ -244,7 +244,7 @@ public class PacketDataSerializer {
      */
     public <T extends Enum<T>> void writeEnum(T enumValue) {
         if (isNotWriting()) throw new IllegalStateException(NOT_WRITING_ERROR);
-        writeString(enumValue != null ? enumValue.name() : "null"); // Maneja null escribiendo "null"
+        writeString(enumValue != null ? enumValue.name() : "null");
     }
 
     /**

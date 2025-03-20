@@ -1,16 +1,23 @@
 package com.github.razorplay01.geowaremod.arkanoid.entity.powerup;
 
+import com.github.razorplay01.geowaremod.GeoWareMod;
 import com.github.razorplay01.geowaremod.arkanoid.ArkanoidGame;
 import com.github.razorplay01.geowaremod.arkanoid.ArkanoidGameScreen;
 import com.github.razorplay01.geowaremod.arkanoid.entity.Ball;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 
 public class MultiBallPowerUp extends PowerUp {
     public MultiBallPowerUp(float xPos, float yPos, ArkanoidGameScreen gameScreen) {
-        super(xPos, yPos, 12, 12, gameScreen, 0xFFFF0000);
+        super(xPos, yPos, 10, 11, gameScreen, 0xFFFF0000);
     }
-
+    @Override
+    public void render(DrawContext context) {
+        Identifier marcoTexture = Identifier.of(GeoWareMod.MOD_ID, "textures/games/arkanoid/power_ups.png");
+        context.drawTexture(marcoTexture, (int) xPos, (int) yPos, (int) width, (int) height, 20, 0, 20, 22, 60, 22);
+    }
     @Override
     protected void onCollect(ArkanoidGame game) {
         ArrayList<Ball> currentBalls = new ArrayList<>(game.getBalls());

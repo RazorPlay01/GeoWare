@@ -1,11 +1,13 @@
 package com.github.razorplay01.geowaremod.arkanoid.entity;
 
+import com.github.razorplay01.geowaremod.GeoWareMod;
 import com.github.razorplay01.geowaremod.arkanoid.CollisionHandler;
 import com.github.razorplay01.razorplayapi.util.hitbox.CircleHitbox;
 import com.github.razorplay01.razorplayapi.util.screen.GameScreen;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.util.Identifier;
 
 @Getter
 @Setter
@@ -82,5 +84,11 @@ public class Ball extends ArkanoidEntity {
         if (!isMoving && !arkanoidGame.getPlayer().isLosing()) {
             isMoving = true;
         }
+    }
+
+    @Override
+    public void render(DrawContext context) {
+        Identifier marcoTexture = Identifier.of(GeoWareMod.MOD_ID, "textures/games/arkanoid/ball.png");
+        context.drawTexture(marcoTexture, (int) xPos - 7, (int) yPos - 7, 14, 14, 0, 0, 14, 13, 15, 15);
     }
 }

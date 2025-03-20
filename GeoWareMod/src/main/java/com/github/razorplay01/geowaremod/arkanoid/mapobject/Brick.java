@@ -1,8 +1,10 @@
 package com.github.razorplay01.geowaremod.arkanoid.mapobject;
 
+import com.github.razorplay01.geowaremod.GeoWareMod;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.util.Identifier;
 
 @Getter
 @Setter
@@ -16,29 +18,14 @@ public class Brick extends MapObject {
 
     @Override
     public void render(DrawContext context) {
-        drawBrick(context, (int) this.getXPos(), (int) this.getYPos(), this.getColor().getColor());
-        super.render(context);
-    }
-
-    private void drawBrick(DrawContext context, int x, int y, int baseColor) {
-        // Crear un color más oscuro para el borde
-        int borderColor = darkenColor(baseColor, 0.7f);
-
-        // Dibujar el relleno del ladrillo
-        context.fill(x + 1, y + 1, (int) (x + this.getWidth() - 1), (int) (y + this.getHeight() - 1), baseColor);
-
-        // Dibujar los bordes
-        context.drawHorizontalLine(x, (int) (x + this.getWidth() - 1), y, borderColor); // Borde superior
-        context.drawHorizontalLine(x, (int) (x + this.getWidth() - 1), (int) (y + this.getHeight() - 1), borderColor); // Borde inferior
-        context.drawVerticalLine(x, y, (int) (y + this.getHeight() - 1), borderColor); // Borde izquierdo
-        context.drawVerticalLine((int) (x + this.getWidth() - 1), y, (int) (y + this.getHeight() - 1), borderColor); // Borde derecho
-    }
-
-    private int darkenColor(int color, float factor) {
-        int a = (color >> 24) & 0xff;
-        int r = (int) ((color >> 16 & 0xff) * factor);
-        int g = (int) ((color >> 8 & 0xff) * factor);
-        int b = (int) ((color & 0xff) * factor);
-        return (a << 24) | (r << 16) | (g << 8) | b;
+        Identifier texture = Identifier.of(GeoWareMod.MOD_ID, "textures/games/arkanoid/bricks.png");
+        switch (color) {
+            case GREEN ->
+                    context.drawTexture(texture, (int) getXPos(), (int) getYPos(), (int) getWidth(), (int) getHeight(), 0, 0, 24, 11, 24, 33);
+            case RED ->
+                    context.drawTexture(texture, (int) getXPos(), (int) getYPos(), (int) getWidth(), (int) getHeight(), 0, 11, 24, 11, 24, 33);
+            case BLUE ->
+                    context.drawTexture(texture, (int) getXPos(), (int) getYPos(), (int) getWidth(), (int) getHeight(), 0, 22, 24, 11, 24, 33);
+        }
     }
 }

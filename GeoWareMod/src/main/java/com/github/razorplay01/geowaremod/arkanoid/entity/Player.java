@@ -1,5 +1,6 @@
 package com.github.razorplay01.geowaremod.arkanoid.entity;
 
+import com.github.razorplay01.geowaremod.GeoWareMod;
 import com.github.razorplay01.geowaremod.arkanoid.ArkanoidGame;
 import com.github.razorplay01.razorplayapi.util.GameStatus;
 import com.github.razorplay01.razorplayapi.util.hitbox.Hitbox;
@@ -8,6 +9,7 @@ import com.github.razorplay01.razorplayapi.util.screen.GameScreen;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.util.Identifier;
 
 import static com.github.razorplay01.razorplayapi.util.ScreenSide.verifyScreenBoundsCollision;
 
@@ -89,5 +91,16 @@ public class Player extends ArkanoidEntity {
             if (hitbox.getHitboxId().equals(name)) return hitbox;
         }
         return null;
+    }
+
+    @Override
+    public void render(DrawContext context) {
+        Identifier marcoTexture = Identifier.of(GeoWareMod.MOD_ID, "textures/games/arkanoid/player.png");
+        int ancho = Math.round(width / 8);
+        for (int i = 0; i < ancho - 1; i++) {
+            context.drawTexture(marcoTexture, (int) xPos + i * 8, (int) yPos, 16, 8, 16, 0, 16, 16, 48, 16);
+        }
+        context.drawTexture(marcoTexture, (int) xPos - 8, (int) yPos, 8, 8, 0, 0, 16, 16, 48, 16);
+        context.drawTexture(marcoTexture, (int) xPos + 8 * ancho, (int) yPos, 8, 8, 32, 0, 16, 16, 48, 16);
     }
 }

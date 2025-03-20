@@ -20,7 +20,5 @@ subprojects {
 
         testCompileOnly 'org.projectlombok:lombok:1.18.36'
         testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
-
-        implementation files('libs/PacketHandler-1.0-SNAPSHOT.jar')
     }
 }

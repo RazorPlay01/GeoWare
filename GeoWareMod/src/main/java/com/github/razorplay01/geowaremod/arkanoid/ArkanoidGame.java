@@ -34,7 +34,7 @@ public class ArkanoidGame extends Game {
     private static final int GAME_WIDTH = BRICK_WIDTH * COLUMNS;
     private static final int GAME_HEIGHT = (ROWS * BRICK_HEIGHT) + EXTRA_SPACE + PADDLE_HEIGHT + BOTTOM_SPACE;
 
-    private static final float POWERUP_SPAWN_CHANCE = 0.1f;
+    private static final float POWERUP_SPAWN_CHANCE = 0.60f;
 
     public final List<Brick> bricks = new ArrayList<>();
     public Player player;
@@ -47,11 +47,7 @@ public class ArkanoidGame extends Game {
     private static final Map<Character, BrickColor> BRICK_MAPPING = Map.of(
             'R', BrickColor.RED,
             'G', BrickColor.GREEN,
-            'B', BrickColor.BLUE,
-            'Y', BrickColor.YELLOW,
-            'M', BrickColor.MAGENTA,
-            'S', BrickColor.GRAY,
-            'C', BrickColor.CYAN
+            'B', BrickColor.BLUE
     );
 
     public ArkanoidGame(Screen screen, int initDelay, int timeLimitSeconds, int prevScore, int level) {
@@ -129,6 +125,9 @@ public class ArkanoidGame extends Game {
         bricks.forEach(platform -> platform.render(context));
         balls.forEach(ball -> ball.render(context));
         player.render(context);
+
+        // Identifier marcoTexture = Identifier.of(GeoWareMod.MOD_ID, "textures/games/arkanoid/marco.png");
+        //context.drawTexture(marcoTexture, screen.getGameScreenXPos(), screen.getGameScreenYPos() - 12, GAME_WIDTH, GAME_HEIGHT, 0, 0, 254, 300, 254, 415);
     }
 
     @Override
@@ -137,6 +136,14 @@ public class ArkanoidGame extends Game {
         customDrawContext.drawBasicBackground(this.screen);
     }
 
+    /*
+    @Override
+    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
+        Identifier backgroundTexture = Identifier.of(GeoWareMod.MOD_ID, "textures/games/arkanoid/fondo.png");
+        //context.drawTexture(texture,x,y,width,height,u,v,i,j,textureW,textureH);
+        context.drawTexture(backgroundTexture, screen.getGameScreenXPos(), screen.getGameScreenYPos() - 12, GAME_WIDTH, GAME_HEIGHT, 0, 0, 254, 300, 254, 415);
+    }
+*/
     @Override
     public int getScreenWidth() {
         return GAME_WIDTH;
@@ -208,37 +215,37 @@ public class ArkanoidGame extends Game {
     private static final String[] LEVEL_1 = {
             "-------------",
             "-------------",
-            "---YYYYYYY---",
-            "--RRRRRRRRR--",
+            "---RRRRRRR---",
+            "--GGGGGGGGG--",
             "-BBBBBBBBBBB-",
-            "MMMMMMMMMMMMM",
+            "RRRRRRRRRRRRR",
             "GGGGGGGGGGGGG",
-            "MMMMMMMMMMMMM",
+            "RRRRRRRRRRRRR",
             "-BBBBBBBBBBB-",
-            "--RRRRRRRRR--",
-            "---YYYYYYY---",
+            "--GGGGGGGGG--",
+            "---RRRRRRR---",
             "-------------",
             "-------------"
     };
     private static final String[] LEVEL_2 = {
             "-------------",
             "-------------",
-            "---Y-----Y---",
-            "---Y-----Y---",
-            "----Y---Y----",
-            "----Y---Y----",
-            "---SSSSSSS---",
-            "---SSSSSSS---",
-            "--SSRSSSRSS--",
-            "--SSRSSSRSS--",
-            "-SSSSSSSSSSS-",
-            "-SSSSSSSSSSS-",
-            "-SSSSSSSSSSS-",
-            "-S-SSSSSSS-S-",
-            "-S-S-----S-S-",
-            "-S-S-----S-S-",
-            "----SS-SS----",
-            "----SS-SS----",
+            "---B-----B---",
+            "---B-----B---",
+            "----B---B----",
+            "----B---B----",
+            "---GGGGGGG---",
+            "---GGGGGGG---",
+            "--GGRGGGRGG--",
+            "--GGRGGGRGG--",
+            "-GGGGGGGGGGG-",
+            "-GGGGGGGGGGG-",
+            "-GGGGGGGGGGG-",
+            "-G-GGGGGGG-G-",
+            "-G-G-----G-G-",
+            "-G-G-----G-G-",
+            "----GG-GG----",
+            "----GG-GG----",
     };
     private static final String[] LEVEL_3 = {
             "------R------",

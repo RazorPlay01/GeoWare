@@ -92,7 +92,7 @@ public class GeoWareMod implements ModInitializer, ClientModInitializer {
             dispatcher.register(CommandManager.literal("arkanoid")
                     .executes(context -> {
                         if (context.getSource().getPlayer() != null) {
-                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new ArkanoidGameScreen(0, 5, 60, 3)));
+                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new ArkanoidGameScreen(0, 5, 60, 1)));
                         }
                         return 1;
                     }));
@@ -106,7 +106,7 @@ public class GeoWareMod implements ModInitializer, ClientModInitializer {
             dispatcher.register(CommandManager.literal("donkeykong")
                     .executes(context -> {
                         if (context.getSource().getPlayer() != null) {
-                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new DonkeyKongScreen(0, 5, 60, 80, 0.7f)));
+                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new DonkeyKongScreen(0, 5, 60, 500, 0.7f)));
                         }
                         return 1;
                     }));
