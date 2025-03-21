@@ -16,6 +16,8 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.client.MinecraftClient;
 
+import java.util.List;
+
 public class NetworkManager {
     private NetworkManager() {
         // []
@@ -41,9 +43,21 @@ public class NetworkManager {
                 case KeyBindPacket pkt -> checkKeyBindPacketClient(pkt, context);
                 case RobotFactoryPacket pkt -> checkRobotFactoryPacketClient(pkt, context);
                 case TetrisPacket pkt -> checkTetrisPacketClient(pkt, context);
+                case ScoreboardPacket pkt -> checkScoreboardPacketClient(pkt, context);
                 default -> GeoWareMod.LOGGER.info("Packet received from server: UnknownPacket");
             }
         }));
+    }
+
+    private static void checkScoreboardPacketClient(ScoreboardPacket pkt, ClientPlayNetworking.Context context) {
+        List<String> text = pkt.getTexts();
+        long fadeInMs = pkt.getFadeInMs();
+        long stayMs = pkt.getStayMs();
+        long fadeOutMs = pkt.getFadeOutMs();
+        int offsetX = pkt.getOffsetX();
+        int offsetY = pkt.getOffsetY();
+        float scale = pkt.getScale();
+        context.client().execute(() -> GeoWareMod.getScoreboard().showScoreboard(text, fadeInMs, stayMs, fadeOutMs, offsetX, offsetY, scale));
     }
 
     private static void checkArkanoidPacketClient(ArkanoidPacket iPacket, ClientPlayNetworking.Context context) {

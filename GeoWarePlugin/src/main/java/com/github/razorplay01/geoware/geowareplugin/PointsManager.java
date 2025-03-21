@@ -15,7 +15,7 @@ public class PointsManager {
     private final Connection databaseConnection;
     private static final String TABLE_NAME = "Puntos";
     private static final String POINTS_COLUMN = "puntos";
-    private static final int TOP_LIMIT = 10;
+    private static final int TOP_LIMIT = 12;
 
     /**
      * Crea una nueva instancia de PointsManager y establece la conexión a la base de datos.
@@ -169,6 +169,27 @@ public class PointsManager {
              ResultSet result = statement.executeQuery(topQuery)) {
             while (result.next()) {
                 topPlayers.add(result.getString("nombre") + ": " + result.getInt(POINTS_COLUMN));
+            }
+        } catch (SQLException e) {
+            GeoWarePlugin.LOGGER.error("Error retrieving top players", e);
+        }
+        return topPlayers;
+    }
+
+    /**
+     * Obtiene la lista de los 12 jugadores con más puntos, mostrando solo sus nombres.
+     *
+     * @return Lista de nombres de usuario
+     */
+    public List<String> getTop12Players() {
+        List<String> topPlayers = new ArrayList<>();
+        String topQuery = "SELECT nombre FROM " + TABLE_NAME +
+                " ORDER BY " + POINTS_COLUMN + " DESC LIMIT " + TOP_LIMIT;
+
+        try (Statement statement = databaseConnection.createStatement();
+             ResultSet result = statement.executeQuery(topQuery)) {
+            while (result.next()) {
+                topPlayers.add(result.getString("nombre"));
             }
         } catch (SQLException e) {
             GeoWarePlugin.LOGGER.error("Error retrieving top players", e);

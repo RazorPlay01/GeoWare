@@ -23,7 +23,8 @@ public class GeoWareCommon {
                 KeyBindPacket.class,
                 RobotFactoryPacket.class,
                 ScorePacket.class,
-                TetrisPacket.class
+                TetrisPacket.class,
+                ScoreboardPacket.class
         };
         PacketTCP.registerPackets(packetClasses);
     }

@@ -18,3 +18,7 @@ commands:
     description: Gestiona los puntos del juego 2D.
     usage: /<command> <top10|add|subtract|reset> [opciones]
     permission: geoware.2dgame.points
+  2dgamescoreboard:
+    description: Muestra un scoreboard personalizado
+    usage: /<command> <target> <fadeInMs> <stayMs> <fadeOutMs> <offsetX> <offsetY> <scale> "<list>"
+    permission: geoware.2dgame.scoreboard

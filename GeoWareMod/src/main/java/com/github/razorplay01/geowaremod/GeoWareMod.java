@@ -1,10 +1,10 @@
 package com.github.razorplay01.geowaremod;
 
-import com.github.razorplay.packet_handler.network.PacketTCP;
 import com.github.razorplay01.geoware.geowarecommon.GeoWareCommon;
-import com.github.razorplay01.geoware.geowarecommon.network.packet.ArkanoidPacket;
 import com.github.razorplay01.geowaremod.arkanoid.ArkanoidGameScreen;
 import com.github.razorplay01.geowaremod.bubblepuzzle.BubblePuzzleScreen;
+import com.github.razorplay01.geowaremod.client.Scoreboard;
+import com.github.razorplay01.geowaremod.client.ScoreboardCommand;
 import com.github.razorplay01.geowaremod.donkeykong.DonkeyKongScreen;
 import com.github.razorplay01.geowaremod.fruitfocus.FruitFocusGameScreen;
 import com.github.razorplay01.geowaremod.galaga.GalagaScreen;
@@ -13,8 +13,11 @@ import com.github.razorplay01.geowaremod.keybind.KeyBindGameScreen;
 import com.github.razorplay01.geowaremod.network.NetworkManager;
 import com.github.razorplay01.geowaremod.robotfactory.RobotFactoryScreen;
 import com.github.razorplay01.geowaremod.tetris.TetrisGameScreen;
+import lombok.Getter;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.command.CommandManager;
@@ -24,6 +27,8 @@ import org.slf4j.LoggerFactory;
 public class GeoWareMod implements ModInitializer, ClientModInitializer {
     public static final String MOD_ID = "geowaremod";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    @Getter
+    private static Scoreboard scoreboard;
 
     @Override
     public void onInitialize() {
@@ -33,6 +38,12 @@ public class GeoWareMod implements ModInitializer, ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        scoreboard = new Scoreboard();
+        HudRenderCallback.EVENT.register(scoreboard);
+        /*ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
+            ScoreboardCommand.setScoreboard(scoreboard);
+            ScoreboardCommand.register(dispatcher);
+        });*/
         NetworkManager.registerClient();
         registerCommands();
     }

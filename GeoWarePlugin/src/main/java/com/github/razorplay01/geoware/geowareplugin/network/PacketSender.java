@@ -7,6 +7,8 @@ import com.github.razorplay01.geoware.geowarecommon.network.packet.*;
 import com.github.razorplay01.geoware.geowareplugin.GeoWarePlugin;
 import org.bukkit.entity.Player;
 
+import java.util.List;
+
 import static com.github.razorplay01.geoware.geowarecommon.GeoWareCommon.PACKET_BASE_CHANNEL;
 
 public class PacketSender {
@@ -97,6 +99,16 @@ public class PacketSender {
     public static void sendTetrisPacketToClient(Player targetPlayer, int prevScore, int timeLimitSeconds, float speedMultiplier) {
         try {
             IPacket packet = new TetrisPacket(prevScore, timeLimitSeconds, speedMultiplier);
+            packetSendInfo(packet, targetPlayer);
+            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PACKET_BASE_CHANNEL, PacketTCP.write(packet));
+        } catch (PacketSerializationException e) {
+            GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());
+        }
+    }
+
+    public static void sendScoreboardPacketToClient(Player targetPlayer, List<String> texts, long fadeInMs, long stayMs, long fadeOutMs, int offsetX, int offsetY, float scale) {
+        try {
+            IPacket packet = new ScoreboardPacket(texts, fadeInMs, stayMs, fadeOutMs, offsetX, offsetY, scale);
             packetSendInfo(packet, targetPlayer);
             targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {
