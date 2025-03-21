@@ -8,6 +8,7 @@ import com.github.razorplay01.razorplayapi.util.texture.Texture;
 import lombok.Getter;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.RotationAxis;
 
 public class RobotPart extends Entity {
     @Getter
@@ -16,6 +17,9 @@ public class RobotPart extends Entity {
     private final PartType type;
     private boolean isHeld;
     private final Texture texture;
+    private final float scale;
+    private final float speedMultiplier;
+    private final float rotationAngle; // Rotation in degrees (0, 90, -90, or 180)
 
     public enum RobotFamily {
         SHIP1("nave1.2.16x", "nave1.3.16x", "nave1.32x"),
@@ -44,19 +48,22 @@ public class RobotPart extends Entity {
         HEAD, BODY
     }
 
-    public RobotPart(RobotFamily family, PartType type, float xPos, float yPos, GameScreen gameScreen, boolean spawnedLeft) {
-        super(xPos, yPos, 16, 16, gameScreen);
+    public RobotPart(RobotFamily family, PartType type, float xPos, float yPos, GameScreen gameScreen, boolean spawnedLeft, float scale, float speedMultiplier, float rotationAngle) {
+        super(xPos * scale, yPos * scale, 16 * scale, 16 * scale, gameScreen);
         this.family = family;
         this.type = type;
+        this.scale = scale;
+        this.speedMultiplier = speedMultiplier;
+        this.rotationAngle = rotationAngle;
 
         String textureName = (type == PartType.HEAD) ? family.headTexture : family.bodyTexture;
         this.texture = new Texture(
                 Identifier.of(GeoWareMod.MOD_ID, "textures/games/robotfactory/parts/" + textureName + ".png"),
-                0, 0, 16, 16, 16, 16, 1.0f
+                0, 0, (int)(16 * scale), (int)(16 * scale), 16, 16, 1.0f
         );
 
-        this.hitboxes.add(new RectangleHitbox("robot_part", xPos, yPos, 16, 16, 0, 0, 0xFFFFFFFF));
-        this.velocityX = spawnedLeft ? 1f : -1f; // Left spawn: move right, Right spawn: move left
+        this.hitboxes.add(new RectangleHitbox("robot_part", xPos * scale, yPos * scale, 16 * scale, 16 * scale, 0, 0, 0xFFFFFFFF));
+        this.velocityX = (spawnedLeft ? 1f : -1f) * speedMultiplier * scale; // Apply speed multiplier to initial movement
         this.velocityY = 0.0f;
         this.isHeld = false;
     }
@@ -75,14 +82,32 @@ public class RobotPart extends Entity {
 
     @Override
     protected void render(DrawContext context) {
+        // Push a new matrix onto the stack to apply rotation
+        context.getMatrices().push();
+
+        // Translate to the center of the part to rotate around its center
+        float centerX = xPos + width / 2;
+        float centerY = yPos + height / 2;
+        context.getMatrices().translate(centerX, centerY, 0f);
+
+        // Apply the rotation (in degrees)
+        context.getMatrices().multiply(RotationAxis.POSITIVE_Z.rotationDegrees(rotationAngle));
+
+        // Translate back to the original position
+        context.getMatrices().translate(-centerX, -centerY, 0f);
+
+        // Render the texture
         context.drawTexture(
                 texture.identifier(),
                 (int) xPos, (int) yPos,
                 (int) width, (int) height,
-                texture.u(), texture.v(),
-                texture.width(), texture.height(),
-                texture.textureWidth(), texture.textureHeight()
+                0, 0, // Use full texture region
+                16, 16, // Source texture dimensions
+                16, 16  // Actual texture file dimensions
         );
+
+        // Pop the matrix to restore the original state
+        context.getMatrices().pop();
     }
 
     public void setHeld(boolean held, double mouseX, double mouseY) {
@@ -94,6 +119,10 @@ public class RobotPart extends Entity {
             velocityY = 0;
             hitboxes.get(0).updatePosition(xPos, yPos);
         }
+    }
+
+    public void setVelocityY(float velocityY) {
+        this.velocityY = velocityY * speedMultiplier; // Apply speed multiplier to vertical movement (for discarding)
     }
 
     public RectangleHitbox getHitbox() {

@@ -86,9 +86,9 @@ public class PacketSender {
         }
     }
 
-    public static void sendRobotFactoryPacketToClient(Player targetPlayer, int prevScore, int timeLimitSeconds) {
+    public static void sendRobotFactoryPacketToClient(Player targetPlayer, int prevScore, int timeLimitSeconds, float speedMultiplier, boolean enableRotation) {
         try {
-            IPacket packet = new RobotFactoryPacket(prevScore, timeLimitSeconds);
+            IPacket packet = new RobotFactoryPacket(prevScore, timeLimitSeconds, speedMultiplier, enableRotation);
             packetSendInfo(packet, targetPlayer);
             targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {

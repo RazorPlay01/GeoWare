@@ -87,7 +87,7 @@ public class GeoWareMod implements ModInitializer, ClientModInitializer {
                     }));
             dispatcher.register(CommandManager.literal("robotfactory")
                     .executes(context -> {
-                        MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new RobotFactoryScreen(60, 0)));
+                        MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new RobotFactoryScreen(60, 0, 1.5f, true)));
                         return 1;
                     }));
             dispatcher.register(CommandManager.literal("bubblepuzzle")

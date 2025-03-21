@@ -43,9 +43,9 @@ public class TwoDGameCommand implements CommandExecutor, TabCompleter {
             switch (game) {
                 case "tetris":
                     int tetrisTime = args.length > 2 ? Integer.parseInt(args[2]) : 60;
-                    float speed = args.length > 3 ? Float.parseFloat(args[3]) : 3.0f;
+                    float tetrisSpeed = args.length > 3 ? Float.parseFloat(args[3]) : 3.0f;
                     for (Player player : targets) {
-                        PacketSender.sendTetrisPacketToClient(player, 0, tetrisTime, speed);
+                        PacketSender.sendTetrisPacketToClient(player, 0, tetrisTime, tetrisSpeed);
                     }
                     sender.sendMessage("§aPacket Tetris enviado a " + targets.size() + " jugador(es)");
                     break;
@@ -114,8 +114,10 @@ public class TwoDGameCommand implements CommandExecutor, TabCompleter {
 
                 case "robotfactory":
                     int robotTime = args.length > 2 ? Integer.parseInt(args[2]) : 60;
+                    float robotSpeed = args.length > 3 ? Float.parseFloat(args[3]) : 1.0f;
+                    boolean enableRotation = args.length > 4 ? Boolean.parseBoolean(args[4]) : false;
                     for (Player player : targets) {
-                        PacketSender.sendRobotFactoryPacketToClient(player, 0, robotTime);
+                        PacketSender.sendRobotFactoryPacketToClient(player, 0, robotTime, robotSpeed, enableRotation);
                     }
                     sender.sendMessage("§aPacket RobotFactory enviado a " + targets.size() + " jugador(es)");
                     break;
@@ -190,9 +192,22 @@ public class TwoDGameCommand implements CommandExecutor, TabCompleter {
                     completions.add("2");
                     completions.add("3");
                     break;
+                case "robotfactory":
+                    completions.add("1.0");
+                    completions.add("1.5");
+                    completions.add("2.0");
+                    break;
             }
-        } else if (args.length == 5 && args[1].equalsIgnoreCase("donkeykong")) {
-            completions.add("0.7");
+        } else if (args.length == 5) {
+            switch (args[1].toLowerCase()) {
+                case "donkeykong":
+                    completions.add("0.7");
+                    break;
+                case "robotfactory":
+                    completions.add("true");
+                    completions.add("false");
+                    break;
+            }
         }
 
         return completions.stream()

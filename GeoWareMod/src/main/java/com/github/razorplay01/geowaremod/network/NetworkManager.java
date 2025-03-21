@@ -89,7 +89,7 @@ public class NetworkManager {
     }
 
     private static void checkRobotFactoryPacketClient(RobotFactoryPacket iPacket, ClientPlayNetworking.Context context) {
-        context.client().execute(() -> MinecraftClient.getInstance().setScreen(new RobotFactoryScreen(iPacket.getTimeLimitSeconds(), iPacket.getScore())));
+        context.client().execute(() -> MinecraftClient.getInstance().setScreen(new RobotFactoryScreen(iPacket.getTimeLimitSeconds(), iPacket.getScore(), iPacket.getSpeedMultiplier(), iPacket.isEnableRotation())));
     }
 
     private static void checkTetrisPacketClient(TetrisPacket iPacket, ClientPlayNetworking.Context context) {
