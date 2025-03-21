@@ -21,7 +21,7 @@ import static com.github.razorplay01.geowaremod.galaga.Moves.*;
 
 @Getter
 public class GalagaGame extends Game {
-    public static final int GAME_WIDTH = 206; // 200
+    public static final int GAME_WIDTH = 206; // 206
     public static final int GAME_HEIGHT = 20 * 14; // 280
 
     private Animation enemyDeathParticle = new Animation(List.of(

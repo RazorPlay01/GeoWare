@@ -80,7 +80,6 @@ public class Barrel extends DonkeyKongEntity {
                 exitLadder();
             }
         }
-        verticalAnimation.update();
     }
 
     private void exitLadder() {
@@ -134,13 +133,6 @@ public class Barrel extends DonkeyKongEntity {
             xPos = nextX;
             yPos = nextY;
             currentPlatform = null;
-        }
-
-        // Actualizar animación según la dirección
-        if (velocityX > 0) {
-            horizontalRightAnimation.update();
-        } else {
-            horizontalLeftAnimation.update();
         }
     }
 
@@ -266,6 +258,15 @@ public class Barrel extends DonkeyKongEntity {
 
     @Override
     public void render(DrawContext context) {
+        if (currentLadder != null) {
+            verticalAnimation.update();
+        }
+        if (velocityX > 0) {
+            horizontalRightAnimation.update();
+        } else {
+            horizontalLeftAnimation.update();
+        }
+
         Animation currentAnimation;
         int xOffset = 0;
         int yOffset = -1;

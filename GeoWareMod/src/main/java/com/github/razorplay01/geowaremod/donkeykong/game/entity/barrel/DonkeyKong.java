@@ -62,8 +62,6 @@ public class DonkeyKong extends DonkeyKongEntity {
 
     @Override
     public void update() {
-        currentAnimation.update();
-
         if (game.getStatus() == GameStatus.ACTIVE && !hasSpawnedFirstBarrel && !isSpawningBarrel && !isPlayingExtra) {
             isSpawningBarrel = true;
             currentAnimation = barrelAnimation;
@@ -97,6 +95,7 @@ public class DonkeyKong extends DonkeyKongEntity {
 
     @Override
     public void render(DrawContext context) {
+        currentAnimation.update();
         renderTexture(context, this, currentAnimation, 0, -5);
     }
 }

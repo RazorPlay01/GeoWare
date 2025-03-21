@@ -3,6 +3,7 @@ package com.github.razorplay01.geowaremod.hanoitowers;
 import com.github.razorplay01.geowaremod.GeoWareMod;
 import com.github.razorplay01.razorplayapi.util.GameStatus;
 import com.github.razorplay01.razorplayapi.util.stage.Game;
+import com.github.razorplay01.razorplayapi.util.texture.Animation;
 import com.github.razorplay01.razorplayapi.util.texture.Texture;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -12,6 +13,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HanoiTowersGame extends Game {
+    private final Identifier globoTexture = Identifier.of(GeoWareMod.MOD_ID, "textures/games/hanoitowers/globo.png");
+    private final Animation globo;
+
     private final List<Tower> towers = new ArrayList<>();
     private Ring selectedRing;
     private Tower selectedTower;
@@ -25,6 +29,17 @@ public class HanoiTowersGame extends Game {
         super(screen, initDelay, timeLimitSeconds, prevScore);
         this.numRings = rings;
         this.movesCounter = 0;
+
+
+        List<Texture> textures = new ArrayList<>();
+        for (int i = 1; i <= 35; i++) {
+            textures.add(new Texture(globoTexture, 0, (i * 15), 102, 15, 102, 525, 1));
+        }
+        this.globo = new Animation(
+                textures,
+                0.75f,
+                true
+        );
     }
 
     @Override
@@ -54,6 +69,8 @@ public class HanoiTowersGame extends Game {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         context.drawTextWithShadow(getTextRenderer(), "Movimientos: " + movesCounter, 10, 10, 0xFFFFFFFF);
         towers.forEach(tower -> tower.render(context));
+        globo.update();
+        globo.renderAnimation(context, 0, 0, screen.getGameScreenXPos() + 270, screen.getGameScreenYPos() + 14, 105, 15);
 
         if (selectedRing != null) {
             selectedRing.setXPos(mouseX - (selectedRing.getWidth() / 2));
@@ -182,7 +199,7 @@ public class HanoiTowersGame extends Game {
                 10,
                 new Texture(texture, 71, 36, 39, height, textureWidth, textureHeight, scale));
 
-        switch (numRings){
+        switch (numRings) {
             case 2 -> {
                 torre.addRing(ring1);
                 torre.addRing(ring2);
