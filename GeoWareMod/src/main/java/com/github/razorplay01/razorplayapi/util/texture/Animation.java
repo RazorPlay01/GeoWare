@@ -1,7 +1,9 @@
 package com.github.razorplay01.razorplayapi.util.texture;
 
+import com.github.razorplay01.razorplayapi.util.Entity;
 import lombok.Getter;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,5 +77,31 @@ public class Animation {
     public boolean isFinished() {
         boolean finished = !loop && currentFrame == textures.size() - 1;
         return finished;
+    }
+
+    public void renderAnimation(DrawContext context, int xOffset, int yOffset, int xPos, int yPos, int width, int height) {
+        Texture currentTexture = this.getCurrentTexture();
+
+        // Calcular dimensiones escaladas de la textura
+        int tWidth = (int) (this.getFrameWidth() * currentTexture.scale());
+        int tHeight = (int) (this.getFrameHeight() * currentTexture.scale());
+
+        // Calculo para centrar la textura en la entidad
+        int centeredX = (int) (xPos + xOffset + (width - tWidth) / 2.0);
+        int centeredY = (int) (yPos + yOffset + (height - tHeight) / 2.0);
+
+        context.drawTexture(
+                currentTexture.identifier(),
+                centeredX,
+                centeredY,
+                width,
+                height,
+                this.getCurrentU(),
+                this.getCurrentV(),
+                this.getFrameWidth(),
+                this.getFrameHeight(),
+                currentTexture.textureWidth(),
+                currentTexture.textureHeight()
+        );
     }
 }

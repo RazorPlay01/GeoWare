@@ -1,5 +1,6 @@
 package com.github.razorplay01.geowaremod.robotfactory;
 
+import com.github.razorplay01.geowaremod.GeoWareMod;
 import com.github.razorplay01.razorplayapi.util.GameStatus;
 import com.github.razorplay01.razorplayapi.util.Particle;
 import com.github.razorplay01.razorplayapi.util.hitbox.RectangleHitbox;
@@ -28,8 +29,8 @@ public class RobotFactoryGame extends Game {
 
     public RobotFactoryGame(GameScreen screen, int timeLimitSeconds, int prevScore) {
         super(screen, 5, timeLimitSeconds, prevScore);
-        this.tableZone = new RectangleHitbox("table", 160, 110, 80, 80, 0, 0, 0xFF808080);
-        this.trashZone = new RectangleHitbox("trash", 170, 280, 60, 20, 0, 0, 0xFF404040);
+        this.tableZone = new RectangleHitbox("table", 80, 32, 48, 48, 0, 0, 0xFF808080);
+        this.trashZone = new RectangleHitbox("trash", 81, 104, 46, 12, 0, 0, 0xFF404040);
     }
 
     @Override
@@ -51,7 +52,6 @@ public class RobotFactoryGame extends Game {
             spawnScheduled = true;
         }
 
-        // Actualizar piezas
         for (RobotPart part : new ArrayList<>(parts)) {
             part.update();
             if (!part.isHeld() && trashZone.intersects(part.getHitbox())) {
@@ -59,23 +59,19 @@ public class RobotFactoryGame extends Game {
             }
         }
 
-        // Actualizar partículas
         particles.removeIf(Particle::isFinished);
         particles.forEach(Particle::update);
 
-        // Combinar piezas en la mesa
         if (tablePart != null && heldPart != null && tableZone.intersects(heldPart.getHitbox()) &&
                 tablePart.getFamily() == heldPart.getFamily() && tablePart.getType() != heldPart.getType()) {
-            addScore(10, tableZone.getXPos(), tableZone.getYPos());
-            addCompletionParticle(tableZone.getXPos(), tableZone.getYPos());
+            addScore(100);
+            addCompletionParticle(tableZone.getXPos(), tableZone.getYPos(), tablePart.getFamily());
             parts.remove(tablePart);
             parts.remove(heldPart);
             tablePart = null;
             heldPart = null;
         }
 
-
-        // Actualizar posición de la pieza sostenida
         if (heldPart != null) {
             double mouseX = MinecraftClient.getInstance().mouse.getX();
             double mouseY = MinecraftClient.getInstance().mouse.getY();
@@ -105,19 +101,19 @@ public class RobotFactoryGame extends Game {
 
     @Override
     public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-        int xOffset = screen.getGameScreenXPos();
-        int yOffset = screen.getGameScreenYPos();
-        context.fill(xOffset, yOffset, xOffset + getScreenWidth(), yOffset + getScreenHeight(), 0xFF000000);
+        Identifier marcoTexture = Identifier.of(GeoWareMod.MOD_ID, "textures/games/robotfactory/fondo.png");
+        context.drawTexture(marcoTexture, screen.getGameScreenXPos(), screen.getGameScreenYPos(),
+                getScreenWidth(), getScreenHeight(), 0, 0, 208, 116, 208, 116);
     }
 
     @Override
     public int getScreenWidth() {
-        return 400;
+        return 208;
     }
 
     @Override
     public int getScreenHeight() {
-        return 300;
+        return 116;
     }
 
     @Override
@@ -127,7 +123,7 @@ public class RobotFactoryGame extends Game {
         mouseX -= xOffset;
         mouseY -= yOffset;
 
-        if (button == 0) { // Clic izquierdo
+        if (button == 0) {
             if (heldPart == null) {
                 for (RobotPart part : parts) {
                     if (part.getHitbox().isMouseOver(mouseX, mouseY)) {
@@ -142,20 +138,18 @@ public class RobotFactoryGame extends Game {
                 if (tableZone.intersects(heldPart.getHitbox())) {
                     if (tablePart == null) {
                         tablePart = heldPart;
-                        tablePart.setVelocityX(0); // Detener movimiento en la mesa
+                        tablePart.setVelocityX(0);
                     } else {
-                        // Mesa llena: teletransportar por encima de la basura
-                        heldPart.setXPos(trashZone.getXPos() + trashZone.getWidth() / 2 - heldPart.getWidth() / 2); // Centrar en X
-                        heldPart.setYPos(trashZone.getYPos() - 50); // 50 píxeles por encima
-                        heldPart.setVelocityX(0); // Detener movimiento horizontal
-                        heldPart.setVelocityY(0.5f); // Caer hacia abajo
+                        heldPart.setXPos(trashZone.getXPos() + trashZone.getWidth() / 2 - heldPart.getWidth() / 2);
+                        heldPart.setYPos(trashZone.getYPos() - 22);
+                        heldPart.setVelocityX(0);
+                        heldPart.setVelocityY(0.5f);
                     }
                 } else {
-                    // Fuera de la mesa: teletransportar por encima de la basura
-                    heldPart.setXPos(trashZone.getXPos() + trashZone.getWidth() / 2 - heldPart.getWidth() / 2); // Centrar en X
-                    heldPart.setYPos(trashZone.getYPos() - 50); // 50 píxeles por encima
-                    heldPart.setVelocityX(0); // Detener movimiento horizontal
-                    heldPart.setVelocityY(0.5f); // Caer hacia abajo
+                    heldPart.setXPos(trashZone.getXPos() + trashZone.getWidth() / 2 - heldPart.getWidth() / 2);
+                    heldPart.setYPos(trashZone.getYPos() - 22);
+                    heldPart.setVelocityX(0);
+                    heldPart.setVelocityY(0.5f);
                 }
                 heldPart = null;
             }
@@ -163,10 +157,10 @@ public class RobotFactoryGame extends Game {
     }
 
     private void spawnPart() {
-        RobotPart.RobotFamily family = RobotPart.RobotFamily.values()[random.nextInt(4)];
+        RobotPart.RobotFamily family = RobotPart.RobotFamily.values()[random.nextInt(10)];
         RobotPart.PartType type = RobotPart.PartType.values()[random.nextInt(2)];
-        float xPos = spawnLeft ? 10 : 358;
-        parts.add(new RobotPart(family, type, xPos, 260, screen));
+        float xPos = spawnLeft ? 7 : 185;
+        parts.add(new RobotPart(family, type, xPos, 90, screen, spawnLeft));
         spawnLeft = !spawnLeft;
         if (status == GameStatus.ACTIVE) {
             scheduleSpawn();
@@ -177,10 +171,14 @@ public class RobotFactoryGame extends Game {
         scheduleTask(this::spawnPart, 1000);
     }
 
-    private void addCompletionParticle(float xPos, float yPos) {
+    private void addCompletionParticle(float xPos, float yPos, RobotPart.RobotFamily family) {
         List<Texture> textures = new ArrayList<>();
-        textures.add(new Texture(Identifier.of("minecraft", "textures/particle/generic_0.png"), 0, 0, 8, 8, 8, 8, 1.0f));
-        Animation animation = new Animation(textures, 0.1f, false);
-        particles.add(new Particle(xPos, yPos, 16, 16, screen, animation));
+        Texture texture = new Texture(
+                Identifier.of(GeoWareMod.MOD_ID, "textures/games/robotfactory/parts/" + family.completeTexture + ".png"),
+                0, 0, 32, 32, 32, 32, 1.0f);
+        textures.add(texture);
+        textures.add(texture);
+        Animation animation = new Animation(textures, 0.5f, false);
+        particles.add(new Particle(xPos + 24 - 16, yPos + 24 - 16, 32, 32, screen, animation));
     }
 }
