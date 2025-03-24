@@ -1,5 +1,6 @@
 package com.github.razorplay01.geoware.geowareplugin;
 
+import com.github.razorplay01.geoware.geowarecommon.util.Pair;
 import org.bukkit.entity.Player;
 
 import java.io.File;
@@ -152,6 +153,29 @@ public class PointsManager {
         } catch (SQLException e) {
             GeoWarePlugin.LOGGER.error("Error retrieving points for player {}", player.getName(), e);
             return 0;
+        }
+    }
+
+    public Pair<Integer, Integer> obtenerPuntosYPosicion(Player player) {
+        String uuid = player.getUniqueId().toString();
+        try (Statement stmt = databaseConnection.createStatement();
+             ResultSet rs = stmt.executeQuery("SELECT uuid, puntos FROM Puntos ORDER BY puntos DESC")) {
+            int posicion = 0;
+            int puntos = 0;
+            while (rs.next()) {
+                posicion++;
+                if (rs.getString("uuid").equals(uuid)) {
+                    puntos = rs.getInt("puntos");
+                    break;
+                }
+            }
+            if (posicion == 0) {
+                return new Pair<>(0, 0);
+            }
+            return new Pair<>(puntos, posicion);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return new Pair<>(0, 0);
         }
     }
 

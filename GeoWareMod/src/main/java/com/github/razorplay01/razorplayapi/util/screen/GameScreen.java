@@ -1,7 +1,9 @@
 package com.github.razorplay01.razorplayapi.util.screen;
 
+import com.github.razorplay01.geowaremod.GeoWareMod;
 import com.github.razorplay01.razorplayapi.util.stage.Game;
 import lombok.Getter;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
@@ -69,6 +71,12 @@ public abstract class GameScreen extends Screen {
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        game.handlemouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+    }
+
     private void renderGameScore(DrawContext context) {
         context.drawText(this.textRenderer, "Score: " + game.getGameScore(),
                 gameScreenXPos + this.game.getScreenWidth() + 10, this.gameScreenYPos + 20, 0xFFFFFF00, true);
@@ -123,5 +131,11 @@ public abstract class GameScreen extends Screen {
         int timeWidth = this.textRenderer.getWidth(timeMessage);
 
         context.drawText(this.textRenderer, timeMessage, centerX - timeWidth / 2, centerY, 0xFFAAAAAA, true);
+    }
+
+    @Override
+    public void close() {
+        MinecraftClient.getInstance().options.getGuiScale().setValue(GeoWareMod.guiScale);
+        super.close();
     }
 }

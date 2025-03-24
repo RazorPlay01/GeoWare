@@ -3,8 +3,8 @@ package com.github.razorplay01.geowaremod;
 import com.github.razorplay01.geoware.geowarecommon.GeoWareCommon;
 import com.github.razorplay01.geowaremod.arkanoid.ArkanoidGameScreen;
 import com.github.razorplay01.geowaremod.bubblepuzzle.BubblePuzzleScreen;
+import com.github.razorplay01.geowaremod.client.Score;
 import com.github.razorplay01.geowaremod.client.Scoreboard;
-import com.github.razorplay01.geowaremod.client.ScoreboardCommand;
 import com.github.razorplay01.geowaremod.donkeykong.DonkeyKongScreen;
 import com.github.razorplay01.geowaremod.fruitfocus.FruitFocusGameScreen;
 import com.github.razorplay01.geowaremod.galaga.GalagaScreen;
@@ -12,11 +12,11 @@ import com.github.razorplay01.geowaremod.hanoitowers.HanoiTowersScreen;
 import com.github.razorplay01.geowaremod.keybind.KeyBindGameScreen;
 import com.github.razorplay01.geowaremod.network.NetworkManager;
 import com.github.razorplay01.geowaremod.robotfactory.RobotFactoryScreen;
+import com.github.razorplay01.geowaremod.scarymaze.ScaryMazeScreen;
 import com.github.razorplay01.geowaremod.tetris.TetrisGameScreen;
 import lombok.Getter;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.minecraft.client.MinecraftClient;
@@ -29,6 +29,11 @@ public class GeoWareMod implements ModInitializer, ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     @Getter
     private static Scoreboard scoreboard;
+    private static Score score;
+
+    public static int guiScale = 2;
+    public static int playerScore = 55;
+    public static int playerPosition = 5;
 
     @Override
     public void onInitialize() {
@@ -39,11 +44,9 @@ public class GeoWareMod implements ModInitializer, ClientModInitializer {
     @Override
     public void onInitializeClient() {
         scoreboard = new Scoreboard();
+        score = new Score();
         HudRenderCallback.EVENT.register(scoreboard);
-        /*ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
-            ScoreboardCommand.setScoreboard(scoreboard);
-            ScoreboardCommand.register(dispatcher);
-        });*/
+        HudRenderCallback.EVENT.register(score);
         NetworkManager.registerClient();
         registerCommands();
     }
@@ -93,7 +96,7 @@ public class GeoWareMod implements ModInitializer, ClientModInitializer {
             dispatcher.register(CommandManager.literal("bubblepuzzle")
                     .executes(context -> {
                         if (context.getSource().getPlayer() != null) {
-                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new BubblePuzzleScreen(0, 5, 60, 1)));
+                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new BubblePuzzleScreen(0, 5, 600, 1)));
                         }
                         return 1;
                     }));
@@ -121,7 +124,28 @@ public class GeoWareMod implements ModInitializer, ClientModInitializer {
             dispatcher.register(CommandManager.literal("donkeykong")
                     .executes(context -> {
                         if (context.getSource().getPlayer() != null) {
-                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new DonkeyKongScreen(0, 5, 60, 500, 0.7f)));
+                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new DonkeyKongScreen(0, 5, 60, 1000, 0.7f)));
+                        }
+                        return 1;
+                    }));
+            dispatcher.register(CommandManager.literal("maze1")
+                    .executes(context -> {
+                        if (context.getSource().getPlayer() != null) {
+                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new ScaryMazeScreen(0, 5, 60, 1)));
+                        }
+                        return 1;
+                    }));
+            dispatcher.register(CommandManager.literal("maze2")
+                    .executes(context -> {
+                        if (context.getSource().getPlayer() != null) {
+                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new ScaryMazeScreen(0, 5, 60, 2)));
+                        }
+                        return 1;
+                    }));
+            dispatcher.register(CommandManager.literal("maze3")
+                    .executes(context -> {
+                        if (context.getSource().getPlayer() != null) {
+                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new ScaryMazeScreen(0, 5, 60, 3)));
                         }
                         return 1;
                     }));

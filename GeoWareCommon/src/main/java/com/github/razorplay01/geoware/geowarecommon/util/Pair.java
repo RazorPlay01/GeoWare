@@ -1,4 +1,4 @@
-package com.github.razorplay01.geoware.geowareplugin.util;
+package com.github.razorplay01.geoware.geowarecommon.util;
 
 import lombok.Getter;
 

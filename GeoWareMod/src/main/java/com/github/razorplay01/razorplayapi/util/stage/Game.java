@@ -165,6 +165,10 @@ public abstract class Game implements IGame {
 
     }
 
+    public void handlemouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+
+    }
+
     public void keyReleased(int keyCode, int scanCode, int modifiers) {
     }
 }

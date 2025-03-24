@@ -37,7 +37,7 @@ public class HanoiTowersGame extends Game {
         }
         this.globo = new Animation(
                 textures,
-                0.75f,
+                0.5f,
                 true
         );
     }
@@ -67,10 +67,10 @@ public class HanoiTowersGame extends Game {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        context.drawTextWithShadow(getTextRenderer(), "Movimientos: " + movesCounter, 10, 10, 0xFFFFFFFF);
+        context.drawTextWithShadow(getTextRenderer(), "Movimientos: " + movesCounter, screen.getGameScreenXPos() + getScreenWidth() + 10, screen.getGameScreenYPos() + 40, 0xFFFFFFFF);
         towers.forEach(tower -> tower.render(context));
         globo.update();
-        globo.renderAnimation(context, 0, 0, screen.getGameScreenXPos() + 270, screen.getGameScreenYPos() + 14, 105, 15);
+        globo.renderAnimation(context, 0, 0, screen.getGameScreenXPos() + 270, screen.getGameScreenYPos() + 15, 105, 15);
 
         if (selectedRing != null) {
             selectedRing.setXPos(mouseX - (selectedRing.getWidth() / 2));

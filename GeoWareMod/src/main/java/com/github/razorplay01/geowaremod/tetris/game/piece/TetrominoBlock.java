@@ -30,7 +30,7 @@ public class TetrominoBlock implements Cloneable {
     }
 
     public void render(DrawContext context, int offsetX, int offsetY, int size) {
-        Identifier texture = Identifier.of(GeoWareMod.MOD_ID, "textures/game/blocks.png");
+        Identifier texture = Identifier.of(GeoWareMod.MOD_ID, "textures/games/tetris/blocks.png");
         context.drawTexture(texture, offsetX, offsetY, size, size, this.color.getU(), this.color.getV(), 9, 9, 63, 9);
     }
 
