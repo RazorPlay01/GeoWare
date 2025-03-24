@@ -45,7 +45,7 @@ public class TwoDGameCommand implements CommandExecutor, TabCompleter {
                     int tetrisTime = args.length > 2 ? Integer.parseInt(args[2]) : 60;
                     float tetrisSpeed = args.length > 3 ? Float.parseFloat(args[3]) : 3.0f;
                     for (Player player : targets) {
-                        PacketSender.sendTetrisPacketToClient(player, 0, tetrisTime, tetrisSpeed);
+                        PacketSender.sendTetrisPacketToClient(player, tetrisTime, tetrisSpeed);
                     }
                     sender.sendMessage("§aPacket Tetris enviado a " + targets.size() + " jugador(es)");
                     break;
@@ -54,7 +54,7 @@ public class TwoDGameCommand implements CommandExecutor, TabCompleter {
                     int hanoiTime = args.length > 2 ? Integer.parseInt(args[2]) : 60;
                     int rings = args.length > 3 ? Integer.parseInt(args[3]) : 5;
                     for (Player player : targets) {
-                        PacketSender.sendHanoiTowersPacketToClient(player, 0, hanoiTime, rings);
+                        PacketSender.sendHanoiTowersPacketToClient(player, hanoiTime, rings);
                     }
                     sender.sendMessage("§aPacket HanoiTowers enviado a " + targets.size() + " jugador(es)");
                     break;
@@ -64,7 +64,7 @@ public class TwoDGameCommand implements CommandExecutor, TabCompleter {
                     int spawnInterval = args.length > 3 ? Integer.parseInt(args[3]) : 80;
                     float spawnProb = args.length > 4 ? Float.parseFloat(args[4]) : 0.7f;
                     for (Player player : targets) {
-                        PacketSender.sendDonkeyKongPacketToClient(player, 0, dkTime, spawnInterval, spawnProb);
+                        PacketSender.sendDonkeyKongPacketToClient(player, dkTime, spawnInterval, spawnProb);
                     }
                     sender.sendMessage("§aPacket DonkeyKong enviado a " + targets.size() + " jugador(es)");
                     break;
@@ -73,7 +73,7 @@ public class TwoDGameCommand implements CommandExecutor, TabCompleter {
                     int bubbleTime = args.length > 2 ? Integer.parseInt(args[2]) : 60;
                     int bubbleLevel = args.length > 3 ? Integer.parseInt(args[3]) : 1;
                     for (Player player : targets) {
-                        PacketSender.sendBubblePuzzlePacketToClient(player, 0, bubbleTime, bubbleLevel);
+                        PacketSender.sendBubblePuzzlePacketToClient(player, bubbleTime, bubbleLevel);
                     }
                     sender.sendMessage("§aPacket BubblePuzzle enviado a " + targets.size() + " jugador(es)");
                     break;
@@ -82,7 +82,7 @@ public class TwoDGameCommand implements CommandExecutor, TabCompleter {
                     int arkanoidTime = args.length > 2 ? Integer.parseInt(args[2]) : 60;
                     int arkanoidLevel = args.length > 3 ? Integer.parseInt(args[3]) : 1;
                     for (Player player : targets) {
-                        PacketSender.sendArkanoidPacketToClient(player, 0, arkanoidTime, arkanoidLevel);
+                        PacketSender.sendArkanoidPacketToClient(player, arkanoidTime, arkanoidLevel);
                     }
                     sender.sendMessage("§aPacket Arkanoid enviado a " + targets.size() + " jugador(es)");
                     break;
@@ -90,7 +90,7 @@ public class TwoDGameCommand implements CommandExecutor, TabCompleter {
                 case "fruitfocus":
                     int fruitTime = args.length > 2 ? Integer.parseInt(args[2]) : 60;
                     for (Player player : targets) {
-                        PacketSender.sendFruitFocusPacketToClient(player, 0, fruitTime);
+                        PacketSender.sendFruitFocusPacketToClient(player, fruitTime);
                     }
                     sender.sendMessage("§aPacket FruitFocus enviado a " + targets.size() + " jugador(es)");
                     break;
@@ -99,7 +99,7 @@ public class TwoDGameCommand implements CommandExecutor, TabCompleter {
                     int galagaTime = args.length > 2 ? Integer.parseInt(args[2]) : 60;
                     int galagaLevel = args.length > 3 ? Integer.parseInt(args[3]) : 1;
                     for (Player player : targets) {
-                        PacketSender.sendGalagaPacketToClient(player, 0, galagaTime, galagaLevel);
+                        PacketSender.sendGalagaPacketToClient(player, galagaTime, galagaLevel);
                     }
                     sender.sendMessage("§aPacket Galaga enviado a " + targets.size() + " jugador(es)");
                     break;
@@ -107,7 +107,7 @@ public class TwoDGameCommand implements CommandExecutor, TabCompleter {
                 case "keybind":
                     int keyTime = args.length > 2 ? Integer.parseInt(args[2]) : 60;
                     for (Player player : targets) {
-                        PacketSender.sendKeyBindPacketToClient(player, 0, keyTime);
+                        PacketSender.sendKeyBindPacketToClient(player, keyTime);
                     }
                     sender.sendMessage("§aPacket KeyBind enviado a " + targets.size() + " jugador(es)");
                     break;
@@ -117,9 +117,18 @@ public class TwoDGameCommand implements CommandExecutor, TabCompleter {
                     float robotSpeed = args.length > 3 ? Float.parseFloat(args[3]) : 1.0f;
                     boolean enableRotation = args.length > 4 ? Boolean.parseBoolean(args[4]) : false;
                     for (Player player : targets) {
-                        PacketSender.sendRobotFactoryPacketToClient(player, 0, robotTime, robotSpeed, enableRotation);
+                        PacketSender.sendRobotFactoryPacketToClient(player, robotTime, robotSpeed, enableRotation);
                     }
                     sender.sendMessage("§aPacket RobotFactory enviado a " + targets.size() + " jugador(es)");
+                    break;
+
+                case "scarymaze":
+                    int scaryMazeTime = args.length > 2 ? Integer.parseInt(args[2]) : 60;
+                    int scaryMazeLevel = args.length > 3 ? Integer.parseInt(args[3]) : 1;
+                    for (Player player : targets) {
+                        PacketSender.sendScaryMazePacketToClient(player, scaryMazeTime, scaryMazeLevel);
+                    }
+                    sender.sendMessage("§aPacket ScaryMaze enviado a " + targets.size() + " jugador(es)");
                     break;
 
                 default:
@@ -162,6 +171,7 @@ public class TwoDGameCommand implements CommandExecutor, TabCompleter {
             completions.add("galaga");
             completions.add("keybind");
             completions.add("robotfactory");
+            completions.add("scarymaze");
         } else if (args.length == 3) {
             // Completar timeLimit
             completions.add("60");
@@ -188,6 +198,7 @@ public class TwoDGameCommand implements CommandExecutor, TabCompleter {
                 case "bubblepuzzle":
                 case "arkanoid":
                 case "galaga":
+                case "scarymaze":
                     completions.add("1");
                     completions.add("2");
                     completions.add("3");
