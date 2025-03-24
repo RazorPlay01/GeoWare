@@ -22,3 +22,7 @@ commands:
     description: Muestra un scoreboard personalizado
     usage: /<command> <target> <fadeInMs> <stayMs> <fadeOutMs> <offsetX> <offsetY> <scale> "<list>"
     permission: geoware.2dgame.scoreboard
+  2dgamesemote:
+    description: Envía un emote a jugadores
+    usage: /<command> <target> <emoteId>
+    permission: geoware.2dgame.2dgamesemote

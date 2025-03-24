@@ -18,34 +18,34 @@ import java.util.List;
 @Setter
 public class Enemy extends Entity {
     private final Animation damagedEnemyVariant1 = new Animation(List.of(
-            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/game/galaka_a.png"), 96, 16, 16, 16, 336, 256, 1.0f))
+            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 96, 16, 16, 16, 336, 256, 1.0f))
             , 1f, false);
     private final Animation enemyVariant1 = new Animation(List.of(
-            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/game/galaka_a.png"), 0, 16, 16, 16, 336, 256, 1.0f))
+            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 0, 16, 16, 16, 336, 256, 1.0f))
             , 1f, false);
     private final Animation damagedEnemyVariant2 = new Animation(List.of(
-            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/game/galaka_a.png"), 0, 32, 16, 16, 336, 256, 1.0f))
+            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 0, 32, 16, 16, 336, 256, 1.0f))
             , 1f, false);
     private final Animation enemyVariant2 = new Animation(List.of(
-            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/game/galaka_a.png"), 96, 32, 16, 16, 336, 256, 1.0f))
+            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 96, 32, 16, 16, 336, 256, 1.0f))
             , 1f, false);
     private final Animation damagedEnemyVariant3 = new Animation(List.of(
-            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/game/galaka_a.png"), 0, 48, 16, 16, 336, 256, 1.0f))
+            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 0, 48, 16, 16, 336, 256, 1.0f))
             , 1f, false);
     private final Animation enemyVariant3 = new Animation(List.of(
-            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/game/galaka_a.png"), 96, 48, 16, 16, 336, 256, 1.0f))
+            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 96, 48, 16, 16, 336, 256, 1.0f))
             , 1f, false);
     private final Animation damagedEnemyVariant4 = new Animation(List.of(
-            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/game/galaka_a.png"), 0, 64, 16, 16, 336, 256, 1.0f))
+            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 0, 64, 16, 16, 336, 256, 1.0f))
             , 1f, false);
     private final Animation enemyVariant4 = new Animation(List.of(
-            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/game/galaka_a.png"), 96, 64, 16, 16, 336, 256, 1.0f))
+            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 96, 64, 16, 16, 336, 256, 1.0f))
             , 1f, false);
     private final Animation damagedEnemyVariant5 = new Animation(List.of(
-            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/game/galaka_a.png"), 0, 96, 16, 16, 336, 256, 1.0f))
+            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 0, 96, 16, 16, 336, 256, 1.0f))
             , 1f, false);
     private final Animation enemyVariant5 = new Animation(List.of(
-            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/game/galaka_a.png"), 96, 96, 16, 16, 336, 256, 1.0f))
+            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 96, 96, 16, 16, 336, 256, 1.0f))
             , 1f, false);
 
 

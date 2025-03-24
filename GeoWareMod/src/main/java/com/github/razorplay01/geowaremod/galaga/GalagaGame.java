@@ -25,16 +25,16 @@ public class GalagaGame extends Game {
     public static final int GAME_HEIGHT = 20 * 14; // 280
 
     private Animation enemyDeathParticle = new Animation(List.of(
-            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/game/galaka_a.png"), 0, 144, 32, 32, 336, 256, 1.0f),
-            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/game/galaka_a.png"), 32, 144, 32, 32, 336, 256, 1.0f),
-            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/game/galaka_a.png"), 64, 144, 32, 32, 336, 256, 1.0f),
-            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/game/galaka_a.png"), 96, 144, 32, 32, 336, 256, 1.0f)
+            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 0, 144, 32, 32, 336, 256, 1.0f),
+            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 32, 144, 32, 32, 336, 256, 1.0f),
+            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 64, 144, 32, 32, 336, 256, 1.0f),
+            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 96, 144, 32, 32, 336, 256, 1.0f)
     ), 0.1f, false);
     private Animation playerDeathParticle = new Animation(List.of(
-            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/game/galaka_a.png"), 0, 112, 32, 32, 336, 256, 1.0f),
-            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/game/galaka_a.png"), 32, 112, 32, 32, 336, 256, 1.0f),
-            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/game/galaka_a.png"), 64, 112, 32, 32, 336, 256, 1.0f),
-            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/game/galaka_a.png"), 96, 112, 32, 32, 336, 256, 1.0f)
+            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 0, 112, 32, 32, 336, 256, 1.0f),
+            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 32, 112, 32, 32, 336, 256, 1.0f),
+            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 64, 112, 32, 32, 336, 256, 1.0f),
+            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 96, 112, 32, 32, 336, 256, 1.0f)
     ), 0.1f, false);
 
     private Player player;
@@ -248,8 +248,10 @@ public class GalagaGame extends Game {
 
     @Override
     public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-        CustomDrawContext customDrawContext = CustomDrawContext.wrap(context);
-        customDrawContext.drawBasicBackground(this.screen);
+        Identifier backgroundTexture = Identifier.of(GeoWareMod.MOD_ID, "textures/games/arkanoid/fondo.png");
+
+        context.drawTexture(backgroundTexture, screen.getGameScreenXPos(), screen.getGameScreenYPos(),
+                getScreenWidth(), getScreenHeight(), 0, 0, 420, 572, 420, 572);
     }
 
     @Override

@@ -24,7 +24,7 @@ import static com.github.razorplay01.razorplayapi.util.ScreenSide.verifyScreenBo
 @Setter
 public class Player extends Entity {
     private final Animation IdleAnimation = new Animation(List.of(
-            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/game/galaka_a.png"), 0, 0, 16, 16, 336, 256, 1.0f))
+            new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 0, 0, 16, 16, 336, 256, 1.0f))
             , 1f, false);
 
     private final RectangleHitbox hitbox;

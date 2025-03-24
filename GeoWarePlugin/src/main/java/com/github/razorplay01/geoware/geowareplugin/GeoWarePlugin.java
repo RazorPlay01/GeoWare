@@ -1,6 +1,7 @@
 package com.github.razorplay01.geoware.geowareplugin;
 
 import com.github.razorplay01.geoware.geowarecommon.GeoWareCommon;
+import com.github.razorplay01.geoware.geowareplugin.command.EmoteCommand;
 import com.github.razorplay01.geoware.geowareplugin.command.PointsCommand;
 import com.github.razorplay01.geoware.geowareplugin.command.ScoreboardCommand;
 import com.github.razorplay01.geoware.geowareplugin.command.TwoDGameCommand;
@@ -77,5 +78,9 @@ public final class GeoWarePlugin extends JavaPlugin {
         ScoreboardCommand command = new ScoreboardCommand();
         getCommand("2dgamescoreboard").setExecutor(command);
         getCommand("2dgamescoreboard").setTabCompleter(command);
+
+        EmoteCommand emoteCommand = new EmoteCommand();
+        getCommand("2dgamesemote").setExecutor(emoteCommand);
+        getCommand("2dgamesemote").setTabCompleter(emoteCommand);
     }
 }

@@ -47,7 +47,7 @@ public class Player extends DonkeyKongEntity {
 
     private boolean hasHammer = false;
     private long hammerStartTime;
-    private static final long HAMMER_DURATION = 10000; // 10 segundos en millisegundos
+    private static final long HAMMER_DURATION = 10000; // 10 segundos en milisegundos
     private static final String HITBOX_HAMMER = "hammer";
     private static final String HITBOX_HAMMER_TOP = "hammer_top";
 
@@ -78,6 +78,7 @@ public class Player extends DonkeyKongEntity {
     public void update() {
         if (isWinning || isLosing) {
             updateState();
+            animationManager.updateAnimation(currentState, false);
             return;
         }
 
@@ -190,21 +191,10 @@ public class Player extends DonkeyKongEntity {
         }
     }
 
-    public void stopMovingLeft() {
-        movingLeft = false;
-    }
-
-    public void stopMovingRight() {
-        movingRight = false;
-    }
-
-    public void stopMovingUp() {
-        movingUp = false;
-    }
-
-    public void stopMovingDown() {
-        movingDown = false;
-    }
+    public void stopMovingLeft() { movingLeft = false; }
+    public void stopMovingRight() { movingRight = false; }
+    public void stopMovingUp() { movingUp = false; }
+    public void stopMovingDown() { movingDown = false; }
 
     private void startClimbing() {
         if (currentLadder != null) {
@@ -220,7 +210,6 @@ public class Player extends DonkeyKongEntity {
             velocityY = 0;
             currentPlatform = null;
         }
-
         isOnLadder = false;
         isClimbing = false;
         currentLadder = null;
@@ -234,7 +223,6 @@ public class Player extends DonkeyKongEntity {
         }
     }
 
-    // Métodos de manejo de escaleras
     private boolean tryClimbLadder(List<Ladder> ladders) {
         if (hasHammer) return false;
         Ladder bestLadder = PlayerCollisionHandler.findBestLadder(this, ladders, movingUp);
@@ -243,7 +231,6 @@ public class Player extends DonkeyKongEntity {
             if (movingDown && !bestLadder.isCanPassThroughPlatform()) {
                 return false;
             }
-
             if (movingUp || movingDown) {
                 currentLadder = bestLadder;
                 startClimbing();
@@ -254,11 +241,8 @@ public class Player extends DonkeyKongEntity {
     }
 
     private void checkBarrelCollision(List<Barrel> barrels) {
-        if (currentState == PlayerState.WINNING || currentState == PlayerState.LOSING) {
-            return;
-        }
+        if (currentState == PlayerState.WINNING || currentState == PlayerState.LOSING) return;
 
-        // Primero verificamos si hay colisión con el martillo
         if (hasHammer) {
             checkHammerBarrelCollision(barrels);
         }
@@ -287,25 +271,51 @@ public class Player extends DonkeyKongEntity {
             return;
         }
 
-        PlayerCollisionHandler.CollisionPoints points = new PlayerCollisionHandler.CollisionPoints(
-                xPos + (this.getWidth() / 2),
-                yPos + this.getHeight(),
-                yPos - velocityY + this.getHeight(),
-                xPos + 2,
-                xPos + this.getWidth() - 2
-        );
+        RectangleHitbox playerHitbox = (RectangleHitbox) getDefaultHitbox();
+        if (playerHitbox == null) return;
 
-        Platform mainPlatform = PlayerCollisionHandler.findMainPlatform(this, platforms, points);
-        Platform stepPlatform = null;
+        // Primero buscamos colisión principal desde arriba
+        Platform collisionPlatform = null;
+        float highestPlatformY = Float.MAX_VALUE;
 
-        if (mainPlatform == null && currentPlatform != null && Math.abs(velocityX) > 0) {
-            stepPlatform = PlayerCollisionHandler.findStepPlatform(this, platforms, points);
+        for (Platform platform : platforms) {
+            Hitbox platformHitbox = platform.getDefaultHitbox();
+            if (platformHitbox == null) continue;
+
+            float playerBottom = yPos + height;
+            float platformTop = platform.getYPos();
+            float previousBottom = yPos + height - velocityY;
+
+            // Colisión desde arriba
+            if (velocityY >= 0 && playerHitbox.intersects(platformHitbox) &&
+                    previousBottom <= platformTop && playerBottom >= platformTop) {
+                if (platformTop < highestPlatformY) {
+                    highestPlatformY = platformTop;
+                    collisionPlatform = platform;
+                }
+            }
         }
 
-        if (mainPlatform != null) {
-            resolveCollision(mainPlatform);
-        } else if (stepPlatform != null) {
-            resolveCollision(stepPlatform);
+        if (collisionPlatform != null) {
+            resolveCollision(collisionPlatform);
+            return; // Si hay colisión principal, no necesitamos verificar steps
+        }
+
+        // Si no hay colisión principal, intentamos subir un desnivel (step)
+        if (currentPlatform != null && Math.abs(velocityX) > 0) {
+            PlayerCollisionHandler.CollisionPoints points = new PlayerCollisionHandler.CollisionPoints(
+                    xPos + (this.getWidth() / 2),
+                    yPos + this.getHeight(),
+                    yPos - velocityY + this.getHeight(),
+                    xPos + 2,
+                    xPos + this.getWidth() - 2
+            );
+            Platform stepPlatform = PlayerCollisionHandler.findStepPlatform(this, platforms, points);
+            if (stepPlatform != null) {
+                resolveCollision(stepPlatform);
+            } else if (!isClimbing) {
+                currentPlatform = null;
+            }
         } else if (!isClimbing) {
             currentPlatform = null;
         }
@@ -335,7 +345,6 @@ public class Player extends DonkeyKongEntity {
     @Override
     public void render(DrawContext context) {
         animationManager.updateAnimation(currentState, movingUp || movingDown || movingLeft || movingRight);
-
         this.animationManager.render(context, this);
     }
 
@@ -377,11 +386,7 @@ public class Player extends DonkeyKongEntity {
         hasHammer = true;
         hammerStartTime = System.currentTimeMillis();
         currentState = PlayerState.WITH_HAMMER;
-
-        if (isOnLadder) {
-            stopClimbing();
-        }
-
+        if (isOnLadder) stopClimbing();
         addHammerHitbox();
     }
 
@@ -390,51 +395,16 @@ public class Player extends DonkeyKongEntity {
             deactivateHammer();
             return;
         }
-
-        // Actualizar posición del hitbox del martillo
         removeHammerHitbox();
         addHammerHitbox();
     }
 
     private void addHammerHitbox() {
-        // Hitbox frontal
-        Hitbox frontHammerHitbox;
-        // Hitbox superior
-        Hitbox topHammerHitbox;
+        Hitbox frontHammerHitbox = animationManager.isFacingRight() ?
+                new RectangleHitbox(HITBOX_HAMMER, xPos + getWidth(), yPos, 16, 8, getWidth(), 0, 0xAAFFAAFF) :
+                new RectangleHitbox(HITBOX_HAMMER, xPos - 16, yPos, 16, 8, -16, 0, 0xAAFFAAFF);
 
-        if (animationManager.isFacingRight()) {
-            frontHammerHitbox = new RectangleHitbox(HITBOX_HAMMER,
-                    xPos + getWidth(),
-                    yPos,
-                    16, 8,
-                    getWidth(), 0,
-                    0xAAFFAAFF);
-
-            topHammerHitbox = new RectangleHitbox(HITBOX_HAMMER_TOP,
-                    xPos,
-                    yPos - 8,
-                    getWidth(),
-                    8,
-                    0,
-                    -8,
-                    0xAAFFAAFF);
-        } else {
-            frontHammerHitbox = new RectangleHitbox(HITBOX_HAMMER,
-                    xPos - 16,
-                    yPos,
-                    16, 8,
-                    -16, 0,
-                    0xAAFFAAFF);
-
-            topHammerHitbox = new RectangleHitbox(HITBOX_HAMMER_TOP,
-                    xPos,
-                    yPos - 8,
-                    getWidth(),
-                    8,
-                    0,
-                    -8,
-                    0xAAFFAAFF);
-        }
+        Hitbox topHammerHitbox = new RectangleHitbox(HITBOX_HAMMER_TOP, xPos, yPos - 8, getWidth(), 8, 0, -8, 0xAAFFAAFF);
 
         this.hitboxes.add(frontHammerHitbox);
         this.hitboxes.add(topHammerHitbox);
@@ -447,10 +417,7 @@ public class Player extends DonkeyKongEntity {
     }
 
     private void removeHammerHitbox() {
-        hitboxes.removeIf(hitbox ->
-                hitbox.getHitboxId().equals(HITBOX_HAMMER) ||
-                        hitbox.getHitboxId().equals(HITBOX_HAMMER_TOP)
-        );
+        hitboxes.removeIf(hitbox -> hitbox.getHitboxId().equals(HITBOX_HAMMER) || hitbox.getHitboxId().equals(HITBOX_HAMMER_TOP));
     }
 
     private void checkHammerBarrelCollision(List<Barrel> barrels) {
@@ -463,13 +430,9 @@ public class Player extends DonkeyKongEntity {
 
             if ((frontHammerHitbox != null && frontHammerHitbox.intersects(barrelHitbox)) ||
                     (topHammerHitbox != null && topHammerHitbox.intersects(barrelHitbox))) {
-
                 float particleX = barrel.getXPos() + (barrel.getWidth() - 16) / 2;
                 float particleY = barrel.getYPos() + (barrel.getHeight() - 16) / 2;
-                game.getParticles().add(
-                        new Particle(particleX, particleY, 16, 16, gameScreen,
-                                new Animation(PARTICLE_TEXTURES, 0.05f, false)));
-
+                game.getParticles().add(new Particle(particleX, particleY, 16, 16, gameScreen, new Animation(PARTICLE_TEXTURES, 0.05f, false)));
                 game.addScore(200, barrel.getXPos(), barrel.getYPos());
                 barrel.setRemove(true);
             }

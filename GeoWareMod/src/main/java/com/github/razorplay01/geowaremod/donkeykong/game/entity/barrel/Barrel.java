@@ -24,12 +24,13 @@ public class Barrel extends DonkeyKongEntity {
     private final Animation verticalAnimation = new Animation(BARREL_V_TEXTURES, 0.05f, true);
 
     private static final float LADDER_DESCENT_SPEED = 1.0f;
-    private static final float PROBABILITY_TO_USE_LADDER = 0.25f;
+    private static final float PROBABILITY_TO_USE_LADDER = 0.10f;
     private static final float ALIGNMENT_TOLERANCE = 4f;
     private static final float PLATFORM_DETECTION_THRESHOLD = 2f;
     private static final float PLATFORM_SEGMENT_WIDTH = 16f;
     private static final float SLOPE_Y = 1f;
-    private static final int FALL_GRACE_TICKS = 2; // Ticks durante los cuales se ignoran colisiones al salir
+    private static final int FALL_GRACE_TICKS = 2;
+    private static final int MIN_LADDER_TICKS = 2; // Mínimo de ticks para considerar que usó la escalera
 
     private final Random random = new Random(System.currentTimeMillis());
     private final Set<Ladder> checkedLadders = new HashSet<>();
@@ -38,7 +39,8 @@ public class Barrel extends DonkeyKongEntity {
     private boolean remove = false;
     private boolean shouldChangeDirectionAfterLadder;
     private boolean hasJumpedOverBarrel = false;
-    private int fallGraceCounter = 0; // Contador para ticks de gracia después de salir
+    private int fallGraceCounter = 0;
+    private int ladderTicks = 0; // Contador de ticks en la escalera
 
     public Barrel(float x, float y, GameScreen gameScreen) {
         super(x, y, 12, 12, gameScreen, 0xffffaaff);
@@ -57,7 +59,6 @@ public class Barrel extends DonkeyKongEntity {
         }
         updateHitboxes();
         verifyScreenBoundsCollision();
-        // Manejar el contador de ticks de gracia
         if (fallGraceCounter > 0) {
             fallGraceCounter--;
         }
@@ -66,17 +67,16 @@ public class Barrel extends DonkeyKongEntity {
     private void handleLadderMovement() {
         if (currentLadder == null) return;
 
+        ladderTicks++; // Incrementar el contador de ticks en la escalera
         yPos += LADDER_DESCENT_SPEED;
         xPos = currentLadder.getXPos() + (currentLadder.getWidth() - width) / 2;
 
         if (yPos + height >= currentLadder.getYPos() + currentLadder.getHeight() - PLATFORM_DETECTION_THRESHOLD) {
             Platform nextPlatform = findNextPlatform(game.getPlatforms());
             if (nextPlatform != null && Math.abs(nextPlatform.getYPos() - (yPos + height)) <= PLATFORM_DETECTION_THRESHOLD) {
-                // Si hay una plataforma inmediata al final de la escalera
                 yPos = nextPlatform.getYPos() - height;
                 exitLadder();
             } else {
-                // Si la escalera es rota, salir y comenzar a caer
                 exitLadder();
             }
         }
@@ -85,24 +85,22 @@ public class Barrel extends DonkeyKongEntity {
     private void exitLadder() {
         isOnLadder = false;
         currentLadder = null;
-        velocityY = 2.0f; // Impulso inicial más fuerte para asegurar la caída
-        fallGraceCounter = FALL_GRACE_TICKS; // Iniciar el período de gracia
-        if (shouldChangeDirectionAfterLadder) {
-            velocityX = -velocityX;
+        velocityY = 2.0f;
+        fallGraceCounter = FALL_GRACE_TICKS;
+        if (shouldChangeDirectionAfterLadder && ladderTicks >= MIN_LADDER_TICKS) {
+            velocityX = -velocityX; // Solo cambiar dirección si estuvo en la escalera al menos MIN_LADDER_TICKS
             shouldChangeDirectionAfterLadder = false;
         }
+        ladderTicks = 0; // Reiniciar el contador
     }
 
     private void handleNormalMovement() {
-        // Aplicar gravedad
         velocityY += gravity;
         velocityY = Math.min(velocityY, maxFallSpeed);
 
-        // Predecir próxima posición
         float nextX = xPos + velocityX;
         float nextY = yPos + velocityY;
 
-        // Verificar colisión con plataformas solo si no estamos en el período de gracia
         Platform platformBeneath = null;
         if (fallGraceCounter == 0) {
             for (Platform platform : game.getPlatforms()) {
@@ -114,7 +112,6 @@ public class Barrel extends DonkeyKongEntity {
         }
 
         if (platformBeneath != null) {
-            // Ajustar posición al nivel de la plataforma con inclinación
             float platformStartX = platformBeneath.getXPos();
             float platformStartY = platformBeneath.getYPos();
             float relativeX = nextX - platformStartX;
@@ -122,14 +119,12 @@ public class Barrel extends DonkeyKongEntity {
             float effectiveSlopeY = platformStartX > 100f ? -SLOPE_Y : SLOPE_Y;
             float slopeAdjustment = segment * effectiveSlopeY;
 
-            // Fijar posición sobre la plataforma
             yPos = platformStartY - height + slopeAdjustment;
             xPos = nextX;
             velocityY = 0;
             currentPlatform = platformBeneath;
             checkLadderCollision(game.getLadders());
         } else {
-            // Si no hay plataforma o estamos en período de gracia, mover normalmente
             xPos = nextX;
             yPos = nextY;
             currentPlatform = null;
@@ -140,16 +135,13 @@ public class Barrel extends DonkeyKongEntity {
         RectangleHitbox barrelHitbox = (RectangleHitbox) this.getDefaultHitbox();
         if (barrelHitbox == null) return false;
 
-        // Actualizar hitbox temporalmente para la predicción
         barrelHitbox.updatePosition(nextX, nextY);
-
         Hitbox platformHitbox = platform.getDefaultHitbox();
         if (platformHitbox == null) return false;
 
         if (barrelHitbox.intersects(platformHitbox)) {
             float barrelBottom = nextY + height;
             float platformTop = platformHitbox.getYPos();
-            // Solo detectar colisiones con plataformas debajo del barril
             return velocityY >= 0 && barrelBottom >= platformTop && yPos < platformTop;
         }
         return false;
@@ -200,7 +192,7 @@ public class Barrel extends DonkeyKongEntity {
         float barrelBottom = yPos + height;
 
         for (Platform platform : platforms) {
-            if (platform.getYPos() > barrelBottom) { // Solo plataformas debajo
+            if (platform.getYPos() > barrelBottom) {
                 float distance = platform.getYPos() - barrelBottom;
                 if (distance < minDistance &&
                         xPos + width > platform.getXPos() &&
@@ -214,6 +206,8 @@ public class Barrel extends DonkeyKongEntity {
     }
 
     private void checkLadderCollision(List<Ladder> ladders) {
+        if (isOnLadder) return; // Evitar chequeos si ya está en una escalera
+
         List<Ladder> validLadders = new ArrayList<>();
         Hitbox barrelLadderHitbox = getHitboxByName(HITBOX_LADDER);
         if (barrelLadderHitbox == null) return;
@@ -223,16 +217,14 @@ public class Barrel extends DonkeyKongEntity {
                 validLadders.add(ladder);
             }
         }
-        if (!validLadders.isEmpty()) {
+        if (!validLadders.isEmpty() && random.nextFloat() < PROBABILITY_TO_USE_LADDER) {
             Ladder selectedLadder = validLadders.get(random.nextInt(validLadders.size()));
             checkedLadders.add(selectedLadder);
-            if (random.nextFloat() < PROBABILITY_TO_USE_LADDER) {
-                isOnLadder = true;
-                currentLadder = selectedLadder;
-                velocityY = 0;
-                shouldChangeDirectionAfterLadder = true;
-                xPos = selectedLadder.getXPos() + (selectedLadder.getWidth() - width) / 2;
-            }
+            isOnLadder = true;
+            currentLadder = selectedLadder;
+            velocityY = 0;
+            shouldChangeDirectionAfterLadder = true;
+            xPos = selectedLadder.getXPos() + (selectedLadder.getWidth() - width) / 2;
         }
     }
 
