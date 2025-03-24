@@ -6,6 +6,7 @@ import com.github.razorplay01.razorplayapi.util.GameStatus;
 import com.github.razorplay01.razorplayapi.util.render.CustomDrawContext;
 import com.github.razorplay01.razorplayapi.util.screen.GameScreen;
 import com.github.razorplay01.razorplayapi.util.stage.Game;
+import com.github.razorplay01.razorplayapi.util.texture.Animation;
 import com.github.razorplay01.razorplayapi.util.texture.Texture;
 import lombok.Getter;
 import net.minecraft.client.gui.DrawContext;
@@ -24,6 +25,7 @@ public class BubblePuzzleGame extends Game {
     private static final int GAME_HEIGHT = 20 * 15; // Alto de la zona de juego
     private float deathLineY;
     private final int level;
+    private Character character;
 
     public BubblePuzzleGame(GameScreen screen, int prevScore, int initDelay, int timeLimitSeconds, int level) {
         super(screen, initDelay, timeLimitSeconds, prevScore);
@@ -35,8 +37,10 @@ public class BubblePuzzleGame extends Game {
     @Override
     public void init() {
         super.init();
-        this.player = new Player(screen.getGameScreenXPos() + GAME_WIDTH / 2f - 10, screen.getGameScreenYPos() + GAME_HEIGHT - 30f, 20, 20, screen);
-        this.deathLineY = screen.getGameScreenYPos() + GAME_HEIGHT - 50f; // Ajusta la posición
+        this.player = new Player(screen.getGameScreenXPos() + GAME_WIDTH / 2f - 10, screen.getGameScreenYPos() + GAME_HEIGHT - 32f, 20, 20, screen);
+        this.deathLineY = screen.getGameScreenYPos() + GAME_HEIGHT - 70f; // Ajusta la posición
+        this.character = new Character(screen.getGameScreenXPos() + 40, screen.getGameScreenYPos() + GAME_HEIGHT - 75, 75, 75);
+        character.startGameBegin();
         switch (level) {
             case 2 -> loadLevel(LEVEL_2);
             case 3 -> loadLevel(LEVEL_3);
@@ -46,16 +50,41 @@ public class BubblePuzzleGame extends Game {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        /*float rotation = 10;
-        context.getMatrices().push();
-        context.getMatrices().multiply(new Quaternionf().rotateZ((float) Math.toRadians(rotation)));
-        context.getMatrices().pop();*/
+        character.update();
+
         CustomDrawContext customDrawContext = CustomDrawContext.wrap(context);
-        player.draw(context);
-        customDrawContext.drawLine(screen.getGameScreenXPos(), (int) deathLineY, screen.getGameScreenXPos() + GAME_WIDTH, (int) deathLineY, 0xAAFFFFFF);
+        customDrawContext.drawLine(screen.getGameScreenXPos() + 2, (int) deathLineY, screen.getGameScreenXPos() + GAME_WIDTH - 4, (int) deathLineY, 0xAAFFFFFF);
+
+        // Dibujar las burbujas estáticas
         for (Bubble bubble : bubbles) {
             bubble.draw(context);
         }
+
+        player.drawCannon(context);
+        // Renderizar la base del cañón (por encima del cañón, por debajo de las burbujas)
+        Texture cannon_base = new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/bubblepuzzle/cannon_base.png"), 29, 54, 44, 30, 100, 100, 0.8f);
+        int width2 = (int) (cannon_base.width() * cannon_base.scale());
+        int height2 = (int) (cannon_base.height() * cannon_base.scale());
+
+        context.drawTexture(
+                cannon_base.identifier(),
+                (screen.getGameScreenXPos() + getScreenWidth() / 2) - width2 / 2,
+                screen.getGameScreenYPos() + getScreenHeight() - height2 - 11,
+                width2,
+                height2,
+                cannon_base.u(),
+                cannon_base.v(),
+                cannon_base.width(),
+                cannon_base.height(),
+                cannon_base.textureWidth(),
+                cannon_base.textureHeight()
+        );
+
+        if (!character.isReloading()) {
+            player.draw(context);
+        }
+
+        // Dibujar textos flotantes
         for (FloatingText text : floatingTexts) {
             text.render(context);
         }
@@ -65,8 +94,30 @@ public class BubblePuzzleGame extends Game {
     public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
         Identifier backgroundTexture = Identifier.of(GeoWareMod.MOD_ID, "textures/games/bubblepuzzle/fondo.png");
 
-        context.drawTexture(backgroundTexture, screen.getGameScreenXPos(), screen.getGameScreenYPos() - 10,
-                getScreenWidth(), getScreenHeight() + 10, 0, 0, 255, 415, 255, 415);
+        context.drawTexture(backgroundTexture, screen.getGameScreenXPos() - 10, screen.getGameScreenYPos() - 10,
+                getScreenWidth() + 20, getScreenHeight() + 10, 0, 0, 255, 415, 255, 415);
+
+        if (character != null) {
+            character.render(context);
+        }
+
+        Texture pipe = new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/bubblepuzzle/pipe.png"), 0, 24, 35, 47, 100, 100, 0.8f);
+        int width = (int) (pipe.width() * pipe.scale());
+        int height = (int) (pipe.height() * pipe.scale());
+
+        context.drawTexture(
+                pipe.identifier(),
+                screen.getGameScreenXPos() + 2,
+                screen.getGameScreenYPos() + getScreenHeight() - height - 11,
+                width,
+                height,
+                pipe.u(),
+                pipe.v(),
+                pipe.width(),
+                pipe.height(),
+                pipe.textureWidth(),
+                pipe.textureHeight()
+        );
     }
 
     @Override
@@ -90,6 +141,12 @@ public class BubblePuzzleGame extends Game {
                 Bubble shotBubble = player.shoot();
                 if (shotBubble != null) {
                     bubbles.add(shotBubble);
+                    // Iniciar animación de recarga con el color de la nueva currentBubble
+                    BubbleColor color = Arrays.stream(BubbleColor.values())
+                            .filter(c -> c.getTexture().equals(player.getCurrentBubble().getColor()))
+                            .findFirst()
+                            .orElse(BubbleColor.GREEN); // Default por si falla
+                    character.startReload(color);
                 }
             }
         }
@@ -296,6 +353,9 @@ public class BubblePuzzleGame extends Game {
     private void checkGameOver() {
         if (bubbles.isEmpty() && status != GameStatus.ENDING) {
             this.status = GameStatus.ENDING;
+            character.startWin(); // Animación de victoria
+        } else if (status == GameStatus.ENDING && !bubbles.isEmpty()) {
+            character.startLose(); // Animación de derrota
         }
     }
 
