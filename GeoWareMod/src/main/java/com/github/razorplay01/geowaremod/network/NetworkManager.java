@@ -11,6 +11,7 @@ import com.github.razorplay01.geowaremod.galaga.GalagaScreen;
 import com.github.razorplay01.geowaremod.hanoitowers.HanoiTowersScreen;
 import com.github.razorplay01.geowaremod.keybind.KeyBindGameScreen;
 import com.github.razorplay01.geowaremod.robotfactory.RobotFactoryScreen;
+import com.github.razorplay01.geowaremod.scarymaze.ScaryMazeScreen;
 import com.github.razorplay01.geowaremod.tetris.TetrisGameScreen;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -42,11 +43,23 @@ public class NetworkManager {
                 case HanoiTowersPacket pkt -> checkHanoiTowersPacketClient(pkt, context);
                 case KeyBindPacket pkt -> checkKeyBindPacketClient(pkt, context);
                 case RobotFactoryPacket pkt -> checkRobotFactoryPacketClient(pkt, context);
+                case ScaryMazePacket pkt -> checkScaryMazePacketClient(pkt, context);
                 case TetrisPacket pkt -> checkTetrisPacketClient(pkt, context);
                 case ScoreboardPacket pkt -> checkScoreboardPacketClient(pkt, context);
+                case EmotePacket pkt -> checkEmotePacketClient(pkt, context);
                 default -> GeoWareMod.LOGGER.info("Packet received from server: UnknownPacket");
             }
         }));
+    }
+
+    private static void checkEmotePacketClient(EmotePacket pkt, ClientPlayNetworking.Context context) {
+        context.client().execute(() -> {
+            if (pkt.getEmoteId().equalsIgnoreCase("\"stop\"")) {
+                MinecraftClient.getInstance().player.networkHandler.sendCommand("emotes-client stop");
+            } else {
+                MinecraftClient.getInstance().player.networkHandler.sendCommand("emotes-client play " + pkt.getEmoteId());
+            }
+        });
     }
 
     private static void checkScoreboardPacketClient(ScoreboardPacket pkt, ClientPlayNetworking.Context context) {
@@ -57,42 +70,68 @@ public class NetworkManager {
         int offsetX = pkt.getOffsetX();
         int offsetY = pkt.getOffsetY();
         float scale = pkt.getScale();
+        GeoWareMod.guiScale = context.client().options.getGuiScale().getValue();
+        context.client().options.getGuiScale().setValue(2);
         context.client().execute(() -> GeoWareMod.getScoreboard().showScoreboard(text, fadeInMs, stayMs, fadeOutMs, offsetX, offsetY, scale));
     }
 
     private static void checkArkanoidPacketClient(ArkanoidPacket iPacket, ClientPlayNetworking.Context context) {
+        GeoWareMod.guiScale = context.client().options.getGuiScale().getValue();
+        context.client().options.getGuiScale().setValue(2);
         context.client().execute(() -> MinecraftClient.getInstance().setScreen(new ArkanoidGameScreen(iPacket.getScore(), 5, iPacket.getTimeLimitSeconds(), iPacket.getLevel())));
     }
 
     private static void checkBubblePuzzlePacketClient(BubblePuzzlePacket iPacket, ClientPlayNetworking.Context context) {
+        GeoWareMod.guiScale = context.client().options.getGuiScale().getValue();
+        context.client().options.getGuiScale().setValue(2);
         context.client().execute(() -> MinecraftClient.getInstance().setScreen(new BubblePuzzleScreen(iPacket.getScore(), 5, iPacket.getTimeLimitSeconds(), iPacket.getLevel())));
     }
 
     private static void checkDonkeyKongPacketClient(DonkeyKongPacket iPacket, ClientPlayNetworking.Context context) {
+        GeoWareMod.guiScale = context.client().options.getGuiScale().getValue();
+        context.client().options.getGuiScale().setValue(2);
         context.client().execute(() -> MinecraftClient.getInstance().setScreen(new DonkeyKongScreen(iPacket.getScore(), 5, iPacket.getTimeLimitSeconds(), iPacket.getSpawnInterval(), iPacket.getSpawnProbability())));
     }
 
     private static void checkFruitFocusPacketClient(FruitFocusPacket iPacket, ClientPlayNetworking.Context context) {
+        GeoWareMod.guiScale = context.client().options.getGuiScale().getValue();
+        context.client().options.getGuiScale().setValue(2);
         context.client().execute(() -> MinecraftClient.getInstance().setScreen(new FruitFocusGameScreen(iPacket.getTimeLimitSeconds(), iPacket.getScore())));
     }
 
     private static void checkGalagaPacketClient(GalagaPacket iPacket, ClientPlayNetworking.Context context) {
+        GeoWareMod.guiScale = context.client().options.getGuiScale().getValue();
+        context.client().options.getGuiScale().setValue(2);
         context.client().execute(() -> MinecraftClient.getInstance().setScreen(new GalagaScreen(iPacket.getLevel(), iPacket.getTimeLimitSeconds(), iPacket.getScore())));
     }
 
     private static void checkHanoiTowersPacketClient(HanoiTowersPacket iPacket, ClientPlayNetworking.Context context) {
+        GeoWareMod.guiScale = context.client().options.getGuiScale().getValue();
+        context.client().options.getGuiScale().setValue(2);
         context.client().execute(() -> MinecraftClient.getInstance().setScreen(new HanoiTowersScreen(iPacket.getScore(), 5, iPacket.getTimeLimitSeconds(), iPacket.getRings())));
     }
 
     private static void checkKeyBindPacketClient(KeyBindPacket iPacket, ClientPlayNetworking.Context context) {
+        GeoWareMod.guiScale = context.client().options.getGuiScale().getValue();
+        context.client().options.getGuiScale().setValue(2);
         context.client().execute(() -> MinecraftClient.getInstance().setScreen(new KeyBindGameScreen(iPacket.getTimeLimitSeconds(), iPacket.getScore())));
     }
 
     private static void checkRobotFactoryPacketClient(RobotFactoryPacket iPacket, ClientPlayNetworking.Context context) {
+        GeoWareMod.guiScale = context.client().options.getGuiScale().getValue();
+        context.client().options.getGuiScale().setValue(2);
         context.client().execute(() -> MinecraftClient.getInstance().setScreen(new RobotFactoryScreen(iPacket.getTimeLimitSeconds(), iPacket.getScore(), iPacket.getSpeedMultiplier(), iPacket.isEnableRotation())));
     }
 
+    private static void checkScaryMazePacketClient(ScaryMazePacket iPacket, ClientPlayNetworking.Context context) {
+        GeoWareMod.guiScale = context.client().options.getGuiScale().getValue();
+        context.client().options.getGuiScale().setValue(2);
+        context.client().execute(() -> MinecraftClient.getInstance().setScreen(new ScaryMazeScreen(iPacket.getScore(), 5, iPacket.getTimeLimitSeconds(), iPacket.getLevel())));
+    }
+
     private static void checkTetrisPacketClient(TetrisPacket iPacket, ClientPlayNetworking.Context context) {
+        GeoWareMod.guiScale = context.client().options.getGuiScale().getValue();
+        context.client().options.getGuiScale().setValue(2);
         context.client().execute(() -> MinecraftClient.getInstance().setScreen(new TetrisGameScreen(iPacket.getScore(), 5, iPacket.getTimeLimitSeconds(), iPacket.getSpeedMultiplier())));
     }
 }
