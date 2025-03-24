@@ -8,6 +8,9 @@ import net.minecraft.util.Identifier;
 @Getter
 @AllArgsConstructor
 public enum BrickColor {
+    YELLOW,
+    WHITE,
+    PURPLE,
     RED,
     GREEN,
     BLUE;

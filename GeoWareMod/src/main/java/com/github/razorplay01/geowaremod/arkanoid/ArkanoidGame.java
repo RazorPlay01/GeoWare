@@ -1,5 +1,6 @@
 package com.github.razorplay01.geowaremod.arkanoid;
 
+import com.github.razorplay01.geowaremod.GeoWareMod;
 import com.github.razorplay01.geowaremod.arkanoid.entity.Ball;
 import com.github.razorplay01.geowaremod.arkanoid.entity.Player;
 import com.github.razorplay01.geowaremod.arkanoid.entity.powerup.MultiBallPowerUp;
@@ -14,6 +15,7 @@ import com.github.razorplay01.razorplayapi.util.stage.Game;
 import lombok.Getter;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -34,7 +36,7 @@ public class ArkanoidGame extends Game {
     private static final int GAME_WIDTH = BRICK_WIDTH * COLUMNS;
     private static final int GAME_HEIGHT = (ROWS * BRICK_HEIGHT) + EXTRA_SPACE + PADDLE_HEIGHT + BOTTOM_SPACE;
 
-    private static final float POWERUP_SPAWN_CHANCE = 0.60f;
+    private static final float POWERUP_SPAWN_CHANCE = 0.20f;
 
     public final List<Brick> bricks = new ArrayList<>();
     public Player player;
@@ -45,6 +47,9 @@ public class ArkanoidGame extends Game {
     private final CollisionHandler collisionHandler;
 
     private static final Map<Character, BrickColor> BRICK_MAPPING = Map.of(
+            'Y', BrickColor.YELLOW,
+            'P', BrickColor.PURPLE,
+            'W', BrickColor.WHITE,
             'R', BrickColor.RED,
             'G', BrickColor.GREEN,
             'B', BrickColor.BLUE
@@ -125,25 +130,16 @@ public class ArkanoidGame extends Game {
         bricks.forEach(platform -> platform.render(context));
         balls.forEach(ball -> ball.render(context));
         player.render(context);
-
-        // Identifier marcoTexture = Identifier.of(GeoWareMod.MOD_ID, "textures/games/arkanoid/marco.png");
-        //context.drawTexture(marcoTexture, screen.getGameScreenXPos(), screen.getGameScreenYPos() - 12, GAME_WIDTH, GAME_HEIGHT, 0, 0, 254, 300, 254, 415);
     }
 
-    @Override
-    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-        CustomDrawContext customDrawContext = CustomDrawContext.wrap(context);
-        customDrawContext.drawBasicBackground(this.screen);
-    }
-
-    /*
     @Override
     public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
         Identifier backgroundTexture = Identifier.of(GeoWareMod.MOD_ID, "textures/games/arkanoid/fondo.png");
-        //context.drawTexture(texture,x,y,width,height,u,v,i,j,textureW,textureH);
-        context.drawTexture(backgroundTexture, screen.getGameScreenXPos(), screen.getGameScreenYPos() - 12, GAME_WIDTH, GAME_HEIGHT, 0, 0, 254, 300, 254, 415);
+
+        context.drawTexture(backgroundTexture, screen.getGameScreenXPos() - 12, screen.getGameScreenYPos() - 8,
+                getScreenWidth() + 24, getScreenHeight() + 16, 0, 0, 416, 464, 416, 464);
     }
-*/
+
     @Override
     public int getScreenWidth() {
         return GAME_WIDTH;
@@ -172,10 +168,6 @@ public class ArkanoidGame extends Game {
         } else if (keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == GLFW.GLFW_KEY_D) {
             player.stopMovingRight();
         }
-    }
-
-    public void removePowerUp(PowerUp powerUp) {
-        powerUps.remove(powerUp);
     }
 
     public void addBrick(int row, int col, BrickColor color) {
@@ -213,7 +205,7 @@ public class ArkanoidGame extends Game {
     }
 
     private static final String[] LEVEL_1 = {
-            "-------------",
+            "-----YPW-----",
             "-------------",
             "---RRRRRRR---",
             "--GGGGGGGGG--",
