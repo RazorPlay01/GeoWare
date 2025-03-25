@@ -1,13 +1,15 @@
 package com.github.razorplay01.geoware.geowareplugin;
 
 import com.github.razorplay01.geoware.geowarecommon.GeoWareCommon;
-import com.github.razorplay01.geoware.geowareplugin.command.EmoteCommand;
-import com.github.razorplay01.geoware.geowareplugin.command.PointsCommand;
-import com.github.razorplay01.geoware.geowareplugin.command.ScoreboardCommand;
-import com.github.razorplay01.geoware.geowareplugin.command.TwoDGameCommand;
+import com.github.razorplay01.geoware.geowareplugin.command.*;
 import com.github.razorplay01.geoware.geowareplugin.network.PacketListener;
 import com.github.razorplay01.geoware.geowareplugin.util.UtilMessage;
 import lombok.Getter;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import org.bukkit.Material;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,5 +84,9 @@ public final class GeoWarePlugin extends JavaPlugin {
         EmoteCommand emoteCommand = new EmoteCommand();
         getCommand("2dgamesemote").setExecutor(emoteCommand);
         getCommand("2dgamesemote").setTabCompleter(emoteCommand);
+
+        TwoDGameScoreCommand scoreCommand = new TwoDGameScoreCommand();
+        getCommand("2dgamescore").setExecutor(scoreCommand);
+        getCommand("2dgamescore").setTabCompleter(scoreCommand);
     }
 }

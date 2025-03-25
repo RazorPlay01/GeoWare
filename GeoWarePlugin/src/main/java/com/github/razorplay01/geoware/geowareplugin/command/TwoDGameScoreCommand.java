@@ -12,28 +12,28 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class EmoteCommand implements CommandExecutor, TabCompleter {
-    private static final String PERMISSION = "geoware.2dgame.emote";
+public class TwoDGameScoreCommand implements CommandExecutor, TabCompleter {
+    private static final String PERMISSION = "geoware.2dgame.score";
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        // Verificar permiso
         if (!sender.hasPermission(PERMISSION)) {
             sender.sendMessage("§cNo tienes permiso para usar este comando.");
             return true;
         }
 
         if (args.length < 2) {
-            sender.sendMessage("§cUso: /2dgamesemote <target> \"<emoteId>\"");
+            sender.sendMessage("§cUso: /2dgamescore <target> <true|false>");
             return true;
         }
 
         String target = args[0];
-        String emoteId = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+        String enableStr = args[1].toLowerCase();
         Collection<Player> targets = getTargetPlayers(target);
 
         if (targets.isEmpty()) {
@@ -41,22 +41,29 @@ public class EmoteCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        Emote emote = Emote.fromString(emoteId);
-        if (emote == null) {
-            sender.sendMessage("§cEmote ID inválido. Usa el autocompletado para ver opciones válidas. Recuerda usar comillas.");
+        // Validar el argumento booleano
+        boolean isEnable;
+        if (enableStr.equals("true")) {
+            isEnable = true;
+        } else if (enableStr.equals("false")) {
+            isEnable = false;
+        } else {
+            sender.sendMessage("§cEl segundo argumento debe ser 'true' o 'false'.");
             return true;
         }
 
+        // Enviar el packet a los jugadores objetivo
         for (Player player : targets) {
-            PacketSender.sendEmotePacketToClient(player, emoteId);
+            PacketSender.sendScoreStatusPacketToClient(player, isEnable);
         }
-        sender.sendMessage("§aEmote " + emoteId + " enviado a " + targets.size() + " jugador(es)");
+        sender.sendMessage("§aEstado de puntuación " + (isEnable ? "activado" : "desactivado") + " para " + targets.size() + " jugador(es)");
 
         return true;
     }
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
+        // Verificar permiso para tab completion
         if (!sender.hasPermission(PERMISSION)) {
             return new ArrayList<>();
         }
@@ -71,20 +78,15 @@ public class EmoteCommand implements CommandExecutor, TabCompleter {
             completions.add("survival");
             completions.add("spectator");
             Bukkit.getOnlinePlayers().forEach(p -> completions.add(p.getName()));
-        } else if (args.length >= 2) {
-            // Completar emoteIds con comillas desde el enum
-            String partialEmote = String.join(" ", Arrays.copyOfRange(args, 1, args.length)).toLowerCase();
-            if (!partialEmote.startsWith("\"")) {
-                partialEmote = "\"" + partialEmote;
-            }
-            String finalPartialEmote = partialEmote;
-            completions.addAll(Arrays.stream(Emote.values())
-                    .map(Emote::getEmoteId)
-                    .filter(emote -> emote.toLowerCase().startsWith(finalPartialEmote))
-                    .toList());
+        } else if (args.length == 2) {
+            // Completar boolean
+            completions.add("true");
+            completions.add("false");
         }
 
-        return completions;
+        return completions.stream()
+                .filter(c -> c.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
+                .toList();
     }
 
     private Collection<Player> getTargetPlayers(String target) {

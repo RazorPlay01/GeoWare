@@ -29,11 +29,12 @@ public class GeoWareMod implements ModInitializer, ClientModInitializer {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     @Getter
     private static Scoreboard scoreboard;
+    @Getter
     private static Score score;
 
     public static int guiScale = 2;
-    public static int playerScore = 55;
-    public static int playerPosition = 5;
+    public static int playerScore = 0;
+    public static int playerPosition = 0;
 
     @Override
     public void onInitialize() {

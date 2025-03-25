@@ -4,6 +4,7 @@ import com.github.razorplay.packet_handler.exceptions.PacketSerializationExcepti
 import com.github.razorplay.packet_handler.network.IPacket;
 import com.github.razorplay.packet_handler.network.PacketTCP;
 import com.github.razorplay01.geoware.geowarecommon.network.packet.*;
+import com.github.razorplay01.geoware.geowarecommon.util.Pair;
 import com.github.razorplay01.geoware.geowareplugin.GeoWarePlugin;
 import com.github.razorplay01.geoware.geowareplugin.command.Emote;
 import org.bukkit.entity.Player;
@@ -144,6 +145,27 @@ public class PacketSender {
     public static void sendScoreboardPacketToClient(Player targetPlayer, List<String> texts, long fadeInMs, long stayMs, long fadeOutMs, int offsetX, int offsetY, float scale) {
         try {
             IPacket packet = new ScoreboardPacket(texts, fadeInMs, stayMs, fadeOutMs, offsetX, offsetY, scale);
+            packetSendInfo(packet, targetPlayer);
+            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PACKET_BASE_CHANNEL, PacketTCP.write(packet));
+        } catch (PacketSerializationException e) {
+            GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());
+        }
+    }
+
+    public static void sendScoreStatusPacketToClient(Player targetPlayer, boolean isEnable) {
+        try {
+            IPacket packet = new ScoreStatusPacket(isEnable);
+            packetSendInfo(packet, targetPlayer);
+            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PACKET_BASE_CHANNEL, PacketTCP.write(packet));
+        } catch (PacketSerializationException e) {
+            GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());
+        }
+    }
+
+    public static void sendScoreUpdaterPacketToClient(Player targetPlayer) {
+        try {
+            Pair<Integer, Integer> scoreAndPosition = GeoWarePlugin.getInstance().getPointsManager().obtenerPuntosYPosicion(targetPlayer);
+            IPacket packet = new ScoreUpdaterPacket(scoreAndPosition.getKey(), scoreAndPosition.getValue());
             packetSendInfo(packet, targetPlayer);
             targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {

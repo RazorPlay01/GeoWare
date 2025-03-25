@@ -46,10 +46,21 @@ public class NetworkManager {
                 case ScaryMazePacket pkt -> checkScaryMazePacketClient(pkt, context);
                 case TetrisPacket pkt -> checkTetrisPacketClient(pkt, context);
                 case ScoreboardPacket pkt -> checkScoreboardPacketClient(pkt, context);
+                case ScoreUpdaterPacket pkt -> checkScoreUpdaterPacketClient(pkt, context);
+                case ScoreStatusPacket pkt -> checkScoreStatusPacketClient(pkt, context);
                 case EmotePacket pkt -> checkEmotePacketClient(pkt, context);
                 default -> GeoWareMod.LOGGER.info("Packet received from server: UnknownPacket");
             }
         }));
+    }
+
+    private static void checkScoreStatusPacketClient(ScoreStatusPacket iPacket, ClientPlayNetworking.Context context) {
+        GeoWareMod.getScore().setVisible(iPacket.isEnable());
+    }
+
+    private static void checkScoreUpdaterPacketClient(ScoreUpdaterPacket iPacket, ClientPlayNetworking.Context context) {
+        GeoWareMod.playerScore = iPacket.getScore();
+        GeoWareMod.playerPosition = iPacket.getPosition();
     }
 
     private static void checkEmotePacketClient(EmotePacket pkt, ClientPlayNetworking.Context context) {

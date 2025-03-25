@@ -25,4 +25,8 @@ commands:
   2dgamesemote:
     description: Envía un emote a jugadores
     usage: /<command> <target> <emoteId>
-    permission: geoware.2dgame.2dgamesemote
+    permission: geoware.2dgame.emote
+  2dgamescore:
+    description: Activa o desactiva el estado de puntuación para jugadores
+    usage: /<command> <target> <true|false>
+    permission: geoware.2dgame.score

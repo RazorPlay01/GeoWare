@@ -1,12 +1,16 @@
 package com.github.razorplay01.geoware.geowareplugin;
 
 import com.github.razorplay01.geoware.geowarecommon.util.Pair;
+import com.github.razorplay01.geoware.geowareplugin.network.PacketSender;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.github.razorplay01.geoware.geowareplugin.network.PacketSender.sendScoreUpdaterPacketToClient;
 
 
 /**
@@ -104,6 +108,7 @@ public class PointsManager {
         } catch (SQLException e) {
             GeoWarePlugin.LOGGER.error("Error modifying points for player {}", playerName, e);
         }
+        sendScoreUpdaterPacketToClient(player);
     }
 
     /**
@@ -121,6 +126,7 @@ public class PointsManager {
         } catch (SQLException e) {
             GeoWarePlugin.LOGGER.error("Error resetting points for player {}", player.getName(), e);
         }
+        sendScoreUpdaterPacketToClient(player);
     }
 
     /**
@@ -133,6 +139,7 @@ public class PointsManager {
         } catch (SQLException e) {
             GeoWarePlugin.LOGGER.error("Error resetting all players' points", e);
         }
+        Bukkit.getOnlinePlayers().forEach(PacketSender::sendScoreUpdaterPacketToClient);
     }
 
     /**

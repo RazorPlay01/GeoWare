@@ -23,6 +23,8 @@ public class GeoWareCommon {
                 KeyBindPacket.class,
                 RobotFactoryPacket.class,
                 ScorePacket.class,
+                ScoreStatusPacket.class,
+                ScoreUpdaterPacket.class,
                 TetrisPacket.class,
                 ScaryMazePacket.class,
                 ScoreboardPacket.class,
