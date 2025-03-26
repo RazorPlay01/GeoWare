@@ -11,8 +11,8 @@ import net.minecraft.text.Text;
 @Getter
 public abstract class GameScreen extends Screen {
     protected Game game;
-    private Integer gameScreenXPos;
-    private Integer gameScreenYPos;
+    protected Integer gameScreenXPos;
+    protected Integer gameScreenYPos;
 
     protected GameScreen(Text title) {
         super(title);
@@ -77,19 +77,19 @@ public abstract class GameScreen extends Screen {
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
-    private void renderGameScore(DrawContext context) {
+    protected void renderGameScore(DrawContext context) {
         context.drawText(this.textRenderer, "Score: " + game.getGameScore(),
                 gameScreenXPos + this.game.getScreenWidth() + 10, this.gameScreenYPos + 20, 0xFFFFFF00, true);
     }
 
-    private void renderGameDuration(DrawContext context) {
+    protected void renderGameDuration(DrawContext context) {
         long remainingTime = this.game.getGameDutarion().getRemainingTime() / 1000;
         String scoreMessage = "Timer: " + String.format("%02d:%02d", (remainingTime / 60), (remainingTime % 60));
         context.drawText(this.textRenderer, scoreMessage,
                 gameScreenXPos + this.game.getScreenWidth() + 10, this.gameScreenYPos, 0xFFFFFF00, true);
     }
 
-    private void renderEndGameScreen(DrawContext context) {
+    protected void renderEndGameScreen(DrawContext context) {
         int centerX = this.width / 2;
         int centerY = this.height / 2;
 
@@ -120,7 +120,7 @@ public abstract class GameScreen extends Screen {
         context.drawText(this.textRenderer, timeMessage, centerX - timeWidth / 2, centerY + 70, 0xFFAAAAAA, true);
     }
 
-    private void renderInitGameScreen(DrawContext context) {
+    protected void renderInitGameScreen(DrawContext context) {
         int centerX = this.width / 2;
         int centerY = this.height / 2;
 

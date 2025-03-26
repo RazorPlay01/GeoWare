@@ -1,14 +1,15 @@
 package com.github.razorplay01.geowaremod.keybind;
 
+import com.github.razorplay01.razorplayapi.util.Particle;
 import com.github.razorplay01.razorplayapi.util.hitbox.CircleHitbox;
 import com.github.razorplay01.razorplayapi.util.stage.Game;
+import com.github.razorplay01.razorplayapi.util.texture.Animation;
+import com.github.razorplay01.razorplayapi.util.texture.Texture;
 import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.client.gui.DrawContext;
 import org.lwjgl.glfw.GLFW;
 
 @Getter
-@Setter
 public class MovingCircle {
     private float xPos;
     private float yPos;
@@ -19,21 +20,25 @@ public class MovingCircle {
     private boolean active;
     private final CircleHitbox hitbox;
     private final KeyBindGame game;
+    private final Texture keyTexture;
+    private final Animation keyAnimation;
 
-    public MovingCircle(float radius, float speed, int key, Game game) {
-        this.game = (KeyBindGame) game;
+    public MovingCircle(float radius, float speed, int keyCode, Texture keyTexture, Animation keyAnimation, KeyBindGame game) {
+        this.game = game;
+        this.radius = radius;
+        this.speed = speed;
+        this.key = keyCode;
+        this.keyTexture = keyTexture;
+        this.keyAnimation = keyAnimation;
 
         xPos = game.getScreen().getGameScreenXPos() + game.getScreenWidth() - radius * 2 - 5;
-        yPos = game.getScreen().getGameScreenYPos() + game.getScreenHeight() / 2f;
+        yPos = game.getScreen().getGameScreenYPos() + 29;
 
         this.keyName = GLFW.glfwGetKeyName(key, 0);
         if (keyName == null) {
             keyName = Character.toString((char) key);
         }
 
-        this.radius = radius;
-        this.speed = speed;
-        this.key = key;
         this.active = true;
         this.hitbox = new CircleHitbox("moving", xPos - radius, yPos - radius, radius, 0, 0, 0xFFFFFF00);
     }
@@ -42,25 +47,28 @@ public class MovingCircle {
         if (!active) return;
         xPos -= speed;
 
-        // Detectar colisión con bordes *antes* de que la bola se salga
-        if (xPos + radius > game.getScreen().getGameScreenXPos() + game.getScreenWidth() || // Borde derecho
-                xPos - radius < game.getScreen().getGameScreenXPos() || // Borde izquierdo
-                yPos + radius > game.getScreen().getGameScreenYPos() + game.getScreenHeight() || // Borde inferior
-                yPos - radius < game.getScreen().getGameScreenYPos()) { // Borde superior
+        if (xPos + radius > game.getScreen().getGameScreenXPos() + game.getScreenWidth() ||
+                xPos - radius < game.getScreen().getGameScreenXPos() ||
+                yPos + radius > game.getScreen().getGameScreenYPos() + game.getScreenHeight() ||
+                yPos - radius < game.getScreen().getGameScreenYPos()) {
             active = false;
-            return; // Importante: salir del método para evitar actualizar el hitbox
+            return;
         }
 
         hitbox.updatePosition(this.xPos, this.yPos);
     }
 
     public void draw(DrawContext context) {
-        hitbox.draw(context);
-        int textWidth = game.getTextRenderer().getWidth(keyName.toUpperCase());
-        int textX = (int) (xPos - textWidth / 2f);
-        int textY = (int) (yPos - 5);
-
-        context.drawText(game.getTextRenderer(), keyName.toUpperCase(), textX, textY, 0xFFFFFFFF, true);
+        if (!active) return;
+        // Renderizar la textura estática del botón
+        context.drawTexture(
+                keyTexture.identifier(),
+                (int) (xPos - radius), (int) (yPos - radius),
+                (int) (radius * 2), (int) (radius * 2),
+                keyTexture.u(), keyTexture.v(),
+                keyTexture.width(), keyTexture.height(),
+                keyTexture.textureWidth(), keyTexture.textureHeight()
+        );
     }
 
     public boolean collidesWith(CircleHitbox other) {
@@ -79,7 +87,17 @@ public class MovingCircle {
             int points = calculatePoints();
             if (points > 0) {
                 game.addScore(points, game.getFinalCircle().getXPos(), game.getFinalCircle().getYPos());
+                game.addParticle(new Particle(
+                        game.getFinalCircle().getXPos() - radius,
+                        game.getFinalCircle().getYPos() - radius,
+                        radius * 2, radius * 2,
+                        game.getScreen(),
+                        keyAnimation
+                ));
+                game.playRandomEmote(); // Reproducir un emote aleatorio
             }
+            active = false;
+            return true;
         }
         active = false;
         return true;
@@ -94,14 +112,9 @@ public class MovingCircle {
 
         if (overlap > 0) {
             float precision = overlap / (2 * radius);
-
-            if (precision > 0.90f) {
-                return 50;
-            } else if (precision > 0.75f) {
-                return 30;
-            } else {
-                return 10;
-            }
+            if (precision > 0.90f) return 50;
+            else if (precision > 0.75f) return 30;
+            else return 10;
         }
         return 0;
     }
