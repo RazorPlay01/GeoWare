@@ -98,7 +98,7 @@ public class CollisionHandler {
                 ball.updateLastCollisionPosition(collisionX, collisionY);
 
                 ball.setCurrentSpeed(Math.min(ball.getCurrentSpeed() + Ball.SPEED_INCREMENT, Ball.MAX_SPEED));
-                game.addScore(100, brick.getXPos() + brick.getWidth() / 2, brick.getYPos());
+                game.addScore(1, brick.getXPos() + brick.getWidth() / 2, brick.getYPos());
                 iterator.remove();
                 game.removeBrick(brick);
                 break;

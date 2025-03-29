@@ -60,7 +60,7 @@ public class HanoiTowersGame extends Game {
     public void update() {
         super.update();
         if (status == GameStatus.ACTIVE && verificarVictoria()) {
-            addScore(1000);
+            addScore(10);
             status = GameStatus.ENDING;
         }
     }
@@ -70,7 +70,7 @@ public class HanoiTowersGame extends Game {
         context.drawTextWithShadow(getTextRenderer(), "Movimientos: " + movesCounter, screen.getGameScreenXPos() + getScreenWidth() + 10, screen.getGameScreenYPos() + 40, 0xFFFFFFFF);
         towers.forEach(tower -> tower.render(context));
         globo.update();
-        globo.renderAnimation(context, 0, 0, screen.getGameScreenXPos() + 270, screen.getGameScreenYPos() + 15, 105, 15);
+        globo.renderAnimation(context, screen.getGameScreenXPos() + 270, screen.getGameScreenYPos() + 15, 105, 15);
 
         if (selectedRing != null) {
             selectedRing.setXPos(mouseX - (selectedRing.getWidth() / 2));

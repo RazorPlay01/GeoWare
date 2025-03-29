@@ -104,4 +104,29 @@ public class Animation {
                 currentTexture.textureHeight()
         );
     }
+    public void renderAnimation(DrawContext context, int xPos, int yPos, int width, int height) {
+        Texture currentTexture = this.getCurrentTexture();
+
+        // Calcular dimensiones escaladas de la textura
+        int tWidth = (int) (this.getFrameWidth() * currentTexture.scale());
+        int tHeight = (int) (this.getFrameHeight() * currentTexture.scale());
+
+        // Calculo para centrar la textura en la entidad
+        int centeredX = (int) (xPos + (width - tWidth) / 2.0);
+        int centeredY = (int) (yPos + (height - tHeight) / 2.0);
+
+        context.drawTexture(
+                currentTexture.identifier(),
+                centeredX,
+                centeredY,
+                width,
+                height,
+                this.getCurrentU(),
+                this.getCurrentV(),
+                this.getFrameWidth(),
+                this.getFrameHeight(),
+                currentTexture.textureWidth(),
+                currentTexture.textureHeight()
+        );
+    }
 }

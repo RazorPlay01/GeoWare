@@ -109,13 +109,13 @@ public class TetrisGame extends Game {
 
     private void updateScore(int lines) {
         switch (lines) {
-            case 2 -> addScore(300);
-            case 3 -> addScore(500);
-            case 4 -> addScore(800);
-            case 5 -> addScore(1000);
-            default -> addScore(100);
+            case 2 -> addScore(3);
+            case 3 -> addScore(5);
+            case 4 -> addScore(8);
+            case 5 -> addScore(10);
+            default -> addScore(1);
         }
-        level = (gameScore / 200) + 1;
+        level = (gameScore / 2) + 1;
         updateDropInterval();
     }
 

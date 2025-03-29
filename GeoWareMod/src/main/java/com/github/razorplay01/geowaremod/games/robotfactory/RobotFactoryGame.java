@@ -75,7 +75,7 @@ public class RobotFactoryGame extends Game {
 
         if (tablePart != null && heldPart != null && tableZone.intersects(heldPart.getHitbox()) &&
                 tablePart.getFamily() == heldPart.getFamily() && tablePart.getType() != heldPart.getType()) {
-            addScore(100);
+            addScore(1);
             addCompletionParticle(tableZone.getXPos(), tableZone.getYPos(), tablePart.getFamily());
             parts.remove(tablePart);
             parts.remove(heldPart);
@@ -118,12 +118,10 @@ public class RobotFactoryGame extends Game {
         context.drawTexture(marcoTexture, screen.getGameScreenXPos(), screen.getGameScreenYPos(),
                 getScreenWidth(), getScreenHeight(), 0, 0, (int) (208 * scale), (int) (116 * scale), (int) (208 * scale), (int) (116 * scale));
         doorRAnimation.renderAnimation(context,
-                0, 0,
                 (int) (screen.getGameScreenXPos() + getScreenWidth() - (78 * scale)),
                 (int) (screen.getGameScreenYPos() + getScreenHeight() - (66 * scale)),
                 (int) (78 * scale), (int) (66 * scale));
         doorLAnimation.renderAnimation(context,
-                0, 0,
                 screen.getGameScreenXPos(),
                 (int) (screen.getGameScreenYPos() + getScreenHeight() - (66 * scale)),
                 (int) (78 * scale), (int) (66 * scale));

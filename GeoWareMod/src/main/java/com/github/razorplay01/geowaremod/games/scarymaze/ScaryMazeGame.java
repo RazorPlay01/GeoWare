@@ -99,7 +99,7 @@ public class ScaryMazeGame extends Game {
                 }
             }
             if (player.intersects(finalArea)) {
-                addScore(1000);
+                addScore(10);
                 status = GameStatus.ENDING;
             }
         }

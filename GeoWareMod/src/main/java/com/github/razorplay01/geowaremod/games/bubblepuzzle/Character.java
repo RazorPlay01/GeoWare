@@ -127,6 +127,6 @@ public class Character {
     }
 
     public void render(DrawContext context) {
-        currentAnimation.renderAnimation(context, 0, 0, (int) x, (int) y, (int) width, (int) height);
+        currentAnimation.renderAnimation(context, (int) x, (int) y, (int) width, (int) height);
     }
 }

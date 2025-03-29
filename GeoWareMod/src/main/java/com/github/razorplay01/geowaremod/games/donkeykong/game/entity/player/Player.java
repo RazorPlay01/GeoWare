@@ -252,7 +252,7 @@ public class Player extends DonkeyKongEntity {
         if (result.hasCollision()) {
             if (result.isJumpOver()) {
                 if (!isBarrelJumpProcessed) {
-                    game.addScore(100, xPos, yPos);
+                    game.addScore(1, xPos, yPos);
                     isBarrelJumpProcessed = true;
                 }
             } else {
@@ -433,7 +433,7 @@ public class Player extends DonkeyKongEntity {
                 float particleX = barrel.getXPos() + (barrel.getWidth() - 16) / 2;
                 float particleY = barrel.getYPos() + (barrel.getHeight() - 16) / 2;
                 game.getParticles().add(new Particle(particleX, particleY, 16, 16, gameScreen, new Animation(PARTICLE_TEXTURES, 0.05f, false)));
-                game.addScore(200, barrel.getXPos(), barrel.getYPos());
+                game.addScore(2, barrel.getXPos(), barrel.getYPos());
                 barrel.setRemove(true);
             }
         }

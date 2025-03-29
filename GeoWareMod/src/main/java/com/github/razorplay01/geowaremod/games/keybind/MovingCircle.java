@@ -111,9 +111,9 @@ public class MovingCircle {
 
         if (overlap > 0) {
             float precision = overlap / (2 * radius);
-            if (precision > 0.90f) return 50;
-            else if (precision > 0.75f) return 30;
-            else return 10;
+            if (precision > 0.90f) return 5;
+            else if (precision > 0.75f) return 3;
+            else return 1;
         }
         return 0;
     }

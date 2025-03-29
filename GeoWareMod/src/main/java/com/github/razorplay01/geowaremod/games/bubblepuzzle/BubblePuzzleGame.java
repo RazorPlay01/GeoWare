@@ -159,7 +159,7 @@ public class BubblePuzzleGame extends Game {
                 bubble.update();
                 if (bubble.isFalling()) {
                     if (bubble.getY() + bubble.getRadius() >= screen.getGameScreenYPos() + GAME_HEIGHT) {
-                        addScore(100, bubble.getX(), bubble.getY());
+                        addScore(2, bubble.getX(), bubble.getY());
                         bubblesToRemove.add(bubble);
                     }
                 } else {
@@ -310,7 +310,7 @@ public class BubblePuzzleGame extends Game {
     private void removeGroupIfValid(Bubble bubble) {
         List<Bubble> connected = findConnectedBubbles(bubble);
         if (connected.size() >= 3) {
-            connected.forEach(b -> addScore(10, b.getX(), b.getY()));
+            connected.forEach(b -> addScore(1, b.getX(), b.getY()));
             bubbles.removeAll(connected);
 
             for (Bubble b : connected) { // Verificar grupos alrededor de las burbujas eliminadas
