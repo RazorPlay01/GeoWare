@@ -30,3 +30,7 @@ commands:
     description: Activa o desactiva el estado de puntuación para jugadores
     usage: /<command> <target> <true|false>
     permission: geoware.2dgame.score
+  2dgameeventtoggle:
+    description: Activa o desactiva el estado de inicializacion de evento
+    usage: /<command>
+    permission: geoware.2dgame.admin

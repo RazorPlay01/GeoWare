@@ -77,9 +77,9 @@ public final class GeoWarePlugin extends JavaPlugin {
         getCommand("2dgamepoints").setExecutor(gamePointsCommand);
         getCommand("2dgamepoints").setTabCompleter(gamePointsCommand);
 
-        ScoreboardCommand command = new ScoreboardCommand();
-        getCommand("2dgamescoreboard").setExecutor(command);
-        getCommand("2dgamescoreboard").setTabCompleter(command);
+        ScoreboardCommand scoreboardCommand = new ScoreboardCommand();
+        getCommand("2dgamescoreboard").setExecutor(scoreboardCommand);
+        getCommand("2dgamescoreboard").setTabCompleter(scoreboardCommand);
 
         EmoteCommand emoteCommand = new EmoteCommand();
         getCommand("2dgamesemote").setExecutor(emoteCommand);
