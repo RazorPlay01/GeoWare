@@ -57,9 +57,9 @@ public class Score implements HudRenderCallback {
             int y = (int) (windowHeight - (16 * scale));
             drawContext.drawTexture(numbersTexture, x, y, (int) (172 * scale), (int) (16 * scale), 0, 0, 172, 16, 172, 16);
 
-            // Manejo de la puntuación (máximo 999)
-            int score = Math.min(GeoWareMod.playerScore, 999);
-            String scoreStr = String.format("%03d", score); // Siempre 3 dígitos
+            // Manejo de la puntuación (máximo 9999)
+            int score = Math.min(GeoWareMod.playerScore, 9999);
+            String scoreStr = String.format("%04d", score); // Siempre 4 dígitos
             drawNumber(drawContext, scoreStr, numbersFontBlackOutline, x + 19 * scale, y + 3 * scale, 16 * scale);
 
             // Manejo de la posición (máximo 99)
