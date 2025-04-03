@@ -49,7 +49,7 @@ public class GeoWareMod implements ModInitializer, ClientModInitializer {
         HudRenderCallback.EVENT.register(scoreboard);
         HudRenderCallback.EVENT.register(score);
         NetworkManager.registerClient();
-        registerCommands();
+        //registerCommands();
     }
 
     public static void registerCommands() {

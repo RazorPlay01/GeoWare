@@ -81,8 +81,6 @@ public class NetworkManager {
         int offsetX = pkt.getOffsetX();
         int offsetY = pkt.getOffsetY();
         float scale = pkt.getScale();
-        GeoWareMod.guiScale = context.client().options.getGuiScale().getValue();
-        context.client().options.getGuiScale().setValue(2);
         context.client().execute(() -> GeoWareMod.getScoreboard().showScoreboard(text, fadeInMs, stayMs, fadeOutMs, offsetX, offsetY, scale));
     }
 

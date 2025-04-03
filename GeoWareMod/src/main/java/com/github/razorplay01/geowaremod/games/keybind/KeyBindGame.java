@@ -50,10 +50,10 @@ public class KeyBindGame extends Game {
         Identifier aAnimation = Identifier.of(GeoWareMod.MOD_ID, "textures/games/keybind/a_animation.png");
         Identifier sAnimation = Identifier.of(GeoWareMod.MOD_ID, "textures/games/keybind/s_animation.png");
         Identifier dAnimation = Identifier.of(GeoWareMod.MOD_ID, "textures/games/keybind/d_animation.png");
-        Identifier upAnimation = Identifier.of(GeoWareMod.MOD_ID, "textures/games/keybind/up_animation.png");
-        Identifier leftAnimation = Identifier.of(GeoWareMod.MOD_ID, "textures/games/keybind/left_animation.png");
-        Identifier downAnimation = Identifier.of(GeoWareMod.MOD_ID, "textures/games/keybind/down_animation.png");
-        Identifier rightAnimation = Identifier.of(GeoWareMod.MOD_ID, "textures/games/keybind/right_animation.png");
+        Identifier lAnimation = Identifier.of(GeoWareMod.MOD_ID, "textures/games/keybind/l_animation.png");
+        Identifier jAnimation = Identifier.of(GeoWareMod.MOD_ID, "textures/games/keybind/j_animation.png");
+        Identifier kAnimation = Identifier.of(GeoWareMod.MOD_ID, "textures/games/keybind/k_animation.png");
+        Identifier hAnimation = Identifier.of(GeoWareMod.MOD_ID, "textures/games/keybind/h_animation.png");
 
         this.wKey = new Key(GLFW.GLFW_KEY_W,
                 new Texture(keysTexture, 24, 0, 24, 24, 48, 96, keyScale),
@@ -95,45 +95,45 @@ public class KeyBindGame extends Game {
                         new Texture(dAnimation, 0, 96, 24, 24, 24, 144, keyScale),
                         new Texture(dAnimation, 0, 120, 24, 24, 24, 144, keyScale)),
                         animationSpeed, false));
-        this.upKey = new Key(GLFW.GLFW_KEY_UP,
+        this.upKey = new Key(GLFW.GLFW_KEY_L,
                 new Texture(keysTexture, 0, 0, 24, 24, 48, 96, keyScale),
                 new Animation(List.of(
-                        new Texture(upAnimation, 0, 0, 24, 24, 24, 144, keyScale),
-                        new Texture(upAnimation, 0, 24, 24, 24, 24, 144, keyScale),
-                        new Texture(upAnimation, 0, 48, 24, 24, 24, 144, keyScale),
-                        new Texture(upAnimation, 0, 72, 24, 24, 24, 144, keyScale),
-                        new Texture(upAnimation, 0, 96, 24, 24, 24, 144, keyScale),
-                        new Texture(upAnimation, 0, 120, 24, 24, 24, 144, keyScale)),
+                        new Texture(lAnimation, 0, 0, 24, 24, 24, 144, keyScale),
+                        new Texture(lAnimation, 0, 24, 24, 24, 24, 144, keyScale),
+                        new Texture(lAnimation, 0, 48, 24, 24, 24, 144, keyScale),
+                        new Texture(lAnimation, 0, 72, 24, 24, 24, 144, keyScale),
+                        new Texture(lAnimation, 0, 96, 24, 24, 24, 144, keyScale),
+                        new Texture(lAnimation, 0, 120, 24, 24, 24, 144, keyScale)),
                         animationSpeed, false));
-        this.leftKey = new Key(GLFW.GLFW_KEY_LEFT,
+        this.leftKey = new Key(GLFW.GLFW_KEY_J,
                 new Texture(keysTexture, 0, 72, 24, 24, 48, 96, keyScale),
                 new Animation(List.of(
-                        new Texture(leftAnimation, 0, 0, 24, 24, 24, 144, keyScale),
-                        new Texture(leftAnimation, 0, 24, 24, 24, 24, 144, keyScale),
-                        new Texture(leftAnimation, 0, 48, 24, 24, 24, 144, keyScale),
-                        new Texture(leftAnimation, 0, 72, 24, 24, 24, 144, keyScale),
-                        new Texture(leftAnimation, 0, 96, 24, 24, 24, 144, keyScale),
-                        new Texture(leftAnimation, 0, 120, 24, 24, 24, 144, keyScale)),
+                        new Texture(jAnimation, 0, 0, 24, 24, 24, 144, keyScale),
+                        new Texture(jAnimation, 0, 24, 24, 24, 24, 144, keyScale),
+                        new Texture(jAnimation, 0, 48, 24, 24, 24, 144, keyScale),
+                        new Texture(jAnimation, 0, 72, 24, 24, 24, 144, keyScale),
+                        new Texture(jAnimation, 0, 96, 24, 24, 24, 144, keyScale),
+                        new Texture(jAnimation, 0, 120, 24, 24, 24, 144, keyScale)),
                         animationSpeed, false));
-        this.downKey = new Key(GLFW.GLFW_KEY_DOWN,
+        this.downKey = new Key(GLFW.GLFW_KEY_K,
                 new Texture(keysTexture, 0, 24, 24, 24, 48, 96, keyScale),
                 new Animation(List.of(
-                        new Texture(downAnimation, 0, 0, 24, 24, 24, 144, keyScale),
-                        new Texture(downAnimation, 0, 24, 24, 24, 24, 144, keyScale),
-                        new Texture(downAnimation, 0, 48, 24, 24, 24, 144, keyScale),
-                        new Texture(downAnimation, 0, 72, 24, 24, 24, 144, keyScale),
-                        new Texture(downAnimation, 0, 96, 24, 24, 24, 144, keyScale),
-                        new Texture(downAnimation, 0, 120, 24, 24, 24, 144, keyScale)),
+                        new Texture(kAnimation, 0, 0, 24, 24, 24, 144, keyScale),
+                        new Texture(kAnimation, 0, 24, 24, 24, 24, 144, keyScale),
+                        new Texture(kAnimation, 0, 48, 24, 24, 24, 144, keyScale),
+                        new Texture(kAnimation, 0, 72, 24, 24, 24, 144, keyScale),
+                        new Texture(kAnimation, 0, 96, 24, 24, 24, 144, keyScale),
+                        new Texture(kAnimation, 0, 120, 24, 24, 24, 144, keyScale)),
                         animationSpeed, false));
-        this.rightKey = new Key(GLFW.GLFW_KEY_RIGHT,
+        this.rightKey = new Key(GLFW.GLFW_KEY_H,
                 new Texture(keysTexture, 0, 48, 24, 24, 48, 96, keyScale),
                 new Animation(List.of(
-                        new Texture(rightAnimation, 0, 0, 24, 24, 24, 144, keyScale),
-                        new Texture(rightAnimation, 0, 24, 24, 24, 24, 144, keyScale),
-                        new Texture(rightAnimation, 0, 48, 24, 24, 24, 144, keyScale),
-                        new Texture(rightAnimation, 0, 72, 24, 24, 24, 144, keyScale),
-                        new Texture(rightAnimation, 0, 96, 24, 24, 24, 144, keyScale),
-                        new Texture(rightAnimation, 0, 120, 24, 24, 24, 144, keyScale)),
+                        new Texture(hAnimation, 0, 0, 24, 24, 24, 144, keyScale),
+                        new Texture(hAnimation, 0, 24, 24, 24, 24, 144, keyScale),
+                        new Texture(hAnimation, 0, 48, 24, 24, 24, 144, keyScale),
+                        new Texture(hAnimation, 0, 72, 24, 24, 24, 144, keyScale),
+                        new Texture(hAnimation, 0, 96, 24, 24, 24, 144, keyScale),
+                        new Texture(hAnimation, 0, 120, 24, 24, 24, 144, keyScale)),
                         animationSpeed, false));
     }
 
