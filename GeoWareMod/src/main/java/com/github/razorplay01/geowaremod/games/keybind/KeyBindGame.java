@@ -43,7 +43,7 @@ public class KeyBindGame extends Game {
         movingCircles = new ArrayList<>();
         particles = new ArrayList<>();
         random = new Random();
-        float animationSpeed = 0.0001f;
+        float animationSpeed = 1f;
         float keyScale = scale;
         Identifier keysTexture = Identifier.of(GeoWareMod.MOD_ID, "textures/games/keybind/keys.png");
         Identifier wAnimation = Identifier.of(GeoWareMod.MOD_ID, "textures/games/keybind/w_animation.png");
@@ -151,7 +151,7 @@ public class KeyBindGame extends Game {
         }
         // Renderizar partículas
         for (Particle particle : particles) {
-            particle.render(context);
+            particle.render(context, delta);
         }
     }
 

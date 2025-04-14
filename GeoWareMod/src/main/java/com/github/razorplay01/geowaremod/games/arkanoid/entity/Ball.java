@@ -87,7 +87,7 @@ public class Ball extends ArkanoidEntity {
     }
 
     @Override
-    public void render(DrawContext context) {
+    public void render(DrawContext context, float delta) {
         Identifier marcoTexture = Identifier.of(GeoWareMod.MOD_ID, "textures/games/arkanoid/ball.png");
         context.drawTexture(marcoTexture, (int) xPos - 7, (int) yPos - 7, 14, 14, 0, 0, 14, 13, 15, 15);
     }

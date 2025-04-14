@@ -8,6 +8,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,7 +19,7 @@ public class TwoDGameCommand implements CommandExecutor, TabCompleter {
     private static final String PERMISSION = "geoware.2dgame";
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         // Verificar permiso
         if (!sender.hasPermission(PERMISSION)) {
             sender.sendMessage("§cNo tienes permiso para usar este comando.");
@@ -116,8 +117,13 @@ public class TwoDGameCommand implements CommandExecutor, TabCompleter {
                     int robotTime = args.length > 2 ? Integer.parseInt(args[2]) : 60;
                     float robotSpeed = args.length > 3 ? Float.parseFloat(args[3]) : 1.0f;
                     boolean enableRotation = args.length > 4 ? Boolean.parseBoolean(args[4]) : false;
+                    int partQuantity = args.length > 5 ? Integer.parseInt(args[5]) : 5; // Default a 5
+                    if (partQuantity < 1 || partQuantity > 10) {
+                        sender.sendMessage("§cLa cantidad de partes debe estar entre 1 y 10.");
+                        return true;
+                    }
                     for (Player player : targets) {
-                        PacketSender.sendRobotFactoryPacketToClient(player, robotTime, robotSpeed, enableRotation);
+                        PacketSender.sendRobotFactoryPacketToClient(player, robotTime, robotSpeed, enableRotation, partQuantity);
                     }
                     sender.sendMessage("§aPacket RobotFactory enviado a " + targets.size() + " jugador(es)");
                     break;
@@ -132,7 +138,7 @@ public class TwoDGameCommand implements CommandExecutor, TabCompleter {
                     break;
 
                 default:
-                    sender.sendMessage("§cJuego inválido. Usa: tetris, hanoitowers, donkeykong, bubblepuzzle, arkanoid, fruitfocus, galaga, keybind o robotfactory");
+                    sender.sendMessage("§cJuego inválido. Usa: tetris, hanoitowers, donkeykong, bubblepuzzle, arkanoid, fruitfocus, galaga, keybind, robotfactory, scarymaze");
                     return true;
             }
         } catch (NumberFormatException e) {
@@ -144,7 +150,7 @@ public class TwoDGameCommand implements CommandExecutor, TabCompleter {
     }
 
     @Override
-    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+    public List<String> onTabComplete(CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         // Verificar permiso para tab completion
         if (!sender.hasPermission(PERMISSION)) {
             return new ArrayList<>();
@@ -219,6 +225,11 @@ public class TwoDGameCommand implements CommandExecutor, TabCompleter {
                     completions.add("false");
                     break;
             }
+        } else if (args.length == 6 && args[1].equalsIgnoreCase("robotfactory")) {
+            // Completar partQuantity (1-10)
+            for (int i = 1; i <= 10; i++) {
+                completions.add(String.valueOf(i));
+            }
         }
 
         return completions.stream()
@@ -227,30 +238,26 @@ public class TwoDGameCommand implements CommandExecutor, TabCompleter {
     }
 
     private Collection<Player> getTargetPlayers(String target) {
-        switch (target.toLowerCase()) {
-            case "all":
-                return (Collection<Player>) Bukkit.getOnlinePlayers();
-            case "allnotop":
-                return Bukkit.getOnlinePlayers().stream()
-                        .filter(player -> !player.isOp())
-                        .collect(Collectors.toList());
-            case "adventure":
-                return Bukkit.getOnlinePlayers().stream()
-                        .filter(player -> player.getGameMode() == GameMode.ADVENTURE)
-                        .collect(Collectors.toList());
-            case "survival":
-                return Bukkit.getOnlinePlayers().stream()
-                        .filter(player -> player.getGameMode() == GameMode.SURVIVAL)
-                        .collect(Collectors.toList());
-            case "spectator":
-                return Bukkit.getOnlinePlayers().stream()
-                        .filter(player -> player.getGameMode() == GameMode.SPECTATOR)
-                        .collect(Collectors.toList());
-            default:
+        return switch (target.toLowerCase()) {
+            case "all" -> (Collection<Player>) Bukkit.getOnlinePlayers();
+            case "allnotop" -> Bukkit.getOnlinePlayers().stream()
+                    .filter(player -> !player.isOp())
+                    .collect(Collectors.toList());
+            case "adventure" -> Bukkit.getOnlinePlayers().stream()
+                    .filter(player -> player.getGameMode() == GameMode.ADVENTURE)
+                    .collect(Collectors.toList());
+            case "survival" -> Bukkit.getOnlinePlayers().stream()
+                    .filter(player -> player.getGameMode() == GameMode.SURVIVAL)
+                    .collect(Collectors.toList());
+            case "spectator" -> Bukkit.getOnlinePlayers().stream()
+                    .filter(player -> player.getGameMode() == GameMode.SPECTATOR)
+                    .collect(Collectors.toList());
+            default -> {
                 Player player = Bukkit.getPlayer(target);
-                return player != null && player.isOnline() ?
+                yield player != null && player.isOnline() ?
                         java.util.Collections.singletonList(player) :
                         java.util.Collections.emptyList();
-        }
+            }
+        };
     }
 }

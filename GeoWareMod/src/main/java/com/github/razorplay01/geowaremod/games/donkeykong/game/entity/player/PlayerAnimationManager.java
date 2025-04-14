@@ -31,27 +31,27 @@ public class PlayerAnimationManager {
 
     public PlayerAnimationManager(Player player) {
         // Inicialización de todas las animaciones
-        walkAnimationR = new Animation(PLAYER_WALK_R_TEXTURES, 0.01f, true);
-        walkAnimationL = new Animation(PLAYER_WALK_L_TEXTURES, 0.01f, true);
-        climbAnimation = new Animation(PLAYER_CLIMB_TEXTURES, 0.01f, true);
+        walkAnimationR = new Animation(PLAYER_WALK_R_TEXTURES, 1.5f, true);
+        walkAnimationL = new Animation(PLAYER_WALK_L_TEXTURES, 1.5f, true);
+        climbAnimation = new Animation(PLAYER_CLIMB_TEXTURES, 1.5f, true);
         idleAnimationR = new Animation(PLAYER_IDLE_R_TEXTURES, 1f, true);
         idleAnimationL = new Animation(PLAYER_IDLE_L_TEXTURES, 1f, true);
         jumpAnimationR = new Animation(PLAYER_JUMP_R_TEXTURES, 1f, true);
         jumpAnimationL = new Animation(PLAYER_JUMP_L_TEXTURES, 1f, true);
         winAnimationR = new Animation(PLAYER_WIN_R_TEXTURES, 1f, true);
         winAnimationL = new Animation(PLAYER_WIN_L_TEXTURES, 1f, true);
-        loseAnimation = new Animation(PLAYER_DIE_TEXTURES, 0.05f, false);
-        hammetAnimationR = new Animation(PLAYER_IDLE_HAMMET_R_TEXTURES, 0.01f, true);
-        hammetAnimationL = new Animation(PLAYER_IDLE_HAMMET_L_TEXTURES, 0.01f, true);
-        hammetWalkAnimationR = new Animation(PLAYER_WALK_HAMMET_R_TEXTURES, 0.01f, true);
-        hammetWalkAnimationL = new Animation(PLAYER_WALK_HAMMET_L_TEXTURES, 0.01f, true);
+        loseAnimation = new Animation(PLAYER_DIE_TEXTURES, 3f, false);
+        hammetAnimationR = new Animation(PLAYER_IDLE_HAMMET_R_TEXTURES, 1f, true);
+        hammetAnimationL = new Animation(PLAYER_IDLE_HAMMET_L_TEXTURES, 1f, true);
+        hammetWalkAnimationR = new Animation(PLAYER_WALK_HAMMET_R_TEXTURES, 1.5f, true);
+        hammetWalkAnimationL = new Animation(PLAYER_WALK_HAMMET_L_TEXTURES, 1.5f, true);
 
         this.facingRight = true;
         this.currentAnimation = idleAnimationR;
         this.player = player;
     }
 
-    public void updateAnimation(PlayerState state, boolean isMoving) {
+    public void updateAnimation(float delta, PlayerState state, boolean isMoving) {
         Animation nextAnimation;
 
         if (state == PlayerState.WITH_HAMMER) {
@@ -71,12 +71,12 @@ public class PlayerAnimationManager {
 
         if (state == PlayerState.CLIMBING) {
             if (isMoving) {
-                currentAnimation.update();
+                currentAnimation.update(delta);
             } else {
                 currentAnimation.setCurrentFrame(0);
             }
         } else {
-            currentAnimation.update();
+            currentAnimation.update(delta);
         }
     }
 

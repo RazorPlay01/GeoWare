@@ -24,22 +24,21 @@ public class Animation {
         reset();
     }
 
-    public void update() {
-        int fps = MinecraftClient.getInstance().getCurrentFps();
-        if (fps <= 0) {
-            fps = 60;
-        }
-        float deltaTime = 1.0f / fps;
-        animationTick += deltaTime;
+    public void update(float delta) {
+        animationTick += delta;
 
+        // Calcular cuántos frames avanzar basado en el tiempo acumulado
         if (animationTick >= animationSpeed) {
-            animationTick -= animationSpeed;
+            int framesToAdvance = (int) (animationTick / animationSpeed);
+            animationTick -= framesToAdvance * animationSpeed;
+
             if (loop || currentFrame < textures.size() - 1) {
-                currentFrame = loop ? (currentFrame + 1) % textures.size() : Math.min(currentFrame + 1, textures.size() - 1);
-            }
-            // No avanzar más si no hay loop y estamos en el último frame
-            if (!loop && currentFrame == textures.size() - 1) {
-                return; // Detener la animación aquí
+                currentFrame += framesToAdvance;
+                if (loop) {
+                    currentFrame %= textures.size();
+                } else {
+                    currentFrame = Math.min(currentFrame, textures.size() - 1);
+                }
             }
         }
     }

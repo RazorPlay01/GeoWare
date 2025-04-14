@@ -97,7 +97,7 @@ public class BubblePuzzleGame extends Game {
                 getScreenWidth() + 20, getScreenHeight() + 10, 0, 0, 255, 415, 255, 415);
 
         if (character != null) {
-            character.render(context);
+            character.render(context, delta);
         }
 
         Texture pipe = new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/bubblepuzzle/pipe.png"), 0, 24, 35, 47, 100, 100, 0.8f);

@@ -94,7 +94,7 @@ public class Player extends ArkanoidEntity {
     }
 
     @Override
-    public void render(DrawContext context) {
+    public void render(DrawContext context, float delta) {
         Identifier marcoTexture = Identifier.of(GeoWareMod.MOD_ID, "textures/games/arkanoid/player.png");
         int ancho = Math.round(width / 8);
         for (int i = 0; i < ancho - 1; i++) {

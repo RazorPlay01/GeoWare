@@ -12,5 +12,5 @@ public abstract class ItemEntity extends DonkeyKongEntity {
         this.gravity = 0;
     }
 
-    public abstract void render(DrawContext context);
+    public abstract void render(DrawContext context, float delta);
 }

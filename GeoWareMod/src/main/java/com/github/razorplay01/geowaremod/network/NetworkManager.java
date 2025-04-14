@@ -129,7 +129,7 @@ public class NetworkManager {
     private static void checkRobotFactoryPacketClient(RobotFactoryPacket iPacket, ClientPlayNetworking.Context context) {
         GeoWareMod.guiScale = context.client().options.getGuiScale().getValue();
         context.client().options.getGuiScale().setValue(2);
-        context.client().execute(() -> MinecraftClient.getInstance().setScreen(new RobotFactoryScreen(iPacket.getTimeLimitSeconds(), iPacket.getScore(), iPacket.getSpeedMultiplier(), iPacket.isEnableRotation())));
+        context.client().execute(() -> MinecraftClient.getInstance().setScreen(new RobotFactoryScreen(iPacket.getTimeLimitSeconds(), iPacket.getScore(), iPacket.getSpeedMultiplier(), iPacket.isEnableRotation(), iPacket.getPartQuantity())));
     }
 
     private static void checkScaryMazePacketClient(ScaryMazePacket iPacket, ClientPlayNetworking.Context context) {

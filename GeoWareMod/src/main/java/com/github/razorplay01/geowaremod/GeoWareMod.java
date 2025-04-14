@@ -8,6 +8,7 @@ import com.github.razorplay01.geowaremod.client.Scoreboard;
 import com.github.razorplay01.geowaremod.games.donkeykong.DonkeyKongScreen;
 import com.github.razorplay01.geowaremod.games.fruitfocus.FruitFocusGameScreen;
 import com.github.razorplay01.geowaremod.games.galaga.GalagaScreen;
+import com.github.razorplay01.geowaremod.games.guitarhero.GuitarHeroScreen;
 import com.github.razorplay01.geowaremod.games.hanoitowers.HanoiTowersScreen;
 import com.github.razorplay01.geowaremod.games.keybind.KeyBindGameScreen;
 import com.github.razorplay01.geowaremod.network.NetworkManager;
@@ -49,11 +50,18 @@ public class GeoWareMod implements ModInitializer, ClientModInitializer {
         HudRenderCallback.EVENT.register(scoreboard);
         HudRenderCallback.EVENT.register(score);
         NetworkManager.registerClient();
-        //registerCommands();
+        registerCommands();
     }
 
     public static void registerCommands() {
         CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+            dispatcher.register(CommandManager.literal("guitathero")
+                    .executes(context -> {
+                        if (context.getSource().getPlayer() != null) {
+                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new GuitarHeroScreen(60, 0)));
+                        }
+                        return 1;
+                    }));
             dispatcher.register(CommandManager.literal("fruitfocus")
                     .executes(context -> {
                         if (context.getSource().getPlayer() != null) {
@@ -91,7 +99,7 @@ public class GeoWareMod implements ModInitializer, ClientModInitializer {
                     }));
             dispatcher.register(CommandManager.literal("robotfactory")
                     .executes(context -> {
-                        MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new RobotFactoryScreen(60, 0, 1.5f, true)));
+                        MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new RobotFactoryScreen(60, 0, 1.5f, true, 5)));
                         return 1;
                     }));
             dispatcher.register(CommandManager.literal("bubblepuzzle")

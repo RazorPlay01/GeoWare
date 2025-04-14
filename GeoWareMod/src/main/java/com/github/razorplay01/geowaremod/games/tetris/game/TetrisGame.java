@@ -100,7 +100,6 @@ public class TetrisGame extends Game {
             }
         }
 
-        // Si hay líneas para limpiar
         if (!linesToClear.isEmpty()) {
             board.clearLines(linesToClear);
             updateScore(linesToClear.size());
@@ -203,11 +202,11 @@ public class TetrisGame extends Game {
     public void keyPressed(int keyCode, int scanCode, int modifiers) {
         if (status == GameStatus.ACTIVE) {
             switch (keyCode) {
-                case GLFW.GLFW_KEY_LEFT -> moveLeft();
-                case GLFW.GLFW_KEY_RIGHT -> moveRight();
-                case GLFW.GLFW_KEY_DOWN -> moveDown();
-                case GLFW.GLFW_KEY_UP, GLFW.GLFW_KEY_SPACE -> rotate();
-                case GLFW.GLFW_KEY_ENTER -> hardDrop();
+                case GLFW.GLFW_KEY_LEFT, GLFW.GLFW_KEY_A -> moveLeft();
+                case GLFW.GLFW_KEY_RIGHT, GLFW.GLFW_KEY_D -> moveRight();
+                case GLFW.GLFW_KEY_DOWN, GLFW.GLFW_KEY_S -> moveDown();
+                case GLFW.GLFW_KEY_UP, GLFW.GLFW_KEY_W -> rotate();
+                case GLFW.GLFW_KEY_SPACE -> hardDrop();
             }
         }
     }

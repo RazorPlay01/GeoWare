@@ -32,11 +32,14 @@ public class RobotFactoryGame extends Game {
 
     private final List<Texture> door_r = Texture.createTextureList(Identifier.of(GeoWareMod.MOD_ID, "textures/games/robotfactory/door_r.png"), 78, 66, 78, 1122, 17, scale, false);
     private final List<Texture> door_l = Texture.createTextureList(Identifier.of(GeoWareMod.MOD_ID, "textures/games/robotfactory/door_l.png"), 78, 66, 78, 1122, 17, scale, false);
-    private final Animation doorRAnimation = new Animation(door_r, 0.1f, true);
-    private final Animation doorLAnimation = new Animation(door_l, 0.1f, true);
+    private final Animation doorRAnimation = new Animation(door_r, 1f, true);
+    private final Animation doorLAnimation = new Animation(door_l, 1f, true);
 
-    public RobotFactoryGame(GameScreen screen, int timeLimitSeconds, int prevScore, float speedMultiplier, boolean enableRotation) {
+    private final int partQuantity;
+
+    public RobotFactoryGame(GameScreen screen, int timeLimitSeconds, int prevScore, float speedMultiplier, boolean enableRotation, int partQuantity) {
         super(screen, 5, timeLimitSeconds, prevScore);
+        this.partQuantity = partQuantity;
         this.speedMultiplier = speedMultiplier;
         this.enableRotation = enableRotation;
         this.tableZone = new RectangleHitbox("table", 80 * scale, 32 * scale, 48 * scale, 48 * scale, 0, 0, 0xFF808080);
@@ -102,14 +105,14 @@ public class RobotFactoryGame extends Game {
         //tableZone.draw(context);
         //trashZone.draw(context);
         for (RobotPart part : parts) {
-            part.render(context);
+            part.render(context, delta);
         }
         for (Particle particle : particles) {
-            particle.render(context);
+            particle.render(context, delta);
         }
         context.getMatrices().pop();
-        doorRAnimation.update();
-        doorLAnimation.update();
+        doorRAnimation.update(delta);
+        doorLAnimation.update(delta);
     }
 
     @Override
@@ -178,7 +181,7 @@ public class RobotFactoryGame extends Game {
     }
 
     private void spawnPart() {
-        RobotPart.RobotFamily family = RobotPart.RobotFamily.values()[random.nextInt(10)];
+        RobotPart.RobotFamily family = RobotPart.RobotFamily.values()[random.nextInt(partQuantity)];
         RobotPart.PartType type = spawnLeft ? RobotPart.PartType.HEAD : RobotPart.PartType.BODY;
         float xPos = spawnLeft ? 7 : 185;
 

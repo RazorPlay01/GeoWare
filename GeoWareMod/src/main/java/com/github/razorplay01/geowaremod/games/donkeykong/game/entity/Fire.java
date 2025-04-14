@@ -116,13 +116,6 @@ public class Fire extends DonkeyKongEntity {
 
         yPos += targetY;
         xPos = currentLadder.getXPos() + (currentLadder.getWidth() - width) / 2;
-// Actualizar animación
-        if (velocityX > 0) {
-            horizontalRightAnimation.update();
-        } else {
-            horizontalLeftAnimation.update();
-        }
-
 // Verificar si debemos salir de la escalera
         if (!isValidLadderPosition()) {
             exitLadder();
@@ -157,12 +150,6 @@ public class Fire extends DonkeyKongEntity {
         }
 
         checkLadderCollisions();
-// Actualizar animación
-        if (velocityX > 0) {
-            horizontalRightAnimation.update();
-        } else {
-            horizontalLeftAnimation.update();
-        }
     }
 
 
@@ -293,7 +280,12 @@ public class Fire extends DonkeyKongEntity {
     }
 
     @Override
-    public void render(DrawContext context) {
+    public void render(DrawContext context, float delta) {
+        if (velocityX > 0) {
+            horizontalRightAnimation.update(delta);
+        } else {
+            horizontalLeftAnimation.update(delta);
+        }
         int xOffset = 0;
         int yOffset = 0;
         Animation currentAnimation = velocityX > 0 ? horizontalRightAnimation : horizontalLeftAnimation;

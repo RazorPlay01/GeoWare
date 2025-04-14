@@ -109,10 +109,10 @@ public class PacketSender {
         }
     }
 
-    public static void sendRobotFactoryPacketToClient(Player targetPlayer, int timeLimitSeconds, float speedMultiplier, boolean enableRotation) {
+    public static void sendRobotFactoryPacketToClient(Player targetPlayer, int timeLimitSeconds, float speedMultiplier, boolean enableRotation, int partQuantity) {
         try {
             int prevScore = GeoWarePlugin.getInstance().getPointsManager().getPlayerPoints(targetPlayer);
-            IPacket packet = new RobotFactoryPacket(prevScore, timeLimitSeconds, speedMultiplier, enableRotation);
+            IPacket packet = new RobotFactoryPacket(prevScore, timeLimitSeconds, speedMultiplier, enableRotation, partQuantity);
             packetSendInfo(packet, targetPlayer);
             targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {

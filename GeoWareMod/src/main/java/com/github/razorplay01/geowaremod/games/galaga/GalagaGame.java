@@ -23,18 +23,18 @@ public class GalagaGame extends Game {
     public static final int GAME_WIDTH = 206; // 206
     public static final int GAME_HEIGHT = 20 * 14; // 280
 
-    private Animation enemyDeathParticle = new Animation(List.of(
+    private final Animation enemyDeathParticle = new Animation(List.of(
             new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 0, 144, 32, 32, 336, 256, 1.0f),
             new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 32, 144, 32, 32, 336, 256, 1.0f),
             new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 64, 144, 32, 32, 336, 256, 1.0f),
             new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 96, 144, 32, 32, 336, 256, 1.0f)
-    ), 0.1f, false);
-    private Animation playerDeathParticle = new Animation(List.of(
+    ), 1.5f, false);
+    private final Animation playerDeathParticle = new Animation(List.of(
             new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 0, 112, 32, 32, 336, 256, 1.0f),
             new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 32, 112, 32, 32, 336, 256, 1.0f),
             new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 64, 112, 32, 32, 336, 256, 1.0f),
             new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 96, 112, 32, 32, 336, 256, 1.0f)
-    ), 0.1f, false);
+    ), 1.5f, false);
 
     private Player player;
     private final List<Enemy> enemies = new ArrayList<>();
@@ -42,7 +42,7 @@ public class GalagaGame extends Game {
     protected final List<Particle> particles = new ArrayList<>();
 
     private boolean playerAlive = true;
-    private int currentPattern;
+    private final int currentPattern;
 
     private boolean showPlayerDeath = false; // Estado para mostrar partículas de muerte del jugador
     private long playerDeathTime = 0; // Temporizador para limitar la duración de las partículas
@@ -237,11 +237,11 @@ public class GalagaGame extends Game {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        particles.forEach(particle -> particle.render(context));
+        particles.forEach(particle -> particle.render(context, delta));
         if (playerAlive) {
-            player.render(context);
+            player.render(context, delta);
         }
-        enemies.forEach(enemy -> enemy.render(context));
+        enemies.forEach(enemy -> enemy.render(context, delta));
         enemyBullets.forEach(enemyBullet -> enemyBullet.render(context));
     }
 

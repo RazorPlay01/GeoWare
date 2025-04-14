@@ -35,10 +35,8 @@ public abstract class PowerUp extends ArkanoidEntity {
     }
 
     @Override
-    public void render(DrawContext context) {
-        if (!isActive) return;
-        animationTick++;
-        getDefaultHitbox().draw(context);
+    public void render(DrawContext context, float delta) {
+
     }
 
     public boolean isActive() {

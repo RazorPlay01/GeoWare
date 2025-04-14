@@ -42,14 +42,4 @@ public abstract class ArkanoidEntity extends Entity {
     }
 
     protected abstract void update();
-
-    public void render(DrawContext context) {
-        renderHitboxes(context);
-    }
-
-    public void renderHitboxes(DrawContext context) {
-        for (Hitbox hitbox : hitboxes) {
-            hitbox.draw(context);
-        }
-    }
 }

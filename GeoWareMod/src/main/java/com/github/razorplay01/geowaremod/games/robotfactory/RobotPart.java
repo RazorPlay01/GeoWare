@@ -59,7 +59,7 @@ public class RobotPart extends Entity {
         String textureName = (type == PartType.HEAD) ? family.headTexture : family.bodyTexture;
         this.texture = new Texture(
                 Identifier.of(GeoWareMod.MOD_ID, "textures/games/robotfactory/parts/" + textureName + ".png"),
-                0, 0, (int)(16 * scale), (int)(16 * scale), 16, 16, 1.0f
+                0, 0, (int) (16 * scale), (int) (16 * scale), 16, 16, 1.0f
         );
 
         this.hitboxes.add(new RectangleHitbox("robot_part", xPos * scale, yPos * scale, 16 * scale, 16 * scale, 0, 0, 0xFFFFFFFF));
@@ -81,7 +81,7 @@ public class RobotPart extends Entity {
     }
 
     @Override
-    protected void render(DrawContext context) {
+    protected void render(DrawContext context, float delta) {
         // Push a new matrix onto the stack to apply rotation
         context.getMatrices().push();
 

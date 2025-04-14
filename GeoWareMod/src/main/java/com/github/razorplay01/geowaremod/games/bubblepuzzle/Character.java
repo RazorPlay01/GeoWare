@@ -12,8 +12,10 @@ import java.util.Map;
 
 @Getter
 public class Character {
-    private float x, y; // Posición del personaje
-    private float width, height; // Dimensiones renderizadas
+    private final float x;
+    private final float y;
+    private final float width;
+    private final float height;
     private Animation currentAnimation; // Animación actual
     private final Map<BubbleColor, Animation> reloadAnimations; // Animaciones de recarga por color
     private final Animation startAnimation; // Animación de inicio
@@ -28,7 +30,7 @@ public class Character {
         this.height = height;
         this.isReloading = false;
 
-        float reloadSpeed = 0.2f;
+        float reloadSpeed = 2f;
         Animation green_ball_animation = new Animation(
                 Texture.createTextureList(Identifier.of(GeoWareMod.MOD_ID, "textures/games/bubblepuzzle/green_ball_animation.png"), 101, 98, 101, 980, 10, 1.0f, false),
                 reloadSpeed, false
@@ -81,15 +83,15 @@ public class Character {
         // Animaciones adicionales
         this.startAnimation = new Animation(
                 Texture.createTextureList(Identifier.of(GeoWareMod.MOD_ID, "textures/games/bubblepuzzle/start_animation.png"), 101, 98, 101, 1078, 11, 1.0f, false),
-                0.2f, true
+                3f, true
         );
         this.winAnimation = new Animation(
                 Texture.createTextureList(Identifier.of(GeoWareMod.MOD_ID, "textures/games/bubblepuzzle/win_animation.png"), 101, 98, 101, 196, 2, 1.0f, false),
-                0.5f, true
+                0.25f, true
         );
         this.loseIdleAnimation = new Animation(
                 Texture.createTextureList(Identifier.of(GeoWareMod.MOD_ID, "textures/games/bubblepuzzle/idle_animation.png"), 101, 98, 101, 392, 4, 1.0f, false),
-                0.3f, true
+                2.5f, true
         );
         this.currentAnimation = loseIdleAnimation;
     }
@@ -119,14 +121,14 @@ public class Character {
     }
 
     public void update() {
-        currentAnimation.update();
         if (isReloading && currentAnimation.isFinished()) {
             this.isReloading = false;
             this.currentAnimation = loseIdleAnimation;
         }
     }
 
-    public void render(DrawContext context) {
+    public void render(DrawContext context, float delta) {
+        currentAnimation.update(delta);
         currentAnimation.renderAnimation(context, (int) x, (int) y, (int) width, (int) height);
     }
 }

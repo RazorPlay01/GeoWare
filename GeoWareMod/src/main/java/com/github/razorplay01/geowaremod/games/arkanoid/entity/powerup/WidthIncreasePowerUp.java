@@ -12,7 +12,7 @@ public class WidthIncreasePowerUp extends WidthModifierPowerUp {
         super(xPos, yPos, 10, 11, gameScreen, 0xFF00FF00, WIDTH_MULTIPLIER);
     }
     @Override
-    public void render(DrawContext context) {
+    public void render(DrawContext context, float delta) {
         Identifier marcoTexture = Identifier.of(GeoWareMod.MOD_ID, "textures/games/arkanoid/power_ups.png");
         context.drawTexture(marcoTexture, (int) xPos, (int) yPos, (int) width, (int) height, 0, 0, 20, 22, 60, 22);
     }

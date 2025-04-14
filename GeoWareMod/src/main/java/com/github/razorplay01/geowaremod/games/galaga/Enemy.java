@@ -105,7 +105,7 @@ public class Enemy extends Entity {
         hitbox.updatePosition(xPos, yPos);
     }
 
-    public void render(DrawContext context) {
+    public void render(DrawContext context, float delta) {
         float screenX = gameScreen.getGameScreenXPos();
         float screenY = gameScreen.getGameScreenYPos();
         float gameWidth = gameScreen.getGame().getScreenWidth();  // GAME_WIDTH

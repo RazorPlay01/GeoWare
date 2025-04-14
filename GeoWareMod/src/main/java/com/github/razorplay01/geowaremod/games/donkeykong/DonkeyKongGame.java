@@ -101,14 +101,14 @@ public class DonkeyKongGame extends Game {
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         platforms.forEach(platform -> platform.render(context));
         ladders.forEach(ladder -> ladder.render(context));
-        items.forEach(item -> item.render(context));
-        particles.forEach(particle -> particle.render(context));
+        items.forEach(item -> item.render(context, delta));
+        particles.forEach(particle -> particle.render(context, delta));
         victoryPlatforms.forEach(victory -> victory.render(context));
-        fires.forEach(fire -> fire.render(context));
-        barrels.forEach(barrel -> barrel.render(context));
+        fires.forEach(fire -> fire.render(context, delta));
+        barrels.forEach(barrel -> barrel.render(context, delta));
 
-        donkeyKong.render(context);
-        player.render(context);
+        donkeyKong.render(context, delta);
+        player.render(context, delta);
         if (getStatus() == GameStatus.ENDING && (player.isLosing() || player.isWinning())) {
             player.update();
         }

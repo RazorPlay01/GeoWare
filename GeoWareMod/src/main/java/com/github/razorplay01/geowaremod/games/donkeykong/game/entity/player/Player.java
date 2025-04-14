@@ -76,12 +76,6 @@ public class Player extends DonkeyKongEntity {
 
     @Override
     public void update() {
-        if (isWinning || isLosing) {
-            updateState();
-            animationManager.updateAnimation(currentState, false);
-            return;
-        }
-
         if (hasHammer) {
             updateHammer();
         }
@@ -191,10 +185,21 @@ public class Player extends DonkeyKongEntity {
         }
     }
 
-    public void stopMovingLeft() { movingLeft = false; }
-    public void stopMovingRight() { movingRight = false; }
-    public void stopMovingUp() { movingUp = false; }
-    public void stopMovingDown() { movingDown = false; }
+    public void stopMovingLeft() {
+        movingLeft = false;
+    }
+
+    public void stopMovingRight() {
+        movingRight = false;
+    }
+
+    public void stopMovingUp() {
+        movingUp = false;
+    }
+
+    public void stopMovingDown() {
+        movingDown = false;
+    }
 
     private void startClimbing() {
         if (currentLadder != null) {
@@ -343,8 +348,13 @@ public class Player extends DonkeyKongEntity {
     }
 
     @Override
-    public void render(DrawContext context) {
-        animationManager.updateAnimation(currentState, movingUp || movingDown || movingLeft || movingRight);
+    public void render(DrawContext context, float delta) {
+        if (isWinning || isLosing) {
+            updateState();
+            animationManager.updateAnimation(delta, currentState, false);
+            return;
+        }
+        animationManager.updateAnimation(delta, currentState, movingUp || movingDown || movingLeft || movingRight);
         this.animationManager.render(context, this);
     }
 

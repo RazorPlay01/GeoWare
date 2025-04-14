@@ -37,7 +37,7 @@ public abstract class Entity {
 
     protected abstract void update();
 
-    protected abstract void render(DrawContext context);
+    protected abstract void render(DrawContext context, float delta);
 
     public static void renderTexture(DrawContext context, Entity entity, Animation currentAnimation, int xOffset, int yOffset) {
         Texture currentTexture = currentAnimation.getCurrentTexture();

@@ -19,9 +19,9 @@ import static com.github.razorplay01.geowaremod.games.donkeykong.DonkeyKongGame.
 
 @Getter
 public class Barrel extends DonkeyKongEntity {
-    private final Animation horizontalRightAnimation = new Animation(BARREL_R_TEXTURES, 0.01f, true);
-    private final Animation horizontalLeftAnimation = new Animation(BARREL_L_TEXTURES, 0.01f, true);
-    private final Animation verticalAnimation = new Animation(BARREL_V_TEXTURES, 0.05f, true);
+    private final Animation horizontalRightAnimation = new Animation(BARREL_R_TEXTURES, 1.5f, true);
+    private final Animation horizontalLeftAnimation = new Animation(BARREL_L_TEXTURES, 1.5f, true);
+    private final Animation verticalAnimation = new Animation(BARREL_V_TEXTURES, 1.5f, true);
 
     private static final float LADDER_DESCENT_SPEED = 1.0f;
     private static final float PROBABILITY_TO_USE_LADDER = 0.10f;
@@ -249,14 +249,14 @@ public class Barrel extends DonkeyKongEntity {
     }
 
     @Override
-    public void render(DrawContext context) {
+    public void render(DrawContext context, float delta) {
         if (currentLadder != null) {
-            verticalAnimation.update();
+            verticalAnimation.update(delta);
         }
         if (velocityX > 0) {
-            horizontalRightAnimation.update();
+            horizontalRightAnimation.update(delta);
         } else {
-            horizontalLeftAnimation.update();
+            horizontalLeftAnimation.update(delta);
         }
 
         Animation currentAnimation;

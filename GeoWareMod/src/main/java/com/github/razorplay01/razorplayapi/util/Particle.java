@@ -16,7 +16,6 @@ public class Particle extends Entity {
 
     @Override
     public void update() {
-        particleAnimation.update();
 
         if (!particleAnimation.isLoop() && particleAnimation.getCurrentFrame() == particleAnimation.getTextures().size() - 1) {
             isFinished = true;
@@ -24,7 +23,8 @@ public class Particle extends Entity {
     }
 
     @Override
-    public void render(DrawContext context) {
+    public void render(DrawContext context, float delta) {
+        particleAnimation.update(delta);
         renderTexture(context, this, particleAnimation, 0, 0);
     }
 

@@ -70,7 +70,7 @@ public class Player extends Entity {
         movingRight = false;
     }
 
-    public void render(DrawContext context) {
+    public void render(DrawContext context, float delta) {
         for (Bullet bullet : bullets) {
             bullet.render(context);
         }

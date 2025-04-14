@@ -125,10 +125,10 @@ public class ArkanoidGame extends Game {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        powerUps.forEach(powerUp -> powerUp.render(context));
+        powerUps.forEach(powerUp -> powerUp.render(context, delta));
         bricks.forEach(platform -> platform.render(context));
-        balls.forEach(ball -> ball.render(context));
-        player.render(context);
+        balls.forEach(ball -> ball.render(context, delta));
+        player.render(context, delta);
     }
 
     @Override

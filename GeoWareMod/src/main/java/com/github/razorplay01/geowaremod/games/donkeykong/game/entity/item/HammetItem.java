@@ -22,7 +22,7 @@ public class HammetItem extends ItemEntity {
     }
 
     @Override
-    public void render(DrawContext context) {
+    public void render(DrawContext context, float delta) {
         int xOffset = 0;
         int yOffset = 0;
         renderTexture(context, this, IdleAnimation, xOffset, yOffset);
