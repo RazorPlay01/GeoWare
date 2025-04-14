@@ -285,16 +285,16 @@ public class FruitFocusGame extends Game {
 
         switch (currentGameState) {
             case SHOWING -> {
-                customDrawContext.drawText(getTextRenderer(), "SHOWING", screen.getGameScreenXPos() + getScreenWidth() + 10, screen.getGameScreenYPos() + 40, 0xFFFFFFFF, true);
-                hideTimer.renderTimer(context, screen.getGameScreenXPos() + getScreenWidth() + 10, screen.getGameScreenYPos() + 60);
+                customDrawContext.drawText(getTextRenderer(), "SHOWING", screen.getGameScreenXPos() + getScreenWidth() + 20, screen.getGameScreenYPos() + 40, 0xFFFFFFFF, true);
+                hideTimer.renderTimer(context, screen.getGameScreenXPos() + getScreenWidth() + 20, screen.getGameScreenYPos() + 60);
             }
             case HIDING -> {
-                customDrawContext.drawText(getTextRenderer(), "HIDING", screen.getGameScreenXPos() + getScreenWidth() + 10, screen.getGameScreenYPos() + 40, 0xFFFFFFFF, true);
+                customDrawContext.drawText(getTextRenderer(), "HIDING", screen.getGameScreenXPos() + getScreenWidth() + 20, screen.getGameScreenYPos() + 40, 0xFFFFFFFF, true);
                 // No mostramos temporizador en HIDING
             }
             case CHOOSING -> {
-                customDrawContext.drawText(getTextRenderer(), "CHOOSING", screen.getGameScreenXPos() + getScreenWidth() + 10, screen.getGameScreenYPos() + 40, 0xFFFFFFFF, true);
-                chooseTimer.renderTimer(context, screen.getGameScreenXPos() + getScreenWidth() + 10, screen.getGameScreenYPos() + 60);
+                customDrawContext.drawText(getTextRenderer(), "CHOOSING", screen.getGameScreenXPos() + getScreenWidth() + 20, screen.getGameScreenYPos() + 40, 0xFFFFFFFF, true);
+                chooseTimer.renderTimer(context, screen.getGameScreenXPos() + getScreenWidth() + 20, screen.getGameScreenYPos() + 60);
             }
         }
     }

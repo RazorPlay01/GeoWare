@@ -122,7 +122,6 @@ public class TwoDGameCommand extends BaseCommand {
             return;
         }
         for (Player player : targets) {
-            System.out.println("Fruit: " + player + timeLimit + hideDuration + fruitsToHide);
             PacketSender.sendFruitFocusPacketToClient(player, timeLimit, hideDuration, fruitsToHide);
         }
         sender.sendMessage("§aPacket FruitFocus enviado a " + targets.size() + " jugador(es)");
