@@ -40,7 +40,7 @@ public class PlayerAnimationManager {
         jumpAnimationL = new Animation(PLAYER_JUMP_L_TEXTURES, 1f, true);
         winAnimationR = new Animation(PLAYER_WIN_R_TEXTURES, 1f, true);
         winAnimationL = new Animation(PLAYER_WIN_L_TEXTURES, 1f, true);
-        loseAnimation = new Animation(PLAYER_DIE_TEXTURES, 3f, false);
+        loseAnimation = new Animation(PLAYER_DIE_TEXTURES, 10f, false);
         hammetAnimationR = new Animation(PLAYER_IDLE_HAMMET_R_TEXTURES, 1f, true);
         hammetAnimationL = new Animation(PLAYER_IDLE_HAMMET_L_TEXTURES, 1f, true);
         hammetWalkAnimationR = new Animation(PLAYER_WALK_HAMMET_R_TEXTURES, 1.5f, true);

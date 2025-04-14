@@ -15,6 +15,7 @@ import com.github.razorplay01.razorplayapi.util.Particle;
 import com.github.razorplay01.razorplayapi.util.render.CustomDrawContext;
 import com.github.razorplay01.razorplayapi.util.stage.Game;
 import com.github.razorplay01.razorplayapi.util.texture.Animation;
+import com.github.razorplay01.razorplayapi.util.texture.Texture;
 import lombok.Getter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -53,6 +54,17 @@ public class DonkeyKongGame extends Game {
     private final int spawnInterval;
     private final float spawnProbability;
 
+    private float helpTextureTimer = 0;
+    private boolean showHelpTexture = false;
+
+    private final Animation princessIdle = new Animation(
+            Texture.createTextureList(Identifier.of(GeoWareMod.MOD_ID, "textures/gui/peach.png"), 44, 56, 129, 56, 2, 1.0f, true),
+            6.0f,
+            true
+    );
+
+    Texture helpTexture = new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/gui/peach.png"), 89, 34, 40, 22, 129, 56, 1.0f);
+
     protected DonkeyKongGame(Screen screen, int initDelay, int timeLimitSeconds, int prevScore, int spawnInterval, float spawnProbability) {
         super(screen, initDelay, timeLimitSeconds, prevScore);
         this.backgroundImage = Identifier.of(GeoWareMod.MOD_ID, "textures/gui/map_base.png");
@@ -81,6 +93,15 @@ public class DonkeyKongGame extends Game {
     @Override
     public void update() {
         super.update();
+        if (getStatus() != GameStatus.ENDING) {
+            helpTextureTimer += 0.05f; // Roughly 20 ticks per second
+            if (helpTextureTimer >= 4.0f) {
+                showHelpTexture = true;
+                helpTextureTimer = 0;
+            } else if (showHelpTexture && helpTextureTimer >= 1.0f) {
+                showHelpTexture = false;
+            }
+        }
         if (getStatus() == GameStatus.ACTIVE) {
             player.update();
             donkeyKong.update();
@@ -117,12 +138,46 @@ public class DonkeyKongGame extends Game {
         if (getStatus() == GameStatus.ENDING && (player.isLosing() || player.isWinning())) {
             player.update();
         }
+
+        if (getStatus() == GameStatus.ENDING && player.isWinning()) {
+            Texture heartTexture = new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/gui/peach.png"), 89, 9, 22, 22, 129, 56, 1.0f);
+            context.drawTexture(
+                    heartTexture.identifier(),
+                    screen.getGameScreenXPos() + 108,
+                    screen.getGameScreenYPos() + 53 - 28,
+                    10,
+                    10,
+                    heartTexture.u(),
+                    heartTexture.v(),
+                    heartTexture.width(),
+                    heartTexture.height(),
+                    heartTexture.textureWidth(),
+                    heartTexture.textureHeight()
+            );
+        }
     }
 
     @Override
     public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
         CustomDrawContext customDrawContext = CustomDrawContext.wrap(context);
         customDrawContext.drawBasicBackground(screen);
+        princessIdle.renderAnimation(delta, context, screen.getGameScreenXPos() + 108, screen.getGameScreenYPos() + 53, 16, 21);
+
+        if (showHelpTexture && getStatus() != GameStatus.ENDING) {
+            context.drawTexture(
+                    helpTexture.identifier(),
+                    screen.getGameScreenXPos() + 108,
+                    screen.getGameScreenYPos() + 53 - 28,
+                    18,
+                    10,
+                    helpTexture.u(),
+                    helpTexture.v(),
+                    helpTexture.width(),
+                    helpTexture.height(),
+                    helpTexture.textureWidth(),
+                    helpTexture.textureHeight()
+            );
+        }
     }
 
     @Override

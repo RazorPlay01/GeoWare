@@ -145,4 +145,9 @@ public abstract class GameScreen extends Screen {
         MinecraftClient.getInstance().options.getGuiScale().setValue(GeoWareMod.guiScale);
         super.close();
     }
+
+    @Override
+    public boolean shouldCloseOnEsc() {
+        return false;
+    }
 }

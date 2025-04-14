@@ -76,6 +76,13 @@ public class Player extends DonkeyKongEntity {
 
     @Override
     public void update() {
+        if (isLosing || isWinning) {
+            movingDown = false;
+            movingLeft = false;
+            movingRight = false;
+            movingUp = false;
+            isClimbing = false;
+        }
         if (hasHammer) {
             updateHammer();
         }
@@ -145,7 +152,7 @@ public class Player extends DonkeyKongEntity {
     }
 
     public void jump(int screenHeight) {
-        if (hasHammer) return;
+        if (hasHammer || isLosing || isWinning) return;
         if (!isJumping && (currentPlatform != null || yPos + this.getHeight() >= screenHeight - 1)) {
             velocityY = -2.6f;
             isJumping = true;
@@ -154,35 +161,31 @@ public class Player extends DonkeyKongEntity {
     }
 
     public void moveLeft() {
-        if (!isWinning) {
-            movingLeft = true;
-            stopClimbing();
-            animationManager.setFacingDirection(false);
-        }
+        if (isWinning || isLosing) return;
+        movingLeft = true;
+        stopClimbing();
+        animationManager.setFacingDirection(false);
     }
 
     public void moveRight() {
-        if (!isWinning) {
-            movingRight = true;
-            stopClimbing();
-            animationManager.setFacingDirection(true);
-        }
+        if (isWinning || isLosing) return;
+        movingRight = true;
+        stopClimbing();
+        animationManager.setFacingDirection(true);
     }
 
     public void moveUp(List<Ladder> ladders) {
-        if (hasHammer) return;
+        if (hasHammer || isLosing || isWinning) return;
         movingUp = true;
         movingDown = false;
         tryClimbLadder(ladders);
     }
 
     public void moveDown(List<Ladder> ladders) {
-        if (hasHammer) return;
-        if (!isWinning) {
-            movingDown = true;
-            movingUp = false;
-            tryClimbLadder(ladders);
-        }
+        if (hasHammer || isLosing || isWinning) return;
+        movingDown = true;
+        movingUp = false;
+        tryClimbLadder(ladders);
     }
 
     public void stopMovingLeft() {
@@ -349,11 +352,6 @@ public class Player extends DonkeyKongEntity {
 
     @Override
     public void render(DrawContext context, float delta) {
-        if (isWinning || isLosing) {
-            updateState();
-            animationManager.updateAnimation(delta, currentState, false);
-            return;
-        }
         animationManager.updateAnimation(delta, currentState, movingUp || movingDown || movingLeft || movingRight);
         this.animationManager.render(context, this);
     }

@@ -2,6 +2,7 @@ package com.github.razorplay01.geowaremod.games.hanoitowers;
 
 import com.github.razorplay01.geowaremod.GeoWareMod;
 import com.github.razorplay01.razorplayapi.util.GameStatus;
+import com.github.razorplay01.razorplayapi.util.render.CustomDrawContext;
 import com.github.razorplay01.razorplayapi.util.stage.Game;
 import com.github.razorplay01.razorplayapi.util.texture.Animation;
 import com.github.razorplay01.razorplayapi.util.texture.Texture;
@@ -67,7 +68,8 @@ public class HanoiTowersGame extends Game {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        context.drawTextWithShadow(getTextRenderer(), "Movimientos: " + movesCounter, screen.getGameScreenXPos() + getScreenWidth() + 10, screen.getGameScreenYPos() + 40, 0xFFFFFFFF);
+        CustomDrawContext customDrawContext = CustomDrawContext.wrap(context);
+        customDrawContext.drawTextWithShadow(getTextRenderer(), "Movimientos: " + movesCounter, screen.getGameScreenXPos() + getScreenWidth() + 20, screen.getGameScreenYPos() + 40, 0xFFFFFFFF);
         towers.forEach(tower -> tower.render(context));
         globo.update(delta);
         globo.renderAnimation(context, screen.getGameScreenXPos() + 270, screen.getGameScreenYPos() + 15, 105, 15);

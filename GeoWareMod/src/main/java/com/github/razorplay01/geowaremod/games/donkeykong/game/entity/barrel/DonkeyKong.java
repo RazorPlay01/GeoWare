@@ -30,11 +30,10 @@ public class DonkeyKong extends DonkeyKongEntity {
         this.gameScreen = gameScreen;
         this.spawnProbability = spawnProbability;
 
-        float intervalInSeconds = spawnInterval / 1000.0f;
-
-        this.barrelAnimation = new Animation(DONKEY_KONG_BARREL_TEXTURES, intervalInSeconds * 4, false);
-        this.extraAnimation = new Animation(DONKEY_KONG_EXTRA_TEXTURES, intervalInSeconds * 4, false);
-        this.idleAnimation = new Animation(DONKEY_KONG_IDLE_TEXTURES, 1f, false);
+        // Usar velocidades fijas para animaciones más uniformes
+        this.barrelAnimation = new Animation(DONKEY_KONG_BARREL_TEXTURES, 7f, false);
+        this.extraAnimation = new Animation(DONKEY_KONG_EXTRA_TEXTURES, 6f, false);
+        this.idleAnimation = new Animation(DONKEY_KONG_IDLE_TEXTURES, 1f, true);
 
         this.spawnTask = createSpawnTask(spawnInterval);
         this.currentAnimation = idleAnimation;
@@ -95,7 +94,9 @@ public class DonkeyKong extends DonkeyKongEntity {
 
     @Override
     public void render(DrawContext context, float delta) {
-        currentAnimation.update(delta);
-        renderTexture(context, this, currentAnimation, 0, -5);
+        if (currentAnimation != null) {
+            currentAnimation.update(delta);
+            renderTexture(context, this, currentAnimation, 0, -5);
+        }
     }
 }
