@@ -105,7 +105,7 @@ public class NetworkManager {
     private static void checkFruitFocusPacketClient(FruitFocusPacket iPacket, ClientPlayNetworking.Context context) {
         GeoWareMod.guiScale = context.client().options.getGuiScale().getValue();
         context.client().options.getGuiScale().setValue(2);
-        context.client().execute(() -> MinecraftClient.getInstance().setScreen(new FruitFocusGameScreen(iPacket.getTimeLimitSeconds(), iPacket.getScore())));
+        context.client().execute(() -> MinecraftClient.getInstance().setScreen(new FruitFocusGameScreen(iPacket.getTimeLimitSeconds(), iPacket.getScore(), iPacket.getHideDurationSeconds(), iPacket.getFruitsToHide())));
     }
 
     private static void checkGalagaPacketClient(GalagaPacket iPacket, ClientPlayNetworking.Context context) {

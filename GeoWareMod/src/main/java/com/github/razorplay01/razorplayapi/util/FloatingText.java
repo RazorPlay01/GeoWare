@@ -1,5 +1,6 @@
 package com.github.razorplay01.razorplayapi.util;
 
+import com.github.razorplay01.razorplayapi.util.render.CustomDrawContext;
 import lombok.Getter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -24,6 +25,7 @@ public class FloatingText {
     }
 
     public void render(DrawContext context) {
+        CustomDrawContext customDrawContext = CustomDrawContext.wrap(context);
         if (!isActive) return;
 
         long currentTime = System.currentTimeMillis();
@@ -43,16 +45,16 @@ public class FloatingText {
 
         float alpha = Math.clamp(1.0f - ((float) elapsedTime / DURATION), 0.0f, 1.0f);
 
-        int alphaInt = (int)(alpha * 255);
+        int alphaInt = (int) (alpha * 255);
         int color = (alphaInt << 24) | 0xFFFFFF;
 
         context.getMatrices().push();
         context.getMatrices().scale(scale, scale, 1.0f);
-        context.drawText(
+        customDrawContext.drawText(
                 MinecraftClient.getInstance().textRenderer,
                 text,
-                (int)(xPos / scale),
-                (int)((yPos - yOffset) / scale),
+                (int) (xPos / scale),
+                (int) ((yPos - yOffset) / scale),
                 color,
                 true
         );

@@ -13,17 +13,23 @@ import lombok.NoArgsConstructor;
 public class FruitFocusPacket implements IPacket {
     private int score;
     private int timeLimitSeconds;
+    private int hideDurationSeconds;
+    private int fruitsToHide;
 
     @Override
     public void read(PacketDataSerializer serializer) throws PacketSerializationException {
         this.score = serializer.readInt();
         this.timeLimitSeconds = serializer.readInt();
+        this.hideDurationSeconds = serializer.readInt();
+        this.fruitsToHide = serializer.readInt();
     }
 
     @Override
     public void write(PacketDataSerializer serializer) throws PacketSerializationException {
         serializer.writeInt(this.score);
         serializer.writeInt(this.timeLimitSeconds);
+        serializer.writeInt(this.hideDurationSeconds);
+        serializer.writeInt(this.fruitsToHide);
     }
 
 

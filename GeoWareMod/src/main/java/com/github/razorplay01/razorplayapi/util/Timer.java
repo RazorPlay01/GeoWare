@@ -1,5 +1,6 @@
 package com.github.razorplay01.razorplayapi.util;
 
+import com.github.razorplay01.razorplayapi.util.render.CustomDrawContext;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.MinecraftClient;
@@ -110,9 +111,10 @@ public class Timer {
     }
 
     public void renderTimer(DrawContext context, int xPos, int yPos) {
+        CustomDrawContext customDrawContext = CustomDrawContext.wrap(context);
         long remainingTime = this.getRemainingTime() / 1000;
         String scoreMessage = String.format("%02d:%02d", (remainingTime / 60), (remainingTime % 60));
-        context.drawText(MinecraftClient.getInstance().textRenderer, scoreMessage,
+        customDrawContext.drawText(MinecraftClient.getInstance().textRenderer, scoreMessage,
                 xPos, yPos, 0xFFFFFF00, true);
     }
 }

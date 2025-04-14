@@ -65,10 +65,10 @@ public class PacketSender {
         }
     }
 
-    public static void sendFruitFocusPacketToClient(Player targetPlayer, int timeLimitSeconds) {
+    public static void sendFruitFocusPacketToClient(Player targetPlayer, int timeLimitSeconds, int hideDurationSeconds, int fruitsToHide) {
         try {
             int prevScore = GeoWarePlugin.getInstance().getPointsManager().getPlayerPoints(targetPlayer);
-            IPacket packet = new FruitFocusPacket(prevScore, timeLimitSeconds);
+            IPacket packet = new FruitFocusPacket(prevScore, timeLimitSeconds, hideDurationSeconds, fruitsToHide);
             packetSendInfo(packet, targetPlayer);
             targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {

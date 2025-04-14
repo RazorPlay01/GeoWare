@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public class TwoDGameCommand extends BaseCommand {
 
     @Subcommand("tetris")
-    @CommandCompletion("@targets|all|allnotop|adventure|survival|spectator @range:60,180,300 @range:1.0,3.0,5.0")
+    @CommandCompletion("@players|all|allnotop|adventure|survival|spectator 60|180|300 1.0|3.0|5.0")
     @Description("Inicia el juego Tetris para los jugadores objetivo")
     public void onTetris(CommandSender sender,
                          @Name("target") String target,
@@ -36,7 +36,7 @@ public class TwoDGameCommand extends BaseCommand {
     }
 
     @Subcommand("hanoitowers")
-    @CommandCompletion("@targets|all|allnotop|adventure|survival|spectator @range:60,180,300 @range:1-8")
+    @CommandCompletion("@players|all|allnotop|adventure|survival|spectator 60|180|300 @range:1-8")
     @Description("Inicia el juego Hanoi Towers para los jugadores objetivo")
     public void onHanoiTowers(CommandSender sender,
                               @Name("target") String target,
@@ -54,7 +54,7 @@ public class TwoDGameCommand extends BaseCommand {
     }
 
     @Subcommand("donkeykong")
-    @CommandCompletion("@targets|all|allnotop|adventure|survival|spectator @range:60,180,300 @range:50,80,100 @range:0.5,0.7,0.9")
+    @CommandCompletion("@players|all|allnotop|adventure|survival|spectator 60|180|300 800|1000|1200 0.5|0.7|0.9")
     @Description("Inicia el juego Donkey Kong para los jugadores objetivo")
     public void onDonkeyKong(CommandSender sender,
                              @Name("target") String target,
@@ -73,7 +73,7 @@ public class TwoDGameCommand extends BaseCommand {
     }
 
     @Subcommand("bubblepuzzle")
-    @CommandCompletion("@targets|all|allnotop|adventure|survival|spectator @range:60,180,300 @range:1-3")
+    @CommandCompletion("@players|all|allnotop|adventure|survival|spectator 60|180|300 1|2|3")
     @Description("Inicia el juego Bubble Puzzle para los jugadores objetivo")
     public void onBubblePuzzle(CommandSender sender,
                                @Name("target") String target,
@@ -91,7 +91,7 @@ public class TwoDGameCommand extends BaseCommand {
     }
 
     @Subcommand("arkanoid")
-    @CommandCompletion("@targets|all|allnotop|adventure|survival|spectator @range:60,180,300 @range:1-3")
+    @CommandCompletion("@players|all|allnotop|adventure|survival|spectator 60|180|300 1|2|3")
     @Description("Inicia el juego Arkanoid para los jugadores objetivo")
     public void onArkanoid(CommandSender sender,
                            @Name("target") String target,
@@ -109,24 +109,27 @@ public class TwoDGameCommand extends BaseCommand {
     }
 
     @Subcommand("fruitfocus")
-    @CommandCompletion("@targets|all|allnotop|adventure|survival|spectator @range:60,180,300")
+    @CommandCompletion("@players|all|allnotop|adventure|survival|spectator 60|180|300 10 6")
     @Description("Inicia el juego Fruit Focus para los jugadores objetivo")
     public void onFruitFocus(CommandSender sender,
                              @Name("target") String target,
-                             @Default("60") @Name("timeLimit") int timeLimit) {
+                             @Default("60") @Name("timeLimit") int timeLimit,
+                             @Default("10") @Name("hideDuration") int hideDuration,
+                             @Default("6") @Name("fruitsToHide") int fruitsToHide) {
         Collection<Player> targets = getTargetPlayers(target);
         if (targets.isEmpty()) {
             sender.sendMessage("§cNo se encontraron jugadores válidos.");
             return;
         }
         for (Player player : targets) {
-            PacketSender.sendFruitFocusPacketToClient(player, timeLimit);
+            System.out.println("Fruit: " + player + timeLimit + hideDuration + fruitsToHide);
+            PacketSender.sendFruitFocusPacketToClient(player, timeLimit, hideDuration, fruitsToHide);
         }
         sender.sendMessage("§aPacket FruitFocus enviado a " + targets.size() + " jugador(es)");
     }
 
     @Subcommand("galaga")
-    @CommandCompletion("@targets|all|allnotop|adventure|survival|spectator @range:60,180,300 @range:1-3")
+    @CommandCompletion("@players|all|allnotop|adventure|survival|spectator 60|180|300 1|2|3")
     @Description("Inicia el juego Galaga para los jugadores objetivo")
     public void onGalaga(CommandSender sender,
                          @Name("target") String target,
@@ -144,7 +147,7 @@ public class TwoDGameCommand extends BaseCommand {
     }
 
     @Subcommand("keybind")
-    @CommandCompletion("@targets|all|allnotop|adventure|survival|spectator @range:60,180,300 @range:1.0,2.0,3.0 @range:5.0,10.0")
+    @CommandCompletion("@players|all|allnotop|adventure|survival|spectator 60|180|300 1.0|2.0|3.0 5.0|10.0")
     @Description("Inicia el juego KeyBind para los jugadores objetivo")
     public void onKeyBind(CommandSender sender,
                           @Name("target") String target,
@@ -167,7 +170,7 @@ public class TwoDGameCommand extends BaseCommand {
     }
 
     @Subcommand("robotfactory")
-    @CommandCompletion("@targets|all|allnotop|adventure|survival|spectator @range:60,180,300 @range:1.0,1.5,2.0 true|false @range:1-10")
+    @CommandCompletion("@players|all|allnotop|adventure|survival|spectator 60|180|300 1.0|1.5|2.0 true|false @range:1-10")
     @Description("Inicia el juego Robot Factory para los jugadores objetivo")
     public void onRobotFactory(CommandSender sender,
                                @Name("target") String target,
@@ -187,7 +190,7 @@ public class TwoDGameCommand extends BaseCommand {
     }
 
     @Subcommand("scarymaze")
-    @CommandCompletion("@targets|all|allnotop|adventure|survival|spectator @range:60,180,300 @range:1-3")
+    @CommandCompletion("@players|all|allnotop|adventure|survival|spectator 60|180|300 1|2|3")
     @Description("Inicia el juego Scary Maze para los jugadores objetivo")
     public void onScaryMaze(CommandSender sender,
                             @Name("target") String target,

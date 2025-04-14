@@ -4,8 +4,8 @@ import com.github.razorplay01.razorplayapi.util.screen.GameScreen;
 import net.minecraft.text.Text;
 
 public class FruitFocusGameScreen extends GameScreen {
-    public FruitFocusGameScreen(int timeLimitSeconds, int prevScore) {
+    public FruitFocusGameScreen(int timeLimitSeconds, int prevScore, int hideDurationSeconds, int fruitsToHide) {
         super(Text.empty());
-        this.game = new FruitFocusGame(this, timeLimitSeconds, prevScore);
+        this.game = new FruitFocusGame(this, timeLimitSeconds, prevScore, hideDurationSeconds, fruitsToHide);
     }
 }

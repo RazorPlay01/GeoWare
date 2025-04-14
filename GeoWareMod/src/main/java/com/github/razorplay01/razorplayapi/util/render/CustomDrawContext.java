@@ -1,19 +1,29 @@
 package com.github.razorplay01.razorplayapi.util.render;
 
+import com.github.razorplay01.geowaremod.GeoWareMod;
 import com.github.razorplay01.razorplayapi.util.screen.GameScreen;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.text.Style;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 import java.awt.geom.Point2D;
 
 public class CustomDrawContext extends DrawContext {
+    public static final Identifier FONT = Identifier.of(GeoWareMod.MOD_ID, "3x5");
     public CustomDrawContext(MinecraftClient client, VertexConsumerProvider.Immediate vertexConsumers) {
         super(client, vertexConsumers);
     }
 
     public static CustomDrawContext wrap(DrawContext context) {
         return new CustomDrawContext(MinecraftClient.getInstance(), context.getVertexConsumers());
+    }
+
+    public int drawText(TextRenderer textRenderer, String text, int x, int y, int color, boolean shadow) {
+        return this.drawText(textRenderer, Text.literal(text).setStyle(Style.EMPTY.withFont(FONT)), x, y, color, shadow);
     }
 
     public void drawBasicBackground(GameScreen screen) {

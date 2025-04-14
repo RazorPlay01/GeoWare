@@ -4,6 +4,7 @@ import com.github.razorplay01.geowaremod.GeoWareMod;
 import com.github.razorplay01.razorplayapi.util.GameStatus;
 import com.github.razorplay01.razorplayapi.util.Timer;
 import com.github.razorplay01.razorplayapi.util.hitbox.RectangleHitbox;
+import com.github.razorplay01.razorplayapi.util.render.CustomDrawContext;
 import com.github.razorplay01.razorplayapi.util.screen.GameScreen;
 import com.github.razorplay01.razorplayapi.util.stage.Game;
 import lombok.Getter;
@@ -33,11 +34,9 @@ public class FruitFocusGame extends Game {
     private static final int NUM_SELECTION_SLOTS = 7;
     private static final int SLOT_COLOR = 0xFF444444;
 
-    private static final int ROUND_DURATION = 10;
     private static final int HIDE_DURATION = 3;
-    private static final int CHOOSE_DURATION = 10;
+    private static final int CHOOSE_DURATION = 6;
 
-    private final Timer roundTimer;
     private final Timer hideTimer;
     private final Timer chooseTimer;
 
@@ -57,12 +56,13 @@ public class FruitFocusGame extends Game {
     private Fruit targetFruit;
     private FruitSlot targetSlot;
 
-    public FruitFocusGame(GameScreen screen, int timeLimitSeconds, int prevScore) {
+    public FruitFocusGame(GameScreen screen, int timeLimitSeconds, int prevScore, int hideDurationSeconds, int fruitsToHide) {
         super(screen, 5, timeLimitSeconds, prevScore);
-        roundTimer = new Timer(ROUND_DURATION * 1000L);
-        hideTimer = new Timer(HIDE_DURATION * 1000L);
-        chooseTimer = new Timer(CHOOSE_DURATION * 1000L);
+        this.hideTimer = new Timer(hideDurationSeconds * 1000L); // Tiempo para mostrar frutas
+        this.chooseTimer = new Timer(CHOOSE_DURATION * 1000L); // Tiempo para elegir
+        this.fruitsToHide = Math.min(fruitsToHide, NUM_SLOTS); // Asegurar que no exceda NUM_SLOTS
         this.hasMadeChoice = false;
+        this.currentGameState = GameState.SHOWING; // Comenzar en SHOWING
     }
 
     @Override
@@ -75,12 +75,13 @@ public class FruitFocusGame extends Game {
                 {87, 81}, {101, 31}, {113, 63}, {125, 20}, {138, 45}, {141, 87}
         };
 
+        fruitSlots.clear(); // Limpiar por si acaso
         for (float[] slotCoordinate : slotCoordinates) {
             float x = screen.getGameScreenXPos() + slotCoordinate[0] * scaleFactor;
             float y = screen.getGameScreenYPos() + slotCoordinate[1] * scaleFactor;
 
             Fruit fruit = availableFruits.get(random.nextInt(availableFruits.size()));
-            fruitSlots.add(new FruitSlot(fruit, x, y, false,
+            fruitSlots.add(new FruitSlot(fruit, x, y, true, // Comenzar ocultas
                     new RectangleHitbox("slot", x, y, 16 * scaleFactor, 16 * scaleFactor, 0, 0, SLOT_COLOR),
                     SLOT_COLOR, screen));
         }
@@ -89,18 +90,18 @@ public class FruitFocusGame extends Game {
 
         discoveredSlots.clear();
         hiddenSlots.clear();
-        fruitsToHide = NUM_SLOTS / 2;
         currentGameState = GameState.SHOWING;
     }
 
     private void initSelectSlots() {
         int yPos = (int) (107 * scaleFactor);
         int xPos = (int) (24 * scaleFactor);
+        selectionSlots.clear(); // Limpiar por si acaso
         for (int i = 0; i < NUM_SELECTION_SLOTS; i++) {
             float x = screen.getGameScreenXPos() + xPos + i * (24 * scaleFactor);
             float y = screen.getGameScreenYPos() + yPos;
             Fruit fruit = availableFruits.get(i);
-            selectionSlots.add(new FruitSlot(fruit, x, y, true,
+            selectionSlots.add(new FruitSlot(fruit, x, y, true, // Comenzar ocultas
                     new RectangleHitbox("selection", x, y, 16 * scaleFactor, 16 * scaleFactor, 0, 0, SLOT_COLOR),
                     SLOT_COLOR, screen));
         }
@@ -109,23 +110,24 @@ public class FruitFocusGame extends Game {
     @Override
     public void update() {
         super.update();
-        if (!roundTimer.isRunning() && initDelay.isFinished()) {
-            roundTimer.reset();
-            roundTimer.start();
-        }
         if (status == GameStatus.ACTIVE) {
-            if (!hiddenSlots.isEmpty() && selectionSlots.getFirst().isHidden()) {
-                selectionSlots.forEach(slot -> slot.setHidden(false));
+            // Controlar visibilidad de fruitSlots y selectionSlots
+            boolean shouldFruitSlotsBeHidden = currentGameState == GameState.SHOWING ? false : true;
+            boolean shouldSelectionBeHidden = currentGameState != GameState.CHOOSING;
+            if (currentGameState == GameState.SHOWING) {
+                fruitSlots.forEach(slot -> slot.setHidden(false)); // Revelar en SHOWING
             }
+            selectionSlots.forEach(slot -> slot.setHidden(shouldSelectionBeHidden));
 
             switch (currentGameState) {
                 case SHOWING:
-                    if (roundTimer.isFinished()) {
+                    if (!hideTimer.isRunning() && initDelay.isFinished()) {
+                        hideTimer.reset();
+                        hideTimer.start();
+                    }
+                    if (hideTimer.isFinished()) {
                         currentGameState = GameState.HIDING;
                         lastHideTime = System.currentTimeMillis();
-                        if (hiddenSlots.isEmpty()) {
-                            fruitsToHide = NUM_SLOTS / 2;
-                        }
                     }
                     break;
                 case HIDING:
@@ -133,19 +135,16 @@ public class FruitFocusGame extends Game {
                     break;
                 case CHOOSING:
                     if (chooseTimer.isFinished()) {
-                        if (discoveredSlots.contains(targetSlot)) { // Si acertó
-                            if (discoveredSlots.size() == NUM_SLOTS) {
-                                status = GameStatus.ENDING;
-                            } else {
-                                targetSlot.setColor(SLOT_COLOR);
-                                selectNewTargetSlot();
-                                startChoosing();
-                            }
-                        } else { // Si falló
-                            hasMadeChoice = false;
-                            chooseTimer.reset();
-                            chooseTimer.start();
+                        if (!hasMadeChoice) {
+                            // Si no hizo ninguna elección, consideramos que falló
+                            client.player.playSound(SoundEvent.of(Identifier.of("minecraft:entity.villager.hurt")), 0.5F, 1.0F);
                         }
+                        hasMadeChoice = false;
+                        if (!discoveredSlots.contains(targetSlot)) {
+                            // Si falló, mantenemos el mismo targetSlot
+                            startChoosing(); // Reiniciar CHOOSING con la misma fruta
+                        }
+                        // Si acertó, checkGuess ya avanzó
                     }
                     break;
             }
@@ -168,7 +167,9 @@ public class FruitFocusGame extends Game {
         if (currentGameState != GameState.HIDING) return;
 
         long currentTime = System.currentTimeMillis();
-        if (currentTime - lastHideTime >= (HIDE_DURATION * 1000L) / NUM_SLOTS) {
+        // Intervalo para ocultar cada fruta, basado en HIDE_DURATION (3 segundos)
+        long hideInterval = (HIDE_DURATION * 1000L) / Math.max(1, fruitsToHide);
+        if (currentTime - lastHideTime >= hideInterval && hiddenSlots.size() < fruitsToHide) {
             List<FruitSlot> slotsToHide = fruitSlots.stream()
                     .filter(slot -> !slot.isHidden() &&
                             !discoveredSlots.contains(slot) &&
@@ -179,14 +180,36 @@ public class FruitFocusGame extends Game {
                 FruitSlot slotToHide = slotsToHide.get(random.nextInt(slotsToHide.size()));
                 slotToHide.setHidden(true);
                 hiddenSlots.add(slotToHide);
-                fruitsToHide--;
                 lastHideTime = currentTime;
             }
 
-            if (fruitsToHide <= 0) {
+            if (hiddenSlots.size() >= fruitsToHide) {
+                startChoosing();
+            }
+        }
+    }
+
+    private void checkGuess(Fruit guessedFruit) {
+        if (hasMadeChoice) return; // Evitar selecciones adicionales
+
+        hasMadeChoice = true;
+        boolean isCorrect = guessedFruit == targetFruit;
+
+        if (isCorrect) {
+            targetSlot.setHidden(false);
+            discoveredSlots.add(targetSlot);
+            client.player.playSound(SoundEvent.of(Identifier.of("minecraft:entity.player.levelup")), 0.5F, 1.0F);
+            // Avanzar a la siguiente ronda inmediatamente
+            if (discoveredSlots.size() == NUM_SLOTS) {
+                status = GameStatus.ENDING;
+            } else {
+                targetSlot.setColor(SLOT_COLOR);
                 selectNewTargetSlot();
                 startChoosing();
             }
+        } else {
+            client.player.playSound(SoundEvent.of(Identifier.of("minecraft:entity.villager.hurt")), 0.5F, 1.0F);
+            // El temporizador sigue corriendo hasta que termine
         }
     }
 
@@ -202,28 +225,12 @@ public class FruitFocusGame extends Game {
         currentGameState = GameState.CHOOSING;
         chooseTimer.reset();
         chooseTimer.start();
-        hasMadeChoice = false;
-    }
-
-    private void checkGuess(Fruit guessedFruit) {
-        boolean isCorrect = guessedFruit == targetFruit;
-
-        if (isCorrect) {
-            targetSlot.setHidden(false);
-            discoveredSlots.add(targetSlot);
-        } else {
-            client.player.playSound(SoundEvent.of(Identifier.of("minecraft:entity.villager.hurt")), 0.5F, 1.0F);
-        }
-        hasMadeChoice = true;
+        hasMadeChoice = false; // Asegurar que el jugador pueda elegir de nuevo
     }
 
     @Override
     public void handleMouseInput(double mouseX, double mouseY, int button) {
-        if (currentGameState != GameState.CHOOSING || hasMadeChoice) {
-            client.player.playSound(SoundEvent.of(Identifier.of("minecraft:entity.villager.no")), 0.5F, 1.0F);
-            return;
-        }
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT && currentGameState == GameState.CHOOSING && !hasMadeChoice) {
             for (FruitSlot slot : selectionSlots) {
                 if (slot.getHitbox().isMouseOver(mouseX, mouseY)) {
                     checkGuess(slot.getFruit());
@@ -252,6 +259,7 @@ public class FruitFocusGame extends Game {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        CustomDrawContext customDrawContext = CustomDrawContext.wrap(context);
         for (FruitSlot slot : fruitSlots) {
             slot.render(context);
         }
@@ -275,21 +283,18 @@ public class FruitFocusGame extends Game {
             }
         }
 
-        if (targetFruit != null) {
-            context.drawText(getTextRenderer(), targetFruit.getName(), 0, 0, 0xFFFFFFFF, true);
-        }
         switch (currentGameState) {
-            case GameState.HIDING -> {
-                context.drawText(getTextRenderer(), Text.literal("HIDING"), screen.getGameScreenXPos() + getScreenWidth() + 10, screen.getGameScreenYPos() + 40, 0xFFFFFFFF, true);
+            case SHOWING -> {
+                customDrawContext.drawText(getTextRenderer(), "SHOWING", screen.getGameScreenXPos() + getScreenWidth() + 10, screen.getGameScreenYPos() + 40, 0xFFFFFFFF, true);
                 hideTimer.renderTimer(context, screen.getGameScreenXPos() + getScreenWidth() + 10, screen.getGameScreenYPos() + 60);
             }
-            case GameState.CHOOSING -> {
-                context.drawText(getTextRenderer(), Text.literal("CHOOSING"), screen.getGameScreenXPos() + getScreenWidth() + 10, screen.getGameScreenYPos() + 40, 0xFFFFFFFF, true);
-                chooseTimer.renderTimer(context, screen.getGameScreenXPos() + getScreenWidth() + 10, screen.getGameScreenYPos() + 60);
+            case HIDING -> {
+                customDrawContext.drawText(getTextRenderer(), "HIDING", screen.getGameScreenXPos() + getScreenWidth() + 10, screen.getGameScreenYPos() + 40, 0xFFFFFFFF, true);
+                // No mostramos temporizador en HIDING
             }
-            default -> {
-                context.drawText(getTextRenderer(), Text.literal("OTHER"), screen.getGameScreenXPos() + getScreenWidth() + 10, screen.getGameScreenYPos() + 40, 0xFFFFFFFF, true);
-                roundTimer.renderTimer(context, screen.getGameScreenXPos() + getScreenWidth() + 10, screen.getGameScreenYPos() + 60);
+            case CHOOSING -> {
+                customDrawContext.drawText(getTextRenderer(), "CHOOSING", screen.getGameScreenXPos() + getScreenWidth() + 10, screen.getGameScreenYPos() + 40, 0xFFFFFFFF, true);
+                chooseTimer.renderTimer(context, screen.getGameScreenXPos() + getScreenWidth() + 10, screen.getGameScreenYPos() + 60);
             }
         }
     }

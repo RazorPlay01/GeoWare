@@ -65,7 +65,7 @@ public class GeoWareMod implements ModInitializer, ClientModInitializer {
             dispatcher.register(CommandManager.literal("fruitfocus")
                     .executes(context -> {
                         if (context.getSource().getPlayer() != null) {
-                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new FruitFocusGameScreen(60, 0)));
+                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new FruitFocusGameScreen(60, 0, 5, 5)));
                         }
                         return 1;
                     }));
