@@ -6,6 +6,8 @@ import com.github.razorplay01.razorplayapi.util.GameStatus;
 import com.github.razorplay01.razorplayapi.util.hitbox.Hitbox;
 import com.github.razorplay01.razorplayapi.util.hitbox.RectangleHitbox;
 import com.github.razorplay01.razorplayapi.util.screen.GameScreen;
+import com.github.razorplay01.razorplayapi.util.texture.Animation;
+import com.github.razorplay01.razorplayapi.util.texture.Texture;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.DrawContext;
@@ -24,6 +26,24 @@ public class Player extends ArkanoidEntity {
     private boolean movingLeft;
     private boolean movingRight;
 
+    private static final float ANIMATION_SPEED = 1.0f;
+    private Animation dogIdle = new Animation(
+            Texture.createTextureList(Identifier.of(GeoWareMod.MOD_ID, "textures/games/arkanoid/dog_idle.png"), 60, 47, 60, 282, 6, 1.0f, false),
+            3.0f,
+            true
+    );
+    private Animation dogRight = new Animation(
+            Texture.createTextureList(Identifier.of(GeoWareMod.MOD_ID, "textures/games/arkanoid/dog_right.png"), 60, 47, 60, 235, 5, 1.0f, false),
+            ANIMATION_SPEED,
+            true
+    );
+    private Animation dogLeft = new Animation(
+            Texture.createTextureList(Identifier.of(GeoWareMod.MOD_ID, "textures/games/arkanoid/dog_left.png"), 60, 47, 60, 235, 5, 1.0f, false),
+            ANIMATION_SPEED,
+            true
+    );
+    private Animation currentAnimation;
+
     public Player(float xPos, float yPos, float width, float height, GameScreen gameScreen) {
         super(xPos, yPos, Math.clamp(width, MIN_WIDTH, MAX_WIDTH), height, gameScreen, 0xFF8300ff);
         this.speed = 2.5f;
@@ -31,6 +51,8 @@ public class Player extends ArkanoidEntity {
         this.maxFallSpeed = 0f;
         this.movingLeft = false;
         this.movingRight = false;
+
+        this.currentAnimation = dogIdle;
         updateHitboxesForResize();
     }
 
@@ -42,9 +64,15 @@ public class Player extends ArkanoidEntity {
         if (game.getStatus() == GameStatus.ACTIVE) {
             if (movingLeft && !movingRight) {
                 velocityX = -speed;
+                currentAnimation = dogLeft;
             } else if (movingRight && !movingLeft) {
                 velocityX = speed;
+                currentAnimation = dogRight;
+            } else {
+                currentAnimation = dogIdle;
             }
+        } else {
+            currentAnimation = dogIdle;
         }
 
         xPos += velocityX;
@@ -95,6 +123,20 @@ public class Player extends ArkanoidEntity {
 
     @Override
     public void render(DrawContext context, float delta) {
+        // Actualizar la animación activa
+        currentAnimation.update(delta);
+
+        // Renderizar la animación del perro centrada en el jugador con offset vertical
+        currentAnimation.renderAnimation(
+                context,
+                0, // xOffset (centrado horizontalmente)
+                14, // yOffset para bajar el perro
+                (int) ((int) xPos + width / 2), // Posición x del jugador
+                (int) yPos, // Posición y del jugador
+                30, // Ancho del paddle para centrar
+                23 // Alto del paddle
+        );
+
         Identifier marcoTexture = Identifier.of(GeoWareMod.MOD_ID, "textures/games/arkanoid/player.png");
         int ancho = Math.round(width / 8);
         for (int i = 0; i < ancho - 1; i++) {

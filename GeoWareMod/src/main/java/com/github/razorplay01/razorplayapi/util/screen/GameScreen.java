@@ -97,7 +97,6 @@ public abstract class GameScreen extends Screen {
     }
 
     protected void renderEndGameScreen(DrawContext context) {
-        CustomDrawContext customDrawContext = CustomDrawContext.wrap(context);
         int centerX = this.width / 2;
         int centerY = this.height / 2;
 
@@ -121,15 +120,14 @@ public abstract class GameScreen extends Screen {
         int timeWidth = this.textRenderer.getWidth(timeMessage);
 
         // Renderizar todos los mensajes centrados
-        customDrawContext.drawText(this.textRenderer, endMessage, centerX - messageWidth / 2, centerY - 40, 0xFFFFFF00, true);
-        customDrawContext.drawText(this.textRenderer, scoreMessage, centerX - scoreWidth / 2, centerY, 0xFFFFFFFF, true);
-        customDrawContext.drawText(this.textRenderer, prevScoreMessage, centerX - prevScoreWidth / 2, centerY + 20, 0xFFFFFFFF, true);
-        customDrawContext.drawText(this.textRenderer, totalScoreMessage, centerX - totalScoreWidth / 2, centerY + 40, 0xFFFFFFFF, true);
+        context.drawText(this.textRenderer, endMessage, centerX - messageWidth / 2, centerY - 40, 0xFFFFFF00, true);
+        context.drawText(this.textRenderer, scoreMessage, centerX - scoreWidth / 2, centerY, 0xFFFFFFFF, true);
+        context.drawText(this.textRenderer, prevScoreMessage, centerX - prevScoreWidth / 2, centerY + 20, 0xFFFFFFFF, true);
+        context.drawText(this.textRenderer, totalScoreMessage, centerX - totalScoreWidth / 2, centerY + 40, 0xFFFFFFFF, true);
         context.drawText(this.textRenderer, timeMessage, centerX - timeWidth / 2, centerY + 70, 0xFFAAAAAA, true);
     }
 
     protected void renderInitGameScreen(DrawContext context) {
-        CustomDrawContext customDrawContext = CustomDrawContext.wrap(context);
         int centerX = this.width / 2;
         int centerY = this.height / 2;
 

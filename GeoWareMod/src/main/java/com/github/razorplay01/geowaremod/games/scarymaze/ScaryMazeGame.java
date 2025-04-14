@@ -39,7 +39,7 @@ public class ScaryMazeGame extends Game {
                 walls.add(new RectangleHitbox("wall6", xPos + 64 * scaleFactor, yPos + 64 * scaleFactor, 144 * scaleFactor, 16 * scaleFactor, 0, 0, 0xAAFF0000));
                 walls.add(new RectangleHitbox("wall7", xPos + 192 * scaleFactor, yPos + 16 * scaleFactor, 16 * scaleFactor, 48 * scaleFactor, 0, 0, 0xAAFF0000));
                 walls.add(new RectangleHitbox("wall8", xPos + 160 * scaleFactor, yPos + 80 * scaleFactor, 48 * scaleFactor, 32 * scaleFactor, 0, 0, 0xAAFF0000));
-                this.player = new RectangleHitbox("player", xPos + 23 * scaleFactor, yPos + 23 * scaleFactor, 3 * scaleFactor, 3 * scaleFactor, 0, 0, 0xFF000000);
+                this.player = new RectangleHitbox("player", xPos + 23 * scaleFactor, yPos + 23 * scaleFactor, 3 * scaleFactor, 3 * scaleFactor, 0, 0, 0xFFFF0000);
                 this.finalArea = new RectangleHitbox("finalArea", xPos + 145 * scaleFactor, yPos + 97 * scaleFactor, 14 * scaleFactor, 14 * scaleFactor, 0, 0, 0xAA00FF00);
                 break;
             case 2:
@@ -59,7 +59,7 @@ public class ScaryMazeGame extends Game {
                 walls.add(new RectangleHitbox("wall14", xPos + 128 * scaleFactor, yPos + 18 * scaleFactor, 80 * scaleFactor, 2 * scaleFactor, 0, 0, 0xAAFF0000));
                 walls.add(new RectangleHitbox("wall15", xPos + 192 * scaleFactor, yPos + 20 * scaleFactor, 16 * scaleFactor, 64 * scaleFactor, 0, 0, 0xAAFF0000));
                 walls.add(new RectangleHitbox("wall16", xPos + 176 * scaleFactor, yPos + 60 * scaleFactor, 16 * scaleFactor, 24 * scaleFactor, 0, 0, 0xAAFF0000));
-                this.player = new RectangleHitbox("player", xPos + 23 * scaleFactor, yPos + 5 * scaleFactor, 2 * scaleFactor, 2 * scaleFactor, 0, 0, 0xFF000000);
+                this.player = new RectangleHitbox("player", xPos + 23 * scaleFactor, yPos + 5 * scaleFactor, 2 * scaleFactor, 2 * scaleFactor, 0, 0, 0xFFFF0000);
                 this.finalArea = new RectangleHitbox("finalArea", xPos + 195 * scaleFactor, yPos + 84 * scaleFactor, 13 * scaleFactor, 8 * scaleFactor, 0, 0, 0xAA00FF00);
                 break;
             case 3:
@@ -81,7 +81,7 @@ public class ScaryMazeGame extends Game {
                 walls.add(new RectangleHitbox("wall16", xPos + 112 * scaleFactor, yPos + 92 * scaleFactor, 12 * scaleFactor, 9 * scaleFactor, 0, 0, 0xAAFF0000));
                 walls.add(new RectangleHitbox("wall17", xPos + 170 * scaleFactor, yPos + 76 * scaleFactor, 38 * scaleFactor, 32 * scaleFactor, 0, 0, 0xAAFF0000));
                 walls.add(new RectangleHitbox("wall18", xPos + 193 * scaleFactor, yPos + 37 * scaleFactor, 15 * scaleFactor, 39 * scaleFactor, 0, 0, 0xAAFF0000));
-                this.player = new RectangleHitbox("player", xPos + 4 * scaleFactor, yPos + 87 * scaleFactor, 2 * scaleFactor, 2 * scaleFactor, 0, 0, 0xFF000000);
+                this.player = new RectangleHitbox("player", xPos + 4 * scaleFactor, yPos + 87 * scaleFactor, 2 * scaleFactor, 2 * scaleFactor, 0, 0, 0xFFFF0000);
                 this.finalArea = new RectangleHitbox("finalArea", xPos + 139 * scaleFactor, yPos + 3 * scaleFactor, 3 * scaleFactor, 3 * scaleFactor, 0, 0, 0xAA00FF00);
                 break;
         }
