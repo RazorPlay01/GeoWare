@@ -30,6 +30,7 @@ dependencies {
     implementation('com.google.code.findbugs:jsr305:3.0.2')
     implementation('org.xerial:sqlite-jdbc:3.7.2')
     compileOnly('me.clip:placeholderapi:2.11.6')
+    implementation('co.aikar:acf-paper:0.5.1-SNAPSHOT')
 
     implementation project(':GeoWareCommon')
 }
@@ -44,7 +45,9 @@ tasks {
 }
 
 shadowJar {
-    relocate "com.github.razorplay.packet_handler", "com.github.razorplay01.minecraft_events_utiles.packet_handler"
+    relocate "com.github.razorplay.packet_handler", "com.github.razorplay01.geoware.geowareplugin.packet_handler"
+    relocate "co.aikar.commands", "com.github.razorplay01.geoware.geowareplugin.acf"
+    relocate "co.aikar.locales", "com.github.razorplay01.geoware.geowareplugin.locales"
 }
 
 tasks.build {

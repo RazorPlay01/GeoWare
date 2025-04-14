@@ -72,7 +72,7 @@ public class GeoWareMod implements ModInitializer, ClientModInitializer {
             dispatcher.register(CommandManager.literal("keybind")
                     .executes(context -> {
                         if (context.getSource().getPlayer() != null) {
-                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new KeyBindGameScreen(60, 0)));
+                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new KeyBindGameScreen(60, 0, 2, 5)));
                         }
                         return 1;
                     }));

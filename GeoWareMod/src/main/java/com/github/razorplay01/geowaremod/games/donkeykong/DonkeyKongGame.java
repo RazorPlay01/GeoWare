@@ -14,6 +14,7 @@ import com.github.razorplay01.razorplayapi.util.GameStatus;
 import com.github.razorplay01.razorplayapi.util.Particle;
 import com.github.razorplay01.razorplayapi.util.render.CustomDrawContext;
 import com.github.razorplay01.razorplayapi.util.stage.Game;
+import com.github.razorplay01.razorplayapi.util.texture.Animation;
 import lombok.Getter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -57,6 +58,10 @@ public class DonkeyKongGame extends Game {
         this.backgroundImage = Identifier.of(GeoWareMod.MOD_ID, "textures/gui/map_base.png");
         this.spawnInterval = spawnInterval;
         this.spawnProbability = spawnProbability;
+    }
+
+    public void addParticle(Animation particle, float xPos, float yPos, int width, int height) {
+        getParticles().add(new Particle(xPos, yPos, width, height, screen, particle));
     }
 
     @Override

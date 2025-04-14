@@ -5,9 +5,9 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 
 public class KeyBindGameScreen extends GameScreen {
-    public KeyBindGameScreen(int timeLimitSeconds, int prevScore) {
+    public KeyBindGameScreen(int timeLimitSeconds, int prevScore, float circleSpeed, float spawnChance) {
         super(Text.empty());
-        this.game = new KeyBindGame(this, timeLimitSeconds, prevScore);
+        this.game = new KeyBindGame(this, timeLimitSeconds, prevScore, circleSpeed, spawnChance);
     }
 
     @Override

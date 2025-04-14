@@ -442,7 +442,7 @@ public class Player extends DonkeyKongEntity {
                     (topHammerHitbox != null && topHammerHitbox.intersects(barrelHitbox))) {
                 float particleX = barrel.getXPos() + (barrel.getWidth() - 16) / 2;
                 float particleY = barrel.getYPos() + (barrel.getHeight() - 16) / 2;
-                game.getParticles().add(new Particle(particleX, particleY, 16, 16, gameScreen, new Animation(PARTICLE_TEXTURES, 0.05f, false)));
+                game.addParticle(new Animation(PARTICLE_TEXTURES, 4f, false), particleX, particleY, 16, 16);
                 game.addScore(2, barrel.getXPos(), barrel.getYPos());
                 barrel.setRemove(true);
             }

@@ -1,240 +1,207 @@
 package com.github.razorplay01.geoware.geowareplugin.command;
 
+import co.aikar.commands.BaseCommand;
+import co.aikar.commands.annotation.*;
 import com.github.razorplay01.geoware.geowareplugin.network.PacketSender;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class TwoDGameCommand implements CommandExecutor, TabCompleter {
-    private static final String PERMISSION = "geoware.2dgame";
+@CommandAlias("2dgame")
+@CommandPermission("geoware.2dgame")
+public class TwoDGameCommand extends BaseCommand {
 
-    @Override
-    public boolean onCommand(CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
-        // Verificar permiso
-        if (!sender.hasPermission(PERMISSION)) {
-            sender.sendMessage("§cNo tienes permiso para usar este comando.");
-            return true;
-        }
-
-        if (args.length < 2) {
-            sender.sendMessage("§cUso: /2dgame <target> <game> [parametros]");
-            return true;
-        }
-
-        String target = args[0];
-        String game = args[1].toLowerCase();
+    @Subcommand("tetris")
+    @CommandCompletion("@targets|all|allnotop|adventure|survival|spectator @range:60,180,300 @range:1.0,3.0,5.0")
+    @Description("Inicia el juego Tetris para los jugadores objetivo")
+    public void onTetris(CommandSender sender,
+                         @Name("target") String target,
+                         @Default("60") @Name("timeLimit") int timeLimit,
+                         @Default("3.0") @Name("speed") float speed) {
         Collection<Player> targets = getTargetPlayers(target);
-
         if (targets.isEmpty()) {
             sender.sendMessage("§cNo se encontraron jugadores válidos.");
-            return true;
+            return;
         }
-
-        try {
-            switch (game) {
-                case "tetris":
-                    int tetrisTime = args.length > 2 ? Integer.parseInt(args[2]) : 60;
-                    float tetrisSpeed = args.length > 3 ? Float.parseFloat(args[3]) : 3.0f;
-                    for (Player player : targets) {
-                        PacketSender.sendTetrisPacketToClient(player, tetrisTime, tetrisSpeed);
-                    }
-                    sender.sendMessage("§aPacket Tetris enviado a " + targets.size() + " jugador(es)");
-                    break;
-
-                case "hanoitowers":
-                    int hanoiTime = args.length > 2 ? Integer.parseInt(args[2]) : 60;
-                    int rings = args.length > 3 ? Integer.parseInt(args[3]) : 5;
-                    for (Player player : targets) {
-                        PacketSender.sendHanoiTowersPacketToClient(player, hanoiTime, rings);
-                    }
-                    sender.sendMessage("§aPacket HanoiTowers enviado a " + targets.size() + " jugador(es)");
-                    break;
-
-                case "donkeykong":
-                    int dkTime = args.length > 2 ? Integer.parseInt(args[2]) : 60;
-                    int spawnInterval = args.length > 3 ? Integer.parseInt(args[3]) : 80;
-                    float spawnProb = args.length > 4 ? Float.parseFloat(args[4]) : 0.7f;
-                    for (Player player : targets) {
-                        PacketSender.sendDonkeyKongPacketToClient(player, dkTime, spawnInterval, spawnProb);
-                    }
-                    sender.sendMessage("§aPacket DonkeyKong enviado a " + targets.size() + " jugador(es)");
-                    break;
-
-                case "bubblepuzzle":
-                    int bubbleTime = args.length > 2 ? Integer.parseInt(args[2]) : 60;
-                    int bubbleLevel = args.length > 3 ? Integer.parseInt(args[3]) : 1;
-                    for (Player player : targets) {
-                        PacketSender.sendBubblePuzzlePacketToClient(player, bubbleTime, bubbleLevel);
-                    }
-                    sender.sendMessage("§aPacket BubblePuzzle enviado a " + targets.size() + " jugador(es)");
-                    break;
-
-                case "arkanoid":
-                    int arkanoidTime = args.length > 2 ? Integer.parseInt(args[2]) : 60;
-                    int arkanoidLevel = args.length > 3 ? Integer.parseInt(args[3]) : 1;
-                    for (Player player : targets) {
-                        PacketSender.sendArkanoidPacketToClient(player, arkanoidTime, arkanoidLevel);
-                    }
-                    sender.sendMessage("§aPacket Arkanoid enviado a " + targets.size() + " jugador(es)");
-                    break;
-
-                case "fruitfocus":
-                    int fruitTime = args.length > 2 ? Integer.parseInt(args[2]) : 60;
-                    for (Player player : targets) {
-                        PacketSender.sendFruitFocusPacketToClient(player, fruitTime);
-                    }
-                    sender.sendMessage("§aPacket FruitFocus enviado a " + targets.size() + " jugador(es)");
-                    break;
-
-                case "galaga":
-                    int galagaTime = args.length > 2 ? Integer.parseInt(args[2]) : 60;
-                    int galagaLevel = args.length > 3 ? Integer.parseInt(args[3]) : 1;
-                    for (Player player : targets) {
-                        PacketSender.sendGalagaPacketToClient(player, galagaTime, galagaLevel);
-                    }
-                    sender.sendMessage("§aPacket Galaga enviado a " + targets.size() + " jugador(es)");
-                    break;
-
-                case "keybind":
-                    int keyTime = args.length > 2 ? Integer.parseInt(args[2]) : 60;
-                    for (Player player : targets) {
-                        PacketSender.sendKeyBindPacketToClient(player, keyTime);
-                    }
-                    sender.sendMessage("§aPacket KeyBind enviado a " + targets.size() + " jugador(es)");
-                    break;
-
-                case "robotfactory":
-                    int robotTime = args.length > 2 ? Integer.parseInt(args[2]) : 60;
-                    float robotSpeed = args.length > 3 ? Float.parseFloat(args[3]) : 1.0f;
-                    boolean enableRotation = args.length > 4 ? Boolean.parseBoolean(args[4]) : false;
-                    int partQuantity = args.length > 5 ? Integer.parseInt(args[5]) : 5; // Default a 5
-                    if (partQuantity < 1 || partQuantity > 10) {
-                        sender.sendMessage("§cLa cantidad de partes debe estar entre 1 y 10.");
-                        return true;
-                    }
-                    for (Player player : targets) {
-                        PacketSender.sendRobotFactoryPacketToClient(player, robotTime, robotSpeed, enableRotation, partQuantity);
-                    }
-                    sender.sendMessage("§aPacket RobotFactory enviado a " + targets.size() + " jugador(es)");
-                    break;
-
-                case "scarymaze":
-                    int scaryMazeTime = args.length > 2 ? Integer.parseInt(args[2]) : 60;
-                    int scaryMazeLevel = args.length > 3 ? Integer.parseInt(args[3]) : 1;
-                    for (Player player : targets) {
-                        PacketSender.sendScaryMazePacketToClient(player, scaryMazeTime, scaryMazeLevel);
-                    }
-                    sender.sendMessage("§aPacket ScaryMaze enviado a " + targets.size() + " jugador(es)");
-                    break;
-
-                default:
-                    sender.sendMessage("§cJuego inválido. Usa: tetris, hanoitowers, donkeykong, bubblepuzzle, arkanoid, fruitfocus, galaga, keybind, robotfactory, scarymaze");
-                    return true;
-            }
-        } catch (NumberFormatException e) {
-            sender.sendMessage("§cError: Los parámetros numéricos no son válidos");
-            return true;
+        for (Player player : targets) {
+            PacketSender.sendTetrisPacketToClient(player, timeLimit, speed);
         }
-
-        return true;
+        sender.sendMessage("§aPacket Tetris enviado a " + targets.size() + " jugador(es)");
     }
 
-    @Override
-    public List<String> onTabComplete(CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
-        // Verificar permiso para tab completion
-        if (!sender.hasPermission(PERMISSION)) {
-            return new ArrayList<>();
+    @Subcommand("hanoitowers")
+    @CommandCompletion("@targets|all|allnotop|adventure|survival|spectator @range:60,180,300 @range:1-8")
+    @Description("Inicia el juego Hanoi Towers para los jugadores objetivo")
+    public void onHanoiTowers(CommandSender sender,
+                              @Name("target") String target,
+                              @Default("60") @Name("timeLimit") int timeLimit,
+                              @Default("5") @Name("rings") @Conditions("limits:min=1,max=8") int rings) {
+        Collection<Player> targets = getTargetPlayers(target);
+        if (targets.isEmpty()) {
+            sender.sendMessage("§cNo se encontraron jugadores válidos.");
+            return;
         }
-
-        List<String> completions = new ArrayList<>();
-
-        if (args.length == 1) {
-            // Completar targets
-            completions.add("all");
-            completions.add("allnotop");
-            completions.add("adventure");
-            completions.add("survival");
-            completions.add("spectator");
-            Bukkit.getOnlinePlayers().forEach(p -> completions.add(p.getName()));
-        } else if (args.length == 2) {
-            // Completar juegos
-            completions.add("tetris");
-            completions.add("hanoitowers");
-            completions.add("donkeykong");
-            completions.add("bubblepuzzle");
-            completions.add("arkanoid");
-            completions.add("fruitfocus");
-            completions.add("galaga");
-            completions.add("keybind");
-            completions.add("robotfactory");
-            completions.add("scarymaze");
-        } else if (args.length == 3) {
-            // Completar timeLimit
-            completions.add("60");
-            completions.add("180");
-            completions.add("300");
-        } else if (args.length == 4) {
-            switch (args[1].toLowerCase()) {
-                case "tetris":
-                    completions.add("3.0");
-                    break;
-                case "hanoitowers":
-                    completions.add("1");
-                    completions.add("2");
-                    completions.add("3");
-                    completions.add("4");
-                    completions.add("5");
-                    completions.add("6");
-                    completions.add("7");
-                    completions.add("8");
-                    break;
-                case "donkeykong":
-                    completions.add("500");
-                    break;
-                case "bubblepuzzle":
-                case "arkanoid":
-                case "galaga":
-                case "scarymaze":
-                    completions.add("1");
-                    completions.add("2");
-                    completions.add("3");
-                    break;
-                case "robotfactory":
-                    completions.add("1.0");
-                    completions.add("1.5");
-                    completions.add("2.0");
-                    break;
-            }
-        } else if (args.length == 5) {
-            switch (args[1].toLowerCase()) {
-                case "donkeykong":
-                    completions.add("0.7");
-                    break;
-                case "robotfactory":
-                    completions.add("true");
-                    completions.add("false");
-                    break;
-            }
-        } else if (args.length == 6 && args[1].equalsIgnoreCase("robotfactory")) {
-            // Completar partQuantity (1-10)
-            for (int i = 1; i <= 10; i++) {
-                completions.add(String.valueOf(i));
-            }
+        for (Player player : targets) {
+            PacketSender.sendHanoiTowersPacketToClient(player, timeLimit, rings);
         }
+        sender.sendMessage("§aPacket HanoiTowers enviado a " + targets.size() + " jugador(es)");
+    }
 
-        return completions.stream()
-                .filter(c -> c.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
-                .toList();
+    @Subcommand("donkeykong")
+    @CommandCompletion("@targets|all|allnotop|adventure|survival|spectator @range:60,180,300 @range:50,80,100 @range:0.5,0.7,0.9")
+    @Description("Inicia el juego Donkey Kong para los jugadores objetivo")
+    public void onDonkeyKong(CommandSender sender,
+                             @Name("target") String target,
+                             @Default("60") @Name("timeLimit") int timeLimit,
+                             @Default("80") @Name("spawnInterval") int spawnInterval,
+                             @Default("0.7") @Name("spawnProb") float spawnProb) {
+        Collection<Player> targets = getTargetPlayers(target);
+        if (targets.isEmpty()) {
+            sender.sendMessage("§cNo se encontraron jugadores válidos.");
+            return;
+        }
+        for (Player player : targets) {
+            PacketSender.sendDonkeyKongPacketToClient(player, timeLimit, spawnInterval, spawnProb);
+        }
+        sender.sendMessage("§aPacket DonkeyKong enviado a " + targets.size() + " jugador(es)");
+    }
+
+    @Subcommand("bubblepuzzle")
+    @CommandCompletion("@targets|all|allnotop|adventure|survival|spectator @range:60,180,300 @range:1-3")
+    @Description("Inicia el juego Bubble Puzzle para los jugadores objetivo")
+    public void onBubblePuzzle(CommandSender sender,
+                               @Name("target") String target,
+                               @Default("60") @Name("timeLimit") int timeLimit,
+                               @Default("1") @Name("level") @Conditions("limits:min=1,max=3") int level) {
+        Collection<Player> targets = getTargetPlayers(target);
+        if (targets.isEmpty()) {
+            sender.sendMessage("§cNo se encontraron jugadores válidos.");
+            return;
+        }
+        for (Player player : targets) {
+            PacketSender.sendBubblePuzzlePacketToClient(player, timeLimit, level);
+        }
+        sender.sendMessage("§aPacket BubblePuzzle enviado a " + targets.size() + " jugador(es)");
+    }
+
+    @Subcommand("arkanoid")
+    @CommandCompletion("@targets|all|allnotop|adventure|survival|spectator @range:60,180,300 @range:1-3")
+    @Description("Inicia el juego Arkanoid para los jugadores objetivo")
+    public void onArkanoid(CommandSender sender,
+                           @Name("target") String target,
+                           @Default("60") @Name("timeLimit") int timeLimit,
+                           @Default("1") @Name("level") @Conditions("limits:min=1,max=3") int level) {
+        Collection<Player> targets = getTargetPlayers(target);
+        if (targets.isEmpty()) {
+            sender.sendMessage("§cNo se encontraron jugadores válidos.");
+            return;
+        }
+        for (Player player : targets) {
+            PacketSender.sendArkanoidPacketToClient(player, timeLimit, level);
+        }
+        sender.sendMessage("§aPacket Arkanoid enviado a " + targets.size() + " jugador(es)");
+    }
+
+    @Subcommand("fruitfocus")
+    @CommandCompletion("@targets|all|allnotop|adventure|survival|spectator @range:60,180,300")
+    @Description("Inicia el juego Fruit Focus para los jugadores objetivo")
+    public void onFruitFocus(CommandSender sender,
+                             @Name("target") String target,
+                             @Default("60") @Name("timeLimit") int timeLimit) {
+        Collection<Player> targets = getTargetPlayers(target);
+        if (targets.isEmpty()) {
+            sender.sendMessage("§cNo se encontraron jugadores válidos.");
+            return;
+        }
+        for (Player player : targets) {
+            PacketSender.sendFruitFocusPacketToClient(player, timeLimit);
+        }
+        sender.sendMessage("§aPacket FruitFocus enviado a " + targets.size() + " jugador(es)");
+    }
+
+    @Subcommand("galaga")
+    @CommandCompletion("@targets|all|allnotop|adventure|survival|spectator @range:60,180,300 @range:1-3")
+    @Description("Inicia el juego Galaga para los jugadores objetivo")
+    public void onGalaga(CommandSender sender,
+                         @Name("target") String target,
+                         @Default("60") @Name("timeLimit") int timeLimit,
+                         @Default("1") @Name("level") @Conditions("limits:min=1,max=3") int level) {
+        Collection<Player> targets = getTargetPlayers(target);
+        if (targets.isEmpty()) {
+            sender.sendMessage("§cNo se encontraron jugadores válidos.");
+            return;
+        }
+        for (Player player : targets) {
+            PacketSender.sendGalagaPacketToClient(player, timeLimit, level);
+        }
+        sender.sendMessage("§aPacket Galaga enviado a " + targets.size() + " jugador(es)");
+    }
+
+    @Subcommand("keybind")
+    @CommandCompletion("@targets|all|allnotop|adventure|survival|spectator @range:60,180,300 @range:1.0,2.0,3.0 @range:5.0,10.0")
+    @Description("Inicia el juego KeyBind para los jugadores objetivo")
+    public void onKeyBind(CommandSender sender,
+                          @Name("target") String target,
+                          @Default("60") @Name("timeLimit") int timeLimit,
+                          @Default("2.0") @Name("circleSpeed") float circleSpeed,
+                          @Default("0.05") @Name("spawnChance") float spawnChance) {
+        if (spawnChance < 0.0f || spawnChance > 100.0f) {
+            sender.sendMessage("§cLa probabilidad de spawn debe estar entre 0.0 y 100.0.");
+            return;
+        }
+        Collection<Player> targets = getTargetPlayers(target);
+        if (targets.isEmpty()) {
+            sender.sendMessage("§cNo se encontraron jugadores válidos.");
+            return;
+        }
+        for (Player player : targets) {
+            PacketSender.sendKeyBindPacketToClient(player, timeLimit, circleSpeed, spawnChance);
+        }
+        sender.sendMessage("§aPacket KeyBind enviado a " + targets.size() + " jugador(es)");
+    }
+
+    @Subcommand("robotfactory")
+    @CommandCompletion("@targets|all|allnotop|adventure|survival|spectator @range:60,180,300 @range:1.0,1.5,2.0 true|false @range:1-10")
+    @Description("Inicia el juego Robot Factory para los jugadores objetivo")
+    public void onRobotFactory(CommandSender sender,
+                               @Name("target") String target,
+                               @Default("60") @Name("timeLimit") int timeLimit,
+                               @Default("1.0") @Name("speed") float speed,
+                               @Default("false") @Name("rotation") boolean rotation,
+                               @Default("5") @Name("partQuantity") @Conditions("limits:min=1,max=10") int partQuantity) {
+        Collection<Player> targets = getTargetPlayers(target);
+        if (targets.isEmpty()) {
+            sender.sendMessage("§cNo se encontraron jugadores válidos.");
+            return;
+        }
+        for (Player player : targets) {
+            PacketSender.sendRobotFactoryPacketToClient(player, timeLimit, speed, rotation, partQuantity);
+        }
+        sender.sendMessage("§aPacket RobotFactory enviado a " + targets.size() + " jugador(es)");
+    }
+
+    @Subcommand("scarymaze")
+    @CommandCompletion("@targets|all|allnotop|adventure|survival|spectator @range:60,180,300 @range:1-3")
+    @Description("Inicia el juego Scary Maze para los jugadores objetivo")
+    public void onScaryMaze(CommandSender sender,
+                            @Name("target") String target,
+                            @Default("60") @Name("timeLimit") int timeLimit,
+                            @Default("1") @Name("level") @Conditions("limits:min=1,max=3") int level) {
+        Collection<Player> targets = getTargetPlayers(target);
+        if (targets.isEmpty()) {
+            sender.sendMessage("§cNo se encontraron jugadores válidos.");
+            return;
+        }
+        for (Player player : targets) {
+            PacketSender.sendScaryMazePacketToClient(player, timeLimit, level);
+        }
+        sender.sendMessage("§aPacket ScaryMaze enviado a " + targets.size() + " jugador(es)");
     }
 
     private Collection<Player> getTargetPlayers(String target) {
@@ -255,9 +222,15 @@ public class TwoDGameCommand implements CommandExecutor, TabCompleter {
             default -> {
                 Player player = Bukkit.getPlayer(target);
                 yield player != null && player.isOnline() ?
-                        java.util.Collections.singletonList(player) :
-                        java.util.Collections.emptyList();
+                        Collections.singletonList(player) :
+                        Collections.emptyList();
             }
         };
+    }
+
+    @CommandCompletion("@players|all|allnotop|adventure|survival|spectator")
+    @CatchUnknown
+    public void onDefault(CommandSender sender) {
+        sender.sendMessage("§cJuego inválido. Usa: tetris, hanoitowers, donkeykong, bubblepuzzle, arkanoid, fruitfocus, galaga, keybind, robotfactory, scarymaze");
     }
 }

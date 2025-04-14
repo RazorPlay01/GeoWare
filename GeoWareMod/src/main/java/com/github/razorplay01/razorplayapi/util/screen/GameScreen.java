@@ -13,6 +13,7 @@ public abstract class GameScreen extends Screen {
     protected Game game;
     protected Integer gameScreenXPos;
     protected Integer gameScreenYPos;
+    private float deltaTime;
 
     protected GameScreen(Text title) {
         super(title);
@@ -30,6 +31,7 @@ public abstract class GameScreen extends Screen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
+        this.deltaTime = delta;
         game.renderBackground(context, mouseX, mouseY, delta);
         game.render(context, mouseX, mouseY, delta);
         renderGameScore(context);

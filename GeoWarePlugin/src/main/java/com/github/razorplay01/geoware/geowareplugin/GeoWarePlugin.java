@@ -1,5 +1,6 @@
 package com.github.razorplay01.geoware.geowareplugin;
 
+import co.aikar.commands.PaperCommandManager;
 import com.github.razorplay01.geoware.geowarecommon.GeoWareCommon;
 import com.github.razorplay01.geoware.geowareplugin.command.*;
 import com.github.razorplay01.geoware.geowareplugin.network.PacketListener;
@@ -23,7 +24,7 @@ import static com.github.razorplay01.geoware.geowarecommon.GeoWareCommon.PACKET_
 public final class GeoWarePlugin extends JavaPlugin {
     public static final String PLUGIN_NAME = "GeoWarePlugin";
     public static final Logger LOGGER = LoggerFactory.getLogger(PLUGIN_NAME);
-
+    private PaperCommandManager commandManager;
     private PointsManager pointsManager;
 
     @Override
@@ -69,9 +70,8 @@ public final class GeoWarePlugin extends JavaPlugin {
     }
 
     private void registerCommands() {
-        TwoDGameCommand gameCommand = new TwoDGameCommand();
-        getCommand("2dgame").setExecutor(gameCommand);
-        getCommand("2dgame").setTabCompleter(gameCommand);
+        commandManager = new PaperCommandManager(this);
+        commandManager.registerCommand(new TwoDGameCommand());
 
         PointsCommand gamePointsCommand = new PointsCommand();
         getCommand("2dgamepoints").setExecutor(gamePointsCommand);

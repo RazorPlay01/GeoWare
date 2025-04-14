@@ -21,7 +21,8 @@ public class KeyBindGame extends Game {
     private static final int GAME_WIDTH = 272;
     private static final int GAME_HEIGHT = 50;
     private static final int CIRCLE_RADIUS = 12;
-    private static final float CIRCLE_SPEED = 2.0f;
+    private final float circleSpeed;
+    private final float spawnChance;
     private FinalCircle finalCircle;
     private final List<MovingCircle> movingCircles;
     private final List<Particle> particles; // Lista para partículas
@@ -38,8 +39,10 @@ public class KeyBindGame extends Game {
     private final Key downKey;
     private final Key rightKey;
 
-    public KeyBindGame(GameScreen screen, int timeLimitSeconds, int prevScore) {
+    public KeyBindGame(GameScreen screen, int timeLimitSeconds, int prevScore, float circleSpeed, float spawnChance) {
         super(screen, 5, timeLimitSeconds, prevScore);
+        this.circleSpeed = circleSpeed;
+        this.spawnChance = spawnChance;
         movingCircles = new ArrayList<>();
         particles = new ArrayList<>();
         random = new Random();
@@ -190,11 +193,11 @@ public class KeyBindGame extends Game {
 
         if (status == GameStatus.ACTIVE) {
             // Generar nuevos círculos
-            if (random.nextInt(100) < 5) {
+            if (random.nextInt(100) < spawnChance) {
                 Key randomKey = getRandomKey();
                 if (!isCircleAtSpawnPosition()) {
                     movingCircles.add(new MovingCircle(
-                            CIRCLE_RADIUS, CIRCLE_SPEED, randomKey.keyCode(),
+                            CIRCLE_RADIUS, circleSpeed, randomKey.keyCode(),
                             randomKey.keyTexture(), randomKey.keyAnimation(), this));
                 }
             }

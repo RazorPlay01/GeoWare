@@ -11,10 +11,6 @@ public class TextureProvider {
         // []
     }
 
-    private static final Identifier EMPTY_TEXTURE = Identifier.of(GeoWareMod.MOD_ID, "textures/gui/game/empty.png");
-    private static final int EMPTY_TEXTURE_WIDTH = 64;
-    private static final int EMPTY_TEXTURE_HEIGHT = 64;
-
     private static final Identifier PLAYER_TEXTURE = Identifier.of(GeoWareMod.MOD_ID, "textures/gui/game/player.png");
     private static final Identifier EXTRA_TEXTURE = Identifier.of(GeoWareMod.MOD_ID, "textures/gui/game/extra.png");
     public static final List<Texture> PLAYER_CLIMB_TEXTURES = List.of(
@@ -100,21 +96,18 @@ public class TextureProvider {
             new Texture(PARTICLE_TEXTURE, 0, 0, 16, 16, 80, 16, 1.0f),
             new Texture(PARTICLE_TEXTURE, 16, 0, 16, 16, 80, 16, 1.0f),
             new Texture(PARTICLE_TEXTURE, 32, 0, 16, 16, 80, 16, 1.0f),
-            new Texture(PARTICLE_TEXTURE, 48, 0, 16, 16, 80, 16, 1.0f),
-            new Texture(EMPTY_TEXTURE, 0, 0, 16, 16, EMPTY_TEXTURE_WIDTH, EMPTY_TEXTURE_HEIGHT, 1.0f)
+            new Texture(PARTICLE_TEXTURE, 48, 0, 16, 16, 80, 16, 1.0f)
     );
     private static final Identifier DONKEY_KONG_TEXTURE = Identifier.of(GeoWareMod.MOD_ID, "textures/gui/game/donkey_kong.png");
     private static final int DONKEY_KONG_TEXTURE_WIDTH = 138;
-    private static final int DONKEY_KONG_TEXTURE_HEIGHT = 126;
+    private static final int DONKEY_KONG_TEXTURE_HEIGHT = 83;
     public static final List<Texture> DONKEY_KONG_BARREL_TEXTURES = List.of(
             new Texture(DONKEY_KONG_TEXTURE, 0, 42, 46, 42, DONKEY_KONG_TEXTURE_WIDTH, DONKEY_KONG_TEXTURE_HEIGHT, 1.0f),
             new Texture(DONKEY_KONG_TEXTURE, 46, 42, 46, 42, DONKEY_KONG_TEXTURE_WIDTH, DONKEY_KONG_TEXTURE_HEIGHT, 1.0f),
-            new Texture(DONKEY_KONG_TEXTURE, 92, 42, 46, 42, DONKEY_KONG_TEXTURE_WIDTH, DONKEY_KONG_TEXTURE_HEIGHT, 1.0f),
-            new Texture(EMPTY_TEXTURE, 0, 84, 46, 42, EMPTY_TEXTURE_WIDTH, EMPTY_TEXTURE_HEIGHT, 1.0f));
+            new Texture(DONKEY_KONG_TEXTURE, 92, 42, 46, 42, DONKEY_KONG_TEXTURE_WIDTH, DONKEY_KONG_TEXTURE_HEIGHT, 1.0f));
     public static final List<Texture> DONKEY_KONG_IDLE_TEXTURES = List.of(
             new Texture(DONKEY_KONG_TEXTURE, 0, 0, 46, 42, DONKEY_KONG_TEXTURE_WIDTH, DONKEY_KONG_TEXTURE_HEIGHT, 1.0f));
     public static final List<Texture> DONKEY_KONG_EXTRA_TEXTURES = List.of(
             new Texture(DONKEY_KONG_TEXTURE, 46, 0, 46, 42, DONKEY_KONG_TEXTURE_WIDTH, DONKEY_KONG_TEXTURE_HEIGHT, 1.0f),
-            new Texture(DONKEY_KONG_TEXTURE, 92, 0, 46, 42, DONKEY_KONG_TEXTURE_WIDTH, DONKEY_KONG_TEXTURE_HEIGHT, 1.0f),
-            new Texture(EMPTY_TEXTURE, 0, 0, 46, 42, EMPTY_TEXTURE_WIDTH, EMPTY_TEXTURE_HEIGHT, 1.0f));
+            new Texture(DONKEY_KONG_TEXTURE, 92, 0, 46, 42, DONKEY_KONG_TEXTURE_WIDTH, DONKEY_KONG_TEXTURE_HEIGHT, 1.0f));
 }

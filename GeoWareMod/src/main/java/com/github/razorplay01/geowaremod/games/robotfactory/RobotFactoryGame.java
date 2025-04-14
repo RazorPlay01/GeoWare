@@ -215,9 +215,10 @@ public class RobotFactoryGame extends Game {
                 Identifier.of(GeoWareMod.MOD_ID, "textures/games/robotfactory/parts/" + family.completeTexture + ".png"),
                 0, 0, 32, 32, 32, 32, scale
         );
-        textures.add(texture);
-        textures.add(texture);
-        Animation animation = new Animation(textures, 0.5f, false);
+        for (int i = 0; i < 5; i++) {
+            textures.add(texture);
+        }
+        Animation animation = new Animation(textures, 2f, false);
         particles.add(new Particle(xPos + 24 * scale - 16 * scale, yPos + 24 * scale - 16 * scale, 32 * scale, 32 * scale, screen, animation));
     }
 }

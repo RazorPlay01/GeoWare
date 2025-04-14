@@ -13,17 +13,23 @@ import lombok.NoArgsConstructor;
 public class KeyBindPacket implements IPacket {
     private int score;
     private int timeLimitSeconds;
+    private float circleSpeed;
+    private float spawnChance;
 
     @Override
     public void read(PacketDataSerializer serializer) throws PacketSerializationException {
         this.score = serializer.readInt();
         this.timeLimitSeconds = serializer.readInt();
+        this.circleSpeed = serializer.readFloat();
+        this.spawnChance = serializer.readFloat();
     }
 
     @Override
     public void write(PacketDataSerializer serializer) throws PacketSerializationException {
         serializer.writeInt(this.score);
         serializer.writeInt(this.timeLimitSeconds);
+        serializer.writeFloat(this.circleSpeed);
+        serializer.writeFloat(this.spawnChance);
     }
 
 
