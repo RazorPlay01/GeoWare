@@ -1,5 +1,6 @@
 package com.github.razorplay01.geowaremod.games.bubblepuzzle;
 
+import com.github.razorplay01.geowaremod.GameSounds;
 import com.github.razorplay01.geowaremod.GeoWareMod;
 import com.github.razorplay01.razorplayapi.util.FloatingText;
 import com.github.razorplay01.razorplayapi.util.GameStatus;
@@ -25,6 +26,7 @@ public class BubblePuzzleGame extends Game {
     private float deathLineY;
     private final int level;
     private Character character;
+    private final float soundVolume = 0.3f;
 
     public BubblePuzzleGame(GameScreen screen, int prevScore, int initDelay, int timeLimitSeconds, int level) {
         super(screen, initDelay, timeLimitSeconds, prevScore);
@@ -138,6 +140,7 @@ public class BubblePuzzleGame extends Game {
                 player.rotateRight();
             } else if (keyCode == GLFW.GLFW_KEY_SPACE || keyCode == GLFW.GLFW_KEY_UP) {
                 Bubble shotBubble = player.shoot();
+                playSound(GameSounds.BUBBLEPUZZLE_DISPARO, soundVolume, 1.0f); // Perdió
                 if (shotBubble != null) {
                     bubbles.add(shotBubble);
                     // Iniciar animación de recarga con el color de la nueva currentBubble
@@ -310,6 +313,7 @@ public class BubblePuzzleGame extends Game {
     private void removeGroupIfValid(Bubble bubble) {
         List<Bubble> connected = findConnectedBubbles(bubble);
         if (connected.size() >= 3) {
+            playSound(GameSounds.BUBBLEPUZZLE_POP, soundVolume, 1.0f); // Perdió
             connected.forEach(b -> addScore(1));
             bubbles.removeAll(connected);
 
@@ -349,12 +353,22 @@ public class BubblePuzzleGame extends Game {
         return bubble.getY() - bubble.getRadius() <= topBorder + tolerance;
     }
 
+    private boolean hasPlayedEndSound = false; // Bandera para evitar repetición de sonidos de fin
+
     private void checkGameOver() {
         if (bubbles.isEmpty() && status != GameStatus.ENDING) {
             this.status = GameStatus.ENDING;
             character.startWin(); // Animación de victoria
+            if (!hasPlayedEndSound) {
+                playSound(GameSounds.FRUITFOCUS_WIN, soundVolume, 1.0f); // Perdió
+                hasPlayedEndSound = true;
+            }
         } else if (status == GameStatus.ENDING && !bubbles.isEmpty()) {
             character.startLose(); // Animación de derrota
+            if (!hasPlayedEndSound) {
+                playSound(GameSounds.BUBBLEPUZZLE_END, soundVolume, 1.0f); // Perdió
+                hasPlayedEndSound = true;
+            }
         }
     }
 
