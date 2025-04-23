@@ -1,6 +1,7 @@
 package com.github.razorplay01.geowaremod.games.robotfactory;
 
 import com.github.razorplay01.geowaremod.GeoWareMod;
+import com.github.razorplay01.geowaremod.games.tetris.GameSounds;
 import com.github.razorplay01.razorplayapi.util.GameStatus;
 import com.github.razorplay01.razorplayapi.util.Particle;
 import com.github.razorplay01.razorplayapi.util.hitbox.RectangleHitbox;
@@ -36,6 +37,7 @@ public class RobotFactoryGame extends Game {
     private final Animation doorLAnimation = new Animation(door_l, 1f, true);
 
     private final int partQuantity;
+    private final float soundVolume = 0.3f;
 
     public RobotFactoryGame(GameScreen screen, int timeLimitSeconds, int prevScore, float speedMultiplier, boolean enableRotation, int partQuantity) {
         super(screen, 5, timeLimitSeconds, prevScore);
@@ -79,6 +81,7 @@ public class RobotFactoryGame extends Game {
         if (tablePart != null && heldPart != null && tableZone.intersects(heldPart.getHitbox()) &&
                 tablePart.getFamily() == heldPart.getFamily() && tablePart.getType() != heldPart.getType()) {
             addScore(1);
+            playSound(GameSounds.ROBOTFACTORY_ENSAMBLE, soundVolume, 1.0f); // Sonido al terminar el juego
             addCompletionParticle(tableZone.getXPos(), tableZone.getYPos(), tablePart.getFamily());
             parts.remove(tablePart);
             parts.remove(heldPart);
@@ -153,6 +156,7 @@ public class RobotFactoryGame extends Game {
                     if (part.getHitbox().isMouseOver(mouseX, mouseY)) {
                         heldPart = part;
                         heldPart.setHeld(true, mouseX, mouseY);
+                        playSound(GameSounds.ROBOTFACTORY_SELECT, soundVolume, 1.0f); // Sonido al terminar el juego
                         if (part == tablePart) tablePart = null;
                         break;
                     }
