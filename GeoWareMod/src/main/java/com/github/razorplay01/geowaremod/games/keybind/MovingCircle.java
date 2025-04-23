@@ -1,5 +1,6 @@
 package com.github.razorplay01.geowaremod.games.keybind;
 
+import com.github.razorplay01.geowaremod.games.tetris.GameSounds;
 import com.github.razorplay01.razorplayapi.util.Particle;
 import com.github.razorplay01.razorplayapi.util.hitbox.CircleHitbox;
 import com.github.razorplay01.razorplayapi.util.texture.Animation;
@@ -86,6 +87,7 @@ public class MovingCircle {
             int points = calculatePoints();
             if (points > 0) {
                 game.addScore(points, game.getFinalCircle().getXPos(), game.getFinalCircle().getYPos());
+                game.playSound(GameSounds.KEYBIND_PERFECT, game.getSoundVolume(), 1.0f); // Sonido al terminar el juego
                 game.addParticle(new Particle(
                         game.getFinalCircle().getXPos() - radius,
                         game.getFinalCircle().getYPos() - radius,
@@ -97,6 +99,8 @@ public class MovingCircle {
             }
             active = false;
             return true;
+        } else {
+            game.playSound(GameSounds.KEYBIND_ERROR, game.getSoundVolume(), 1.0f); // Sonido al terminar el juego
         }
         active = false;
         return true;

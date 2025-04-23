@@ -177,7 +177,7 @@ public abstract class Game implements IGame {
     public void keyReleased(int keyCode, int scanCode, int modifiers) {
     }
 
-    protected void playSound(SoundEvent sound, float volume, float pitch) {
+    public void playSound(SoundEvent sound, float volume, float pitch) {
         MinecraftClient.getInstance().getSoundManager().play(
                 new PositionedSoundInstance(
                         sound.getId(),

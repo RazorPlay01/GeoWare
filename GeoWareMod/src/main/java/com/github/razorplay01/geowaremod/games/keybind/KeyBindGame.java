@@ -1,6 +1,7 @@
 package com.github.razorplay01.geowaremod.games.keybind;
 
 import com.github.razorplay01.geowaremod.GeoWareMod;
+import com.github.razorplay01.geowaremod.games.tetris.GameSounds;
 import com.github.razorplay01.razorplayapi.util.GameStatus;
 import com.github.razorplay01.razorplayapi.util.Particle;
 import com.github.razorplay01.razorplayapi.util.screen.GameScreen;
@@ -38,6 +39,8 @@ public class KeyBindGame extends Game {
     private final Key leftKey;
     private final Key downKey;
     private final Key rightKey;
+
+    private final float soundVolume = 0.3f;
 
     public KeyBindGame(GameScreen screen, int timeLimitSeconds, int prevScore, float circleSpeed, float spawnChance) {
         super(screen, 5, timeLimitSeconds, prevScore);
