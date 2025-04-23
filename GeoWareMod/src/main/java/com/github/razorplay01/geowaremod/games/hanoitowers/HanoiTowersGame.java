@@ -1,5 +1,6 @@
 package com.github.razorplay01.geowaremod.games.hanoitowers;
 
+import com.github.razorplay01.geowaremod.GameSounds;
 import com.github.razorplay01.geowaremod.GeoWareMod;
 import com.github.razorplay01.razorplayapi.util.GameStatus;
 import com.github.razorplay01.razorplayapi.util.render.CustomDrawContext;
@@ -25,6 +26,10 @@ public class HanoiTowersGame extends Game {
 
     private static final int GAME_WIDTH = 420;
     private static final int GAME_HEIGHT = 255;
+
+    private final float soundVolume = 0.3f;
+
+    private boolean playDeadSound = false;
 
     public HanoiTowersGame(Screen screen, int initDelay, int timeLimitSeconds, int prevScore, int rings) {
         super(screen, initDelay, timeLimitSeconds, prevScore);
@@ -62,7 +67,12 @@ public class HanoiTowersGame extends Game {
         super.update();
         if (status == GameStatus.ACTIVE && verificarVictoria()) {
             addScore(50);
+            playSound(GameSounds.HANOITOWERS_WIN, soundVolume, 1.0f); // Perdió
             status = GameStatus.ENDING;
+        }
+        if (status == GameStatus.ENDING && !verificarVictoria() && !playDeadSound) {
+            playSound(GameSounds.HANOITOWERS_DEAD, soundVolume, 1.0f); // Perdió
+            playDeadSound = true;
         }
     }
 
@@ -121,6 +131,7 @@ public class HanoiTowersGame extends Game {
 
     private void selectRing(Tower torre) {
         if (!torre.getRings().isEmpty()) {
+            playSound(GameSounds.HANOITOWERS_SELECT, soundVolume, 1.0f); // Perdió
             selectedRing = torre.getRings().get(torre.getRings().size() - 1);
             torre.removeRing(selectedRing);
             selectedTower = torre;
@@ -135,6 +146,7 @@ public class HanoiTowersGame extends Game {
             selectedRing.setXPos(selectedTower.getXPos() - (selectedRing.getWidth() / 2) + (selectedTower.getWidth() / 2));
             selectedRing.setYPos(selectedTower.getYPosForRelocateRing());
         }
+        playSound(GameSounds.HANOITOWERS_THROW, soundVolume, 1.0f); // Perdió
         selectedRing = null;
         selectedTower = null;
         movesCounter++;
