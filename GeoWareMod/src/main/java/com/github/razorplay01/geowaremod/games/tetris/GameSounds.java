@@ -39,7 +39,6 @@ public class GameSounds {
     public static final SoundEvent FRUITFOCUS_DEAD = register("dead_fruitfocus");
     public static final SoundEvent FRUITFOCUS_ERROR = register("error_fruitfocus");
     public static final SoundEvent FRUITFOCUS_WIN = register("win_fruitfocus");
-    public static final SoundEvent FRUITFOCUS_END = register("end_fruitfocus");
 
     // Galaga
     public static final SoundEvent GALAGA_DEAD = register("dead_galaga");

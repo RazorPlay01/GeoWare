@@ -1,6 +1,7 @@
 package com.github.razorplay01.geowaremod.games.fruitfocus;
 
 import com.github.razorplay01.geowaremod.GeoWareMod;
+import com.github.razorplay01.geowaremod.games.tetris.GameSounds;
 import com.github.razorplay01.razorplayapi.util.GameStatus;
 import com.github.razorplay01.razorplayapi.util.Timer;
 import com.github.razorplay01.razorplayapi.util.hitbox.RectangleHitbox;
@@ -9,9 +10,8 @@ import com.github.razorplay01.razorplayapi.util.screen.GameScreen;
 import com.github.razorplay01.razorplayapi.util.stage.Game;
 import lombok.Getter;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.random.Random;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
@@ -23,7 +23,7 @@ public class FruitFocusGame extends Game {
 
     private static final int GAME_WIDTH = 208;
     private static final int GAME_HEIGHT = 148;
-    private final Random random = new Random();
+    private final Random random = Random.create();
 
     private final List<FruitSlot> fruitSlots = new ArrayList<>();
     private final List<FruitSlot> selectionSlots = new ArrayList<>();
@@ -45,6 +45,7 @@ public class FruitFocusGame extends Game {
     private List<Fruit> availableFruits;
 
     private boolean hasMadeChoice;
+    private boolean hasPlayedEndSound; // Bandera para evitar repetición de sonidos de fin
 
     private enum GameState {
         SHOWING,
@@ -56,12 +57,15 @@ public class FruitFocusGame extends Game {
     private Fruit targetFruit;
     private FruitSlot targetSlot;
 
+    private final float soundVolume = 0.3f;
+
     public FruitFocusGame(GameScreen screen, int timeLimitSeconds, int prevScore, int hideDurationSeconds, int fruitsToHide) {
         super(screen, 5, timeLimitSeconds, prevScore);
         this.hideTimer = new Timer(hideDurationSeconds * 1000L); // Tiempo para mostrar frutas
         this.chooseTimer = new Timer(CHOOSE_DURATION * 1000L); // Tiempo para elegir
         this.fruitsToHide = Math.min(fruitsToHide, NUM_SLOTS); // Asegurar que no exceda NUM_SLOTS
         this.hasMadeChoice = false;
+        this.hasPlayedEndSound = false; // Inicializar bandera
         this.currentGameState = GameState.SHOWING; // Comenzar en SHOWING
     }
 
@@ -91,6 +95,7 @@ public class FruitFocusGame extends Game {
         discoveredSlots.clear();
         hiddenSlots.clear();
         currentGameState = GameState.SHOWING;
+        hasPlayedEndSound = false; // Reiniciar bandera al iniciar
     }
 
     private void initSelectSlots() {
@@ -111,8 +116,6 @@ public class FruitFocusGame extends Game {
     public void update() {
         super.update();
         if (status == GameStatus.ACTIVE) {
-            // Controlar visibilidad de fruitSlots y selectionSlots
-            boolean shouldFruitSlotsBeHidden = currentGameState == GameState.SHOWING ? false : true;
             boolean shouldSelectionBeHidden = currentGameState != GameState.CHOOSING;
             if (currentGameState == GameState.SHOWING) {
                 fruitSlots.forEach(slot -> slot.setHidden(false)); // Revelar en SHOWING
@@ -137,7 +140,7 @@ public class FruitFocusGame extends Game {
                     if (chooseTimer.isFinished()) {
                         if (!hasMadeChoice) {
                             // Si no hizo ninguna elección, consideramos que falló
-                            client.player.playSound(SoundEvent.of(Identifier.of("minecraft:entity.villager.hurt")), 0.5F, 1.0F);
+                            playSound(GameSounds.FRUITFOCUS_ERROR, soundVolume, 1.0f);
                         }
                         hasMadeChoice = false;
                         if (!discoveredSlots.contains(targetSlot)) {
@@ -148,6 +151,10 @@ public class FruitFocusGame extends Game {
                     }
                     break;
             }
+        } else if (status == GameStatus.ENDING && !hasPlayedEndSound && discoveredSlots.size() != NUM_SLOTS) {
+            // Reproducir sonido solo si no se completó el juego
+            playSound(GameSounds.FRUITFOCUS_DEAD, soundVolume, 1.0f); // Perdió
+            hasPlayedEndSound = true; // Evitar repetición
         }
     }
 
@@ -198,18 +205,22 @@ public class FruitFocusGame extends Game {
         if (isCorrect) {
             targetSlot.setHidden(false);
             discoveredSlots.add(targetSlot);
+
             addScore(3);
-            client.player.playSound(SoundEvent.of(Identifier.of("minecraft:entity.player.levelup")), 0.5F, 1.0F);
+
+            playSound(GameSounds.FRUITFOCUS_CORRECT, soundVolume, 1.0f);
             // Avanzar a la siguiente ronda inmediatamente
             if (discoveredSlots.size() == NUM_SLOTS) {
                 status = GameStatus.ENDING;
+                playSound(GameSounds.FRUITFOCUS_WIN, soundVolume, 1.0f); // Ganó
+                hasPlayedEndSound = true; // Marcar como reproducido
             } else {
                 targetSlot.setColor(SLOT_COLOR);
                 selectNewTargetSlot();
                 startChoosing();
             }
         } else {
-            client.player.playSound(SoundEvent.of(Identifier.of("minecraft:entity.villager.hurt")), 0.5F, 1.0F);
+            playSound(GameSounds.FRUITFOCUS_ERROR, soundVolume, 1.0f);
             // El temporizador sigue corriendo hasta que termine
         }
     }
@@ -231,7 +242,7 @@ public class FruitFocusGame extends Game {
 
     @Override
     public void handleMouseInput(double mouseX, double mouseY, int button) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT && currentGameState == GameState.CHOOSING && !hasMadeChoice) {
+        if ((button == GLFW.GLFW_MOUSE_BUTTON_LEFT && currentGameState == GameState.CHOOSING && !hasMadeChoice) && status == GameStatus.ACTIVE) {
             for (FruitSlot slot : selectionSlots) {
                 if (slot.getHitbox().isMouseOver(mouseX, mouseY)) {
                     checkGuess(slot.getFruit());
