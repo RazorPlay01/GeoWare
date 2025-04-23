@@ -56,6 +56,7 @@ public class DonkeyKongGame extends Game {
 
     private float helpTextureTimer = 0;
     private boolean showHelpTexture = false;
+    private final float soundVolume = 0.3f;
 
     private final Animation princessIdle = new Animation(
             Texture.createTextureList(Identifier.of(GeoWareMod.MOD_ID, "textures/gui/peach.png"), 44, 56, 129, 56, 2, 1.0f, true),
@@ -93,9 +94,6 @@ public class DonkeyKongGame extends Game {
     @Override
     public void update() {
         super.update();
-        if (this.finalTimer.isFinished()) {
-            this.player.setLosing(true);
-        }
         if (getStatus() != GameStatus.ENDING) {
             helpTextureTimer += 0.05f; // Roughly 20 ticks per second
             if (helpTextureTimer >= 4.0f) {

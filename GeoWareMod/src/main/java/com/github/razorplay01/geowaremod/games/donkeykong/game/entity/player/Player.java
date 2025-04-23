@@ -1,5 +1,6 @@
 package com.github.razorplay01.geowaremod.games.donkeykong.game.entity.player;
 
+import com.github.razorplay01.geowaremod.GameSounds;
 import com.github.razorplay01.geowaremod.games.donkeykong.game.entity.DonkeyKongEntity;
 import com.github.razorplay01.geowaremod.games.donkeykong.game.entity.barrel.Barrel;
 import com.github.razorplay01.geowaremod.games.donkeykong.game.entity.item.HammetItem;
@@ -157,6 +158,7 @@ public class Player extends DonkeyKongEntity {
     }
 
     public void jump(int screenHeight) {
+        game.playSound(GameSounds.DONKEYKONG_JUMP, game.getSoundVolume(), 1.0f); // Perdió
         if (hasHammer || isLosing || isWinning) return;
         if (!isJumping && (currentPlatform != null || yPos + this.getHeight() >= screenHeight - 1)) {
             velocityY = -2.6f;
@@ -334,13 +336,19 @@ public class Player extends DonkeyKongEntity {
         }
     }
 
+    private boolean playedWinSound = false;
+
     public void checkVictoryPlatform(VictoryZone victoryPlatform) {
         if (!isWinning && !isLosing && PlayerCollisionHandler.checkVictoryCondition(this, victoryPlatform)) {
             isWinning = true;
+            if (!playedWinSound) {
+                game.playSound(GameSounds.DONKEYKONG_WIN, game.getSoundVolume(), 1.0f); // Perdió
+            }
         }
     }
 
     public void setLosing(boolean losing) {
+        game.playSound(GameSounds.DONKEYKONG_DEAD, game.getSoundVolume(), 1.0f); // Perdió
         this.isLosing = losing;
         if (losing) {
             velocityX = 0;
@@ -396,6 +404,7 @@ public class Player extends DonkeyKongEntity {
     }
 
     private void activateHammer() {
+        game.playSound(GameSounds.DONKEYKONG_MARTILLO, game.getSoundVolume(), 1.0f); // Perdió
         hasHammer = true;
         hammerStartTime = System.currentTimeMillis();
         currentState = PlayerState.WITH_HAMMER;
@@ -447,6 +456,7 @@ public class Player extends DonkeyKongEntity {
                 float particleY = barrel.getYPos() + (barrel.getHeight() - 16) / 2;
                 game.addParticle(new Animation(PARTICLE_TEXTURES, 4f, false), particleX, particleY, 16, 16);
                 game.addScore(2, barrel.getXPos(), barrel.getYPos());
+                game.playSound(GameSounds.DONKEYKONG_BARRIL_EXPLOSION, game.getSoundVolume(), 1.0f); // Perdió
                 barrel.setRemove(true);
             }
         }
