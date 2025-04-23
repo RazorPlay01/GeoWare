@@ -1,5 +1,6 @@
 package com.github.razorplay01.geowaremod.games.galaga;
 
+import com.github.razorplay01.geowaremod.GameSounds;
 import com.github.razorplay01.geowaremod.GeoWareMod;
 import com.github.razorplay01.razorplayapi.util.Entity;
 import com.github.razorplay01.razorplayapi.util.hitbox.RectangleHitbox;
@@ -83,6 +84,7 @@ public class Player extends Entity {
             Bullet bullet = new Bullet(xPos + hitbox.getWidth() / 2f - 1, yPos, gameScreen);
             bullets.add(bullet);
             lastShotTime = currentTime;
+            gameScreen.getGame().playSound(GameSounds.GALAGA_SHOOT, ((GalagaGame) gameScreen.getGame()).getSoundVolume(), 1.0f); // Sonido al terminar el juego
         }
     }
 

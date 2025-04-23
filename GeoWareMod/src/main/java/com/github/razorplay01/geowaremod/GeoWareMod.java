@@ -11,7 +11,6 @@ import com.github.razorplay01.geowaremod.games.galaga.GalagaScreen;
 import com.github.razorplay01.geowaremod.games.guitarhero.GuitarHeroScreen;
 import com.github.razorplay01.geowaremod.games.hanoitowers.HanoiTowersScreen;
 import com.github.razorplay01.geowaremod.games.keybind.KeyBindGameScreen;
-import com.github.razorplay01.geowaremod.games.tetris.GameSounds;
 import com.github.razorplay01.geowaremod.network.NetworkManager;
 import com.github.razorplay01.geowaremod.games.robotfactory.RobotFactoryScreen;
 import com.github.razorplay01.geowaremod.games.scarymaze.ScaryMazeScreen;

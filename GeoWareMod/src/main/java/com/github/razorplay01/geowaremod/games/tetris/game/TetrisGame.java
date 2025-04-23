@@ -1,7 +1,7 @@
 package com.github.razorplay01.geowaremod.games.tetris.game;
 
 import com.github.razorplay01.geowaremod.GeoWareMod;
-import com.github.razorplay01.geowaremod.games.tetris.GameSounds;
+import com.github.razorplay01.geowaremod.GameSounds;
 import com.github.razorplay01.geowaremod.games.tetris.game.board.GameBoard;
 import com.github.razorplay01.geowaremod.games.tetris.game.piece.Tetromino;
 import com.github.razorplay01.geowaremod.games.tetris.game.piece.TetrominoFactory;

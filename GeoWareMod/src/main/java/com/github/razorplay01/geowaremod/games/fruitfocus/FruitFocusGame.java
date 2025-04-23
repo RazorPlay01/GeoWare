@@ -1,7 +1,7 @@
 package com.github.razorplay01.geowaremod.games.fruitfocus;
 
 import com.github.razorplay01.geowaremod.GeoWareMod;
-import com.github.razorplay01.geowaremod.games.tetris.GameSounds;
+import com.github.razorplay01.geowaremod.GameSounds;
 import com.github.razorplay01.razorplayapi.util.GameStatus;
 import com.github.razorplay01.razorplayapi.util.Timer;
 import com.github.razorplay01.razorplayapi.util.hitbox.RectangleHitbox;

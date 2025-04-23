@@ -1,6 +1,5 @@
-package com.github.razorplay01.geowaremod.games.tetris;
+package com.github.razorplay01.geowaremod;
 
-import com.github.razorplay01.geowaremod.GeoWareMod;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.sound.SoundEvent;

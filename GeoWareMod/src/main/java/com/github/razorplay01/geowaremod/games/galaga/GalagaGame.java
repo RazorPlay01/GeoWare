@@ -1,5 +1,6 @@
 package com.github.razorplay01.geowaremod.games.galaga;
 
+import com.github.razorplay01.geowaremod.GameSounds;
 import com.github.razorplay01.geowaremod.GeoWareMod;
 import com.github.razorplay01.razorplayapi.util.GameStatus;
 import com.github.razorplay01.razorplayapi.util.Particle;
@@ -22,6 +23,7 @@ import static com.github.razorplay01.geowaremod.games.galaga.Moves.*;
 public class GalagaGame extends Game {
     public static final int GAME_WIDTH = 206; // 206
     public static final int GAME_HEIGHT = 20 * 14; // 280
+    private final float soundVolume = 0.3f;
 
     private final Animation enemyDeathParticle = new Animation(List.of(
             new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/games/galaga/galaka_a.png"), 0, 144, 32, 32, 336, 256, 1.0f),
@@ -158,6 +160,7 @@ public class GalagaGame extends Game {
                             if (enemy.takeDamage()) {
                                 addScore(enemy.getInitialHealth(), enemy.getXPos(), enemy.getYPos());
                                 particles.add(new Particle(enemy.getXPos(), enemy.getYPos(), 16, 16, screen, enemyDeathParticle));
+                                playSound(GameSounds.GALAGA_KILL, soundVolume, 1.0f); // Sonido al terminar el juego
                                 enemyIterator.remove();
                             }
                             bulletIterator.remove();
@@ -166,6 +169,7 @@ public class GalagaGame extends Game {
                     }
                     if (enemy.collidesWith(player)) {
                         particles.add(new Particle(player.getXPos(), player.getYPos(), 16, 16, screen, playerDeathParticle));
+                        playSound(GameSounds.GALAGA_DEAD, soundVolume, 1.0f); // Sonido al terminar el juego
                         playerAlive = false;
                         break;
                     }
@@ -178,6 +182,7 @@ public class GalagaGame extends Game {
                     enemyBullet.update();
                     if (enemyBullet.collidesWith(player)) {
                         particles.add(new Particle(player.getXPos(), player.getYPos(), 16, 16, screen, playerDeathParticle));
+                        playSound(GameSounds.GALAGA_DEAD, soundVolume, 1.0f); // Sonido al terminar el juego
                         playerAlive = false;
                         enemyBulletIterator.remove();
                     } else if (enemyBullet.isOffScreen()) {

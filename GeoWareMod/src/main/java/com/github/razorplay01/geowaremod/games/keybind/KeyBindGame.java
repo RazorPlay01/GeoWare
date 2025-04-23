@@ -1,7 +1,6 @@
 package com.github.razorplay01.geowaremod.games.keybind;
 
 import com.github.razorplay01.geowaremod.GeoWareMod;
-import com.github.razorplay01.geowaremod.games.tetris.GameSounds;
 import com.github.razorplay01.razorplayapi.util.GameStatus;
 import com.github.razorplay01.razorplayapi.util.Particle;
 import com.github.razorplay01.razorplayapi.util.screen.GameScreen;
