@@ -1,6 +1,7 @@
 package com.github.razorplay01.geowaremod.games.scarymaze;
 
 import com.github.razorplay01.geowaremod.GeoWareMod;
+import com.github.razorplay01.geowaremod.games.tetris.GameSounds;
 import com.github.razorplay01.razorplayapi.util.GameStatus;
 import com.github.razorplay01.razorplayapi.util.hitbox.RectangleHitbox;
 import com.github.razorplay01.razorplayapi.util.stage.Game;
@@ -18,6 +19,7 @@ public class ScaryMazeGame extends Game {
     private RectangleHitbox player;
     private boolean isPlayerBoundToMouse = false;
     private final float scaleFactor = 2.0f; // Factor de escala (ajústalo según necesites)
+    private final float soundVolume = 0.3f;
 
     protected ScaryMazeGame(Screen screen, int initDelay, int timeLimitSeconds, int prevScore, int level) {
         super(screen, initDelay, timeLimitSeconds, prevScore);
@@ -95,12 +97,14 @@ public class ScaryMazeGame extends Game {
                 if (player.intersects(wall)) {
                     status = GameStatus.ENDING;
                     isPlayerBoundToMouse = false;
+                    playSound(GameSounds.SCARYMAZE_DEAD, soundVolume, 1.0f);
                     break;
                 }
             }
             if (player.intersects(finalArea)) {
                 addScore(10);
                 status = GameStatus.ENDING;
+                playSound(GameSounds.SCARYMAZE_WIN, soundVolume, 1.0f);
             }
         }
     }
@@ -126,6 +130,7 @@ public class ScaryMazeGame extends Game {
         if (button == 0 && status == GameStatus.ACTIVE) {
             if (!isPlayerBoundToMouse && player.isMouseOver(mouseX, mouseY)) {
                 isPlayerBoundToMouse = true;
+                playSound(GameSounds.SCARYMAZE_SELECT, soundVolume, 1.0f);
             }
         }
     }
