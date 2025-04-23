@@ -26,10 +26,10 @@ public class Player extends ArkanoidEntity {
     private boolean movingLeft;
     private boolean movingRight;
 
-    private static final float ANIMATION_SPEED = 1.0f;
+    private static final float ANIMATION_SPEED = 2.0f;
     private Animation dogIdle = new Animation(
             Texture.createTextureList(Identifier.of(GeoWareMod.MOD_ID, "textures/games/arkanoid/dog_idle.png"), 60, 47, 60, 282, 6, 1.0f, false),
-            3.0f,
+            4.5f,
             true
     );
     private Animation dogRight = new Animation(

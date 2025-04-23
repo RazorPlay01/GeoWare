@@ -9,12 +9,6 @@ import java.util.Collections;
 import java.util.List;
 
 public class GameBoard {
-    /*
-    private static final int WIDTH = 28;
-    private static final int HEIGHT = 32;
-    private static final int BLOCK_SIZE = 8;
-    */
-
     private static final int WIDTH = 10;
     private static final int HEIGHT = 20;
     private static final int BLOCK_SIZE = 16;
@@ -25,7 +19,7 @@ public class GameBoard {
     }
 
     public void render(DrawContext context, int offsetX, int offsetY) {
-        // Dibujar el borde del tablero
+        /*// Dibujar el borde del tablero
         context.fill(offsetX - 2, offsetY - 2,
                 offsetX + WIDTH * BLOCK_SIZE + 2,
                 offsetY + HEIGHT * BLOCK_SIZE + 2,
@@ -35,7 +29,7 @@ public class GameBoard {
         context.fill(offsetX, offsetY,
                 offsetX + WIDTH * BLOCK_SIZE,
                 offsetY + HEIGHT * BLOCK_SIZE,
-                0xFF373737);
+                0xFF373737);*/
 
         // Dibujar los bloques
         for (int y = 0; y < HEIGHT; y++) {

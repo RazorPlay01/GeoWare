@@ -16,7 +16,7 @@ public abstract class GameScreen extends Screen {
     protected Game game;
     protected Integer gameScreenXPos;
     protected Integer gameScreenYPos;
-    private float deltaTime;
+    protected float deltaTime;
 
     protected GameScreen(Text title) {
         super(title);

@@ -11,6 +11,7 @@ import com.github.razorplay01.geowaremod.games.galaga.GalagaScreen;
 import com.github.razorplay01.geowaremod.games.guitarhero.GuitarHeroScreen;
 import com.github.razorplay01.geowaremod.games.hanoitowers.HanoiTowersScreen;
 import com.github.razorplay01.geowaremod.games.keybind.KeyBindGameScreen;
+import com.github.razorplay01.geowaremod.games.tetris.GameSounds;
 import com.github.razorplay01.geowaremod.network.NetworkManager;
 import com.github.razorplay01.geowaremod.games.robotfactory.RobotFactoryScreen;
 import com.github.razorplay01.geowaremod.games.scarymaze.ScaryMazeScreen;
@@ -50,6 +51,7 @@ public class GeoWareMod implements ModInitializer, ClientModInitializer {
         HudRenderCallback.EVENT.register(scoreboard);
         HudRenderCallback.EVENT.register(score);
         NetworkManager.registerClient();
+        GameSounds.registerSounds();
         registerCommands();
     }
 
@@ -102,10 +104,24 @@ public class GeoWareMod implements ModInitializer, ClientModInitializer {
                         MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new RobotFactoryScreen(60, 0, 1.5f, true, 5)));
                         return 1;
                     }));
-            dispatcher.register(CommandManager.literal("bubblepuzzle")
+            dispatcher.register(CommandManager.literal("bubblepuzzle1")
                     .executes(context -> {
                         if (context.getSource().getPlayer() != null) {
-                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new BubblePuzzleScreen(0, 5, 600, 1)));
+                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new BubblePuzzleScreen(0, 5, 60, 1)));
+                        }
+                        return 1;
+                    }));
+            dispatcher.register(CommandManager.literal("bubblepuzzle2")
+                    .executes(context -> {
+                        if (context.getSource().getPlayer() != null) {
+                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new BubblePuzzleScreen(0, 5, 60, 2)));
+                        }
+                        return 1;
+                    }));
+            dispatcher.register(CommandManager.literal("bubblepuzzle3")
+                    .executes(context -> {
+                        if (context.getSource().getPlayer() != null) {
+                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new BubblePuzzleScreen(0, 5, 60, 3)));
                         }
                         return 1;
                     }));
@@ -133,7 +149,7 @@ public class GeoWareMod implements ModInitializer, ClientModInitializer {
             dispatcher.register(CommandManager.literal("donkeykong")
                     .executes(context -> {
                         if (context.getSource().getPlayer() != null) {
-                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new DonkeyKongScreen(0, 5, 60, 1000, 0.7f)));
+                            MinecraftClient.getInstance().execute(() -> MinecraftClient.getInstance().setScreen(new DonkeyKongScreen(0, 5, 60, 1000, 0.0f)));
                         }
                         return 1;
                     }));

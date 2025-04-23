@@ -93,6 +93,9 @@ public class DonkeyKongGame extends Game {
     @Override
     public void update() {
         super.update();
+        if (this.finalTimer.isFinished()) {
+            this.player.setLosing(true);
+        }
         if (getStatus() != GameStatus.ENDING) {
             helpTextureTimer += 0.05f; // Roughly 20 ticks per second
             if (helpTextureTimer >= 4.0f) {
@@ -226,7 +229,7 @@ public class DonkeyKongGame extends Game {
     private void calculateVictoryBonus() {
         if (player.isWinning()) {
             long remainingTimeSeconds = gameDutarion.getRemainingTime() / 1000;  // Convert to seconds
-            int timeBonus = (int) remainingTimeSeconds * 100;  // 100 points per remaining second
+            int timeBonus = (int) remainingTimeSeconds;  // 1 points per remaining second
             addScore(timeBonus);
         }
     }

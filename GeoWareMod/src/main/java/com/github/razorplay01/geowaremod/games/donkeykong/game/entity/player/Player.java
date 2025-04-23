@@ -76,7 +76,7 @@ public class Player extends DonkeyKongEntity {
 
     @Override
     public void update() {
-        if (isLosing || isWinning) {
+        if (isLosing) {
             movingDown = false;
             movingLeft = false;
             movingRight = false;
@@ -99,6 +99,11 @@ public class Player extends DonkeyKongEntity {
     }
 
     private void updateMovement() {
+        if (isWinning || isLosing) {
+            velocityY = 0;
+            velocityX = 0;
+            return;
+        }
         if (isOnLadder) {
             updateLadderMovement();
         } else {
@@ -175,7 +180,7 @@ public class Player extends DonkeyKongEntity {
     }
 
     public void moveUp(List<Ladder> ladders) {
-        if (hasHammer || isLosing || isWinning) return;
+        if (hasHammer || isLosing) return;
         movingUp = true;
         movingDown = false;
         tryClimbLadder(ladders);

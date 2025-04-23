@@ -198,6 +198,7 @@ public class FruitFocusGame extends Game {
         if (isCorrect) {
             targetSlot.setHidden(false);
             discoveredSlots.add(targetSlot);
+            addScore(3);
             client.player.playSound(SoundEvent.of(Identifier.of("minecraft:entity.player.levelup")), 0.5F, 1.0F);
             // Avanzar a la siguiente ronda inmediatamente
             if (discoveredSlots.size() == NUM_SLOTS) {

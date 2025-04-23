@@ -156,7 +156,7 @@ public class GalagaGame extends Game {
                         Bullet bullet = bulletIterator.next();
                         if (enemy.collidesWith(bullet)) {
                             if (enemy.takeDamage()) {
-                                addScore(1, enemy.getXPos(), enemy.getYPos());
+                                addScore(enemy.getInitialHealth(), enemy.getXPos(), enemy.getYPos());
                                 particles.add(new Particle(enemy.getXPos(), enemy.getYPos(), 16, 16, screen, enemyDeathParticle));
                                 enemyIterator.remove();
                             }

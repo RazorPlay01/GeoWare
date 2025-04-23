@@ -61,7 +61,7 @@ public class HanoiTowersGame extends Game {
     public void update() {
         super.update();
         if (status == GameStatus.ACTIVE && verificarVictoria()) {
-            addScore(10);
+            addScore(50);
             status = GameStatus.ENDING;
         }
     }

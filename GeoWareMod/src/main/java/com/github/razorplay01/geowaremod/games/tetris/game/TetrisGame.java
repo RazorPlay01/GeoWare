@@ -1,14 +1,18 @@
 package com.github.razorplay01.geowaremod.games.tetris.game;
 
+import com.github.razorplay01.geowaremod.GeoWareMod;
+import com.github.razorplay01.geowaremod.games.tetris.GameSounds;
 import com.github.razorplay01.geowaremod.games.tetris.game.board.GameBoard;
 import com.github.razorplay01.geowaremod.games.tetris.game.piece.Tetromino;
 import com.github.razorplay01.geowaremod.games.tetris.game.piece.TetrominoFactory;
+import com.github.razorplay01.geowaremod.games.tetris.game.piece.pieces.TetrominoI;
+import com.github.razorplay01.geowaremod.games.tetris.game.piece.pieces.TetrominoO;
 import com.github.razorplay01.razorplayapi.util.GameStatus;
-import com.github.razorplay01.razorplayapi.util.render.CustomDrawContext;
 import com.github.razorplay01.razorplayapi.util.stage.Game;
 import lombok.Getter;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Vec2f;
 import org.lwjgl.glfw.GLFW;
 
@@ -26,6 +30,7 @@ public class TetrisGame extends Game {
     private final float initialSpeedMultiplier;
     private float currentSpeedMultiplier;
     private static final long BASE_DROP_INTERVAL = 1000; // 1 segundo base
+    private final float soundVolume = 0.3f;
 
     public TetrisGame(Screen screen, int initDelay, int timeLimitSeconds, int prevScore, float speedMultiplier) {
         super(screen, initDelay, timeLimitSeconds, prevScore);
@@ -43,6 +48,7 @@ public class TetrisGame extends Game {
             if (System.currentTimeMillis() - lastDropTime > dropInterval) {
                 if (canMoveDown()) {
                     currentPiece.moveDown();
+                    playSound(GameSounds.TETRIS_BAJAR, soundVolume, 1.0f);
                 } else {
                     placePiece();
                     clearLines();
@@ -50,6 +56,8 @@ public class TetrisGame extends Game {
                 }
                 lastDropTime = System.currentTimeMillis();
             }
+        } else if (status == GameStatus.ENDING && !finalTimer.isRunning()) {
+            playSound(GameSounds.TETRIS_END, soundVolume, 1.0f); // Sonido al terminar el juego
         }
     }
 
@@ -103,6 +111,7 @@ public class TetrisGame extends Game {
         if (!linesToClear.isEmpty()) {
             board.clearLines(linesToClear);
             updateScore(linesToClear.size());
+            playSound(GameSounds.TETRIS_LINE, soundVolume, 1.0f);
         }
     }
 
@@ -129,6 +138,7 @@ public class TetrisGame extends Game {
         test.moveLeft();
         if (!checkCollision(test)) {
             currentPiece.moveLeft();
+            playSound(GameSounds.TETRIS_MOVE, soundVolume, 1.0f);
         }
     }
 
@@ -137,12 +147,14 @@ public class TetrisGame extends Game {
         test.moveRight();
         if (!checkCollision(test)) {
             currentPiece.moveRight();
+            playSound(GameSounds.TETRIS_MOVE, soundVolume, 1.0f);
         }
     }
 
     public void moveDown() {
         if (canMoveDown()) {
             currentPiece.moveDown();
+            playSound(GameSounds.TETRIS_MOVE, soundVolume, 1.0f);
         } else {
             placePiece();
             clearLines();
@@ -155,12 +167,14 @@ public class TetrisGame extends Game {
         test.rotate();
         if (!checkCollision(test)) {
             currentPiece.rotate();
+            playSound(GameSounds.TETRIS_ROTATE, soundVolume, 1.0f);
         }
     }
 
     public void hardDrop() {
         while (canMoveDown()) {
             currentPiece.moveDown();
+            playSound(GameSounds.TETRIS_BAJAR, soundVolume, 1.0f);
         }
         placePiece();
         clearLines();
@@ -169,23 +183,39 @@ public class TetrisGame extends Game {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        int boardX = screen.getGameScreenXPos();
-        int boardY = screen.getGameScreenYPos();
-
-        getBoard().render(context, boardX, boardY);
+        getBoard().render(context, screen.getGameScreenXPos(), screen.getGameScreenYPos());
         if (getCurrentPiece() != null) {
-            getCurrentPiece().render(context, boardX, boardY, GameBoard.getBlockSize());
+            getCurrentPiece().render(context, screen.getGameScreenXPos(), screen.getGameScreenYPos(), GameBoard.getBlockSize());
         }
-        int nextPieceX = boardX + getScreenWidth() + 20;
         if (getNextPiece() != null) {
-            getNextPiece().render(context, nextPieceX, boardY + 20, GameBoard.getBlockSize());
+            if (getNextPiece() instanceof TetrominoI) {
+                getNextPiece().render(context,
+                        screen.getGameScreenXPos() + getScreenWidth() - 31,
+                        screen.getGameScreenYPos() + 16,
+                        12);
+            } else if (getNextPiece() instanceof TetrominoO) {
+                getNextPiece().render(context,
+                        screen.getGameScreenXPos() + getScreenWidth() - 30,
+                        screen.getGameScreenYPos() + 13,
+                        12);
+            } else {
+                getNextPiece().render(context,
+                        screen.getGameScreenXPos() + getScreenWidth() - 24,
+                        screen.getGameScreenYPos() + 13,
+                        12);
+            }
         }
     }
 
     @Override
     public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-        CustomDrawContext customDrawContext = CustomDrawContext.wrap(context);
-        customDrawContext.drawBasicBackground(screen);
+        Identifier backgroundTexture = Identifier.of(GeoWareMod.MOD_ID, "textures/games/tetris/fondo.png");
+        context.drawTexture(backgroundTexture, screen.getGameScreenXPos() - 10, screen.getGameScreenYPos() - 10,
+                getScreenWidth() + 20, getScreenHeight() + 20, 0, 0, getScreenWidth(), getScreenHeight(), getScreenWidth(), getScreenHeight());
+
+        Identifier marcoTexture = Identifier.of(GeoWareMod.MOD_ID, "textures/games/tetris/marco.png");
+        context.drawTexture(marcoTexture, screen.getGameScreenXPos() + getScreenWidth() + 9, screen.getGameScreenYPos() - 10,
+                64, 64, 0, 0, 64, 64, 64, 64);
     }
 
     @Override

@@ -14,6 +14,11 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.sound.PositionedSoundInstance;
+import net.minecraft.client.sound.SoundInstance;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.math.random.Random;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -170,5 +175,26 @@ public abstract class Game implements IGame {
     }
 
     public void keyReleased(int keyCode, int scanCode, int modifiers) {
+    }
+
+    protected void playSound(SoundEvent sound, float volume, float pitch) {
+        MinecraftClient.getInstance().getSoundManager().play(
+                new PositionedSoundInstance(
+                        sound.getId(),
+                        SoundCategory.MASTER,
+                        volume, // Volumen
+                        pitch, // Tono
+                        Random.create(),
+                        false, // No repetir
+                        0, // Retraso
+                        SoundInstance.AttenuationType.NONE,
+                        0.0, 0.0, 0.0, // Posición (no importa para MASTER)
+                        true // Relativo
+                )
+        );
+    }
+
+    protected void playSound(SoundEvent sound) {
+        playSound(sound, 1.0f, 1.0f);
     }
 }
