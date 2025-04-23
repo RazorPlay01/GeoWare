@@ -1,5 +1,6 @@
 package com.github.razorplay01.geowaremod.games.arkanoid;
 
+import com.github.razorplay01.geowaremod.GameSounds;
 import com.github.razorplay01.geowaremod.games.arkanoid.entity.Ball;
 import com.github.razorplay01.geowaremod.games.arkanoid.entity.Player;
 import com.github.razorplay01.geowaremod.games.arkanoid.mapobject.Brick;
@@ -38,15 +39,18 @@ public class CollisionHandler {
             ball.setXPos(screenX + radius);
             ball.setDirection((float) (Math.PI - ball.getDirection()));
             ball.updateVelocities();
+            game.playSound(GameSounds.ARKANOID_GOLPE, game.getSoundVolume(), 1.0f);
         } else if (ball.getXPos() + radius >= screenX + screenWidth) {
             ball.setXPos(screenX + screenWidth - radius);
             ball.setDirection((float) (Math.PI - ball.getDirection()));
             ball.updateVelocities();
+            game.playSound(GameSounds.ARKANOID_GOLPE, game.getSoundVolume(), 1.0f);
         }
         if (ball.getYPos() - radius <= screenY) {
             ball.setYPos(screenY + radius);
             ball.setDirection(-ball.getDirection());
             ball.updateVelocities();
+            game.playSound(GameSounds.ARKANOID_GOLPE, game.getSoundVolume(), 1.0f);
         } else if (ball.getYPos() + radius >= screenY + screenHeight) {
             ball.setActive(false);
         }
@@ -101,6 +105,7 @@ public class CollisionHandler {
                 game.addScore(1, brick.getXPos() + brick.getWidth() / 2, brick.getYPos());
                 iterator.remove();
                 game.removeBrick(brick);
+                game.playSound(GameSounds.ARKANOID_GOLPE, game.getSoundVolume(), 1.0f);
                 break;
             }
         }
@@ -134,6 +139,7 @@ public class CollisionHandler {
             }
 
             ball.updateLastCollisionPosition(ball.getXPos() + radius, ball.getYPos() + radius);
+            game.playSound(GameSounds.ARKANOID_REBOTE_BARRA, game.getSoundVolume(), 1.0f);
         }
     }
 }

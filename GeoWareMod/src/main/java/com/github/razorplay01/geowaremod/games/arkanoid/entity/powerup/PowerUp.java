@@ -3,11 +3,13 @@ package com.github.razorplay01.geowaremod.games.arkanoid.entity.powerup;
 import com.github.razorplay01.geowaremod.games.arkanoid.ArkanoidGame;
 import com.github.razorplay01.geowaremod.games.arkanoid.ArkanoidGameScreen;
 import com.github.razorplay01.geowaremod.games.arkanoid.entity.ArkanoidEntity;
+import lombok.Getter;
 import net.minecraft.client.gui.DrawContext;
 
 public abstract class PowerUp extends ArkanoidEntity {
     protected static final float FALL_SPEED = 1.0f;
     protected int animationTick = 0;
+    @Getter
     protected boolean isActive = true; // Nueva bandera para marcar si el power-up está activo
 
     public PowerUp(float xPos, float yPos, float width, float height, ArkanoidGameScreen gameScreen, int color) {
@@ -37,10 +39,6 @@ public abstract class PowerUp extends ArkanoidEntity {
     @Override
     public void render(DrawContext context, float delta) {
 
-    }
-
-    public boolean isActive() {
-        return isActive;
     }
 
     protected abstract void onCollect(ArkanoidGame game);

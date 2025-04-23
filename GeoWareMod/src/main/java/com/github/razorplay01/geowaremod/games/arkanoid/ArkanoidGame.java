@@ -1,5 +1,6 @@
 package com.github.razorplay01.geowaremod.games.arkanoid;
 
+import com.github.razorplay01.geowaremod.GameSounds;
 import com.github.razorplay01.geowaremod.GeoWareMod;
 import com.github.razorplay01.geowaremod.games.arkanoid.entity.Ball;
 import com.github.razorplay01.geowaremod.games.arkanoid.entity.Player;
@@ -35,7 +36,7 @@ public class ArkanoidGame extends Game {
     private static final int GAME_WIDTH = BRICK_WIDTH * COLUMNS;
     private static final int GAME_HEIGHT = (ROWS * BRICK_HEIGHT) + EXTRA_SPACE + PADDLE_HEIGHT + BOTTOM_SPACE;
 
-    private static final float POWERUP_SPAWN_CHANCE = 0.20f;
+    private static final float POWERUP_SPAWN_CHANCE = 0.15f;
 
     public final List<Brick> bricks = new ArrayList<>();
     public Player player;
@@ -53,6 +54,7 @@ public class ArkanoidGame extends Game {
             'G', BrickColor.GREEN,
             'B', BrickColor.BLUE
     );
+    private final float soundVolume = 0.3f;
 
     public ArkanoidGame(Screen screen, int initDelay, int timeLimitSeconds, int prevScore, int level) {
         super(screen, initDelay, timeLimitSeconds, prevScore);
@@ -120,6 +122,7 @@ public class ArkanoidGame extends Game {
 
         if (status == GameStatus.ACTIVE && balls.isEmpty()) {
             player.setLosing(true);
+            playSound(GameSounds.ARKANOID_END, soundVolume, 1.0f); // Perdió
         }
     }
 
