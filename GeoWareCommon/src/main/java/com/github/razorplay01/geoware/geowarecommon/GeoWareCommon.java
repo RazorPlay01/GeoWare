@@ -28,7 +28,8 @@ public class GeoWareCommon {
                 TetrisPacket.class,
                 ScaryMazePacket.class,
                 ScoreboardPacket.class,
-                EmotePacket.class
+                EmotePacket.class,
+                GuitarHeroPacket.class
         };
         PacketTCP.registerPackets(packetClasses);
     }

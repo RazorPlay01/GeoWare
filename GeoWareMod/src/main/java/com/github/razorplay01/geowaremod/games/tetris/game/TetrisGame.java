@@ -48,7 +48,6 @@ public class TetrisGame extends Game {
             if (System.currentTimeMillis() - lastDropTime > dropInterval) {
                 if (canMoveDown()) {
                     currentPiece.moveDown();
-                    playSound(GameSounds.TETRIS_BAJAR, soundVolume, 1.0f);
                 } else {
                     placePiece();
                     clearLines();

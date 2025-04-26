@@ -27,6 +27,10 @@ repositories {
         name "KosmX's maven"
         url 'https://maven.kosmx.dev/'
     }
+    maven {
+        url "https://www.cursemaven.com"
+        content { includeGroup "curse.maven" }
+    }
 }
 
 dependencies {
@@ -42,6 +46,8 @@ dependencies {
 
     implementation project(':GeoWareCommon')
     include 'com.github.RazorPlay01:PacketHandler:1.0.0'
+
+    modImplementation "curse.maven:watermedia-869524:6457358"
 }
 
 processResources {

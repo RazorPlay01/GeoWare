@@ -1,8 +1,9 @@
 plugins {
+    id 'base'
 }
 
 allprojects {
-    project_version = project.project_version
+    project_version = project.findProperty('project_version') ?: '1.0.0'
 }
 
 subprojects {
@@ -29,4 +30,30 @@ subprojects {
         testCompileOnly 'org.projectlombok:lombok:1.18.36'
         testAnnotationProcessor 'org.projectlombok:lombok:1.18.36'
     }
+}
+
+// Configuración para copiar los JARs a un directorio común
+def commonOutputDir = file("${rootDir}/output/jars")
+
+// Tarea para limpiar el directorio común
+tasks.register('cleanCommonOutputDir', Delete) {
+    delete commonOutputDir
+}
+
+// Tarea para copiar los JARs de los submódulos
+tasks.register('copyJars', Copy) {
+    dependsOn subprojects.build
+    from subprojects.collect { it.layout.buildDirectory.dir('libs').get().asFile }
+    include '*.jar'
+    into commonOutputDir
+}
+
+// Asegúrate de que cleanCommonOutputDir se ejecute antes de copyJars
+tasks.named('copyJars').configure {
+    dependsOn tasks.named('cleanCommonOutputDir')
+}
+
+// Vincula la tarea 'build' del proyecto raíz con copyJars
+tasks.named('build').configure {
+    dependsOn tasks.named('copyJars')
 }

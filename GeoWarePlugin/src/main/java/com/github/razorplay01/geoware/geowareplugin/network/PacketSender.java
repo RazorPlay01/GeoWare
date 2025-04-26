@@ -42,6 +42,16 @@ public class PacketSender {
             GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());
         }
     }
+    public static void sendGuitarHeroPacketToClient(Player targetPlayer) {
+        try {
+            int prevScore = GeoWarePlugin.getInstance().getPointsManager().getPlayerPoints(targetPlayer);
+            IPacket packet = new GuitarHeroPacket(prevScore);
+            packetSendInfo(packet, targetPlayer);
+            targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PACKET_BASE_CHANNEL, PacketTCP.write(packet));
+        } catch (PacketSerializationException e) {
+            GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());
+        }
+    }
 
     public static void sendBubblePuzzlePacketToClient(Player targetPlayer, int timeLimitSeconds, int level) {
         try {

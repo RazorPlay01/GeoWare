@@ -8,6 +8,7 @@ import com.github.razorplay01.geowaremod.games.bubblepuzzle.BubblePuzzleScreen;
 import com.github.razorplay01.geowaremod.games.donkeykong.DonkeyKongScreen;
 import com.github.razorplay01.geowaremod.games.fruitfocus.FruitFocusGameScreen;
 import com.github.razorplay01.geowaremod.games.galaga.GalagaScreen;
+import com.github.razorplay01.geowaremod.games.guitarhero.GuitarHeroScreen;
 import com.github.razorplay01.geowaremod.games.hanoitowers.HanoiTowersScreen;
 import com.github.razorplay01.geowaremod.games.keybind.KeyBindGameScreen;
 import com.github.razorplay01.geowaremod.games.robotfactory.RobotFactoryScreen;
@@ -16,8 +17,13 @@ import com.github.razorplay01.geowaremod.games.tetris.TetrisGameScreen;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.sound.SoundCategory;
+import org.watermedia.api.player.videolan.MusicPlayer;
 
+import java.io.File;
+import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 
 public class NetworkManager {
     private NetworkManager() {
@@ -49,9 +55,49 @@ public class NetworkManager {
                 case ScoreUpdaterPacket pkt -> checkScoreUpdaterPacketClient(pkt, context);
                 case ScoreStatusPacket pkt -> checkScoreStatusPacketClient(pkt, context);
                 case EmotePacket pkt -> checkEmotePacketClient(pkt, context);
+                case GuitarHeroPacket pkt -> checkGuitarHeroPacketClient(pkt, context);
                 default -> GeoWareMod.LOGGER.info("Packet received from server: UnknownPacket");
             }
         }));
+    }
+
+    private static void checkGuitarHeroPacketClient(GuitarHeroPacket packet, ClientPlayNetworking.Context context) {
+        MinecraftClient client = context.client();
+        UUID musicPlayerId = UUID.randomUUID();
+
+        // Iniciar música
+        try {
+            File audioFile = new File(client.runDirectory, "mods/geowaremod/guitarhero_sound.mp3");
+            if (!audioFile.exists()) {
+                GeoWareMod.LOGGER.error("Archivo de audio no encontrado: {}", audioFile.getAbsolutePath());
+                return;
+            }
+            MusicPlayer musicPlayer = new MusicPlayer();
+            musicPlayer.start(URI.create(audioFile.toURI().toString()));
+            musicPlayer.setVolume((int) (client.options.getSoundVolume(SoundCategory.MASTER) * 100));
+            GeoWareMod.playingAudios.put(musicPlayer, musicPlayerId);
+            GeoWareMod.musicStartTime = System.currentTimeMillis();
+            GeoWareMod.LOGGER.info("Music started playing with WaterMedia, ID: {}", musicPlayerId);
+        } catch (Exception e) {
+            GeoWareMod.LOGGER.error("Error al reproducir el audio con WaterMedia: {}", e.getMessage());
+            return;
+        }
+
+        // Programar apertura de la pantalla a los 56s
+        client.execute(() -> new Thread(() -> {
+            try {
+                Thread.sleep(56000); // Esperar 56s
+                client.execute(() -> {
+                    if (GeoWareMod.playingAudios.containsValue(musicPlayerId)) {
+                        GeoWareMod.guiScale = client.options.getGuiScale().getValue();
+                        client.options.getGuiScale().setValue(2);
+                        client.setScreen(new GuitarHeroScreen(packet.getScore(), musicPlayerId));
+                    }
+                });
+            } catch (InterruptedException e) {
+                GeoWareMod.LOGGER.error("Error al programar la screen: {}", e.getMessage());
+            }
+        }).start());
     }
 
     private static void checkScoreStatusPacketClient(ScoreStatusPacket iPacket, ClientPlayNetworking.Context context) {

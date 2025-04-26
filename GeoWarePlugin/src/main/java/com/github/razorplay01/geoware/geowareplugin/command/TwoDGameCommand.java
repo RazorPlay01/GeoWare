@@ -107,6 +107,21 @@ public class TwoDGameCommand extends BaseCommand {
         }
         sender.sendMessage("§aPacket Arkanoid enviado a " + targets.size() + " jugador(es)");
     }
+    @Subcommand("guitarhero")
+    @CommandCompletion("@players|all|allnotop|adventure|survival|spectator")
+    @Description("Inicia el juego GuitarHero para los jugadores objetivo")
+    public void onGuitarHero(CommandSender sender,
+                           @Name("target") String target) {
+        Collection<Player> targets = getTargetPlayers(target);
+        if (targets.isEmpty()) {
+            sender.sendMessage("§cNo se encontraron jugadores válidos.");
+            return;
+        }
+        for (Player player : targets) {
+            PacketSender.sendGuitarHeroPacketToClient(player);
+        }
+        sender.sendMessage("§aPacket GuitarHero enviado a " + targets.size() + " jugador(es)");
+    }
 
     @Subcommand("fruitfocus")
     @CommandCompletion("@players|all|allnotop|adventure|survival|spectator 60|180|300 10 6")

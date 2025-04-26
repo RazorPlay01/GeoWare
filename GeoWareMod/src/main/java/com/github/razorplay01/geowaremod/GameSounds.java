@@ -6,6 +6,7 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 
 public class GameSounds {
+    public static final SoundEvent GUITAR_HERO_SOUND = register("guitarhero_sound");
     // Tetris
     public static final SoundEvent TETRIS_BAJAR = register("bajar_tetris");
     public static final SoundEvent TETRIS_END = register("end_tetris");

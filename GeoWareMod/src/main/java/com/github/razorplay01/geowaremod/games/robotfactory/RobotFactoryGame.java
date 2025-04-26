@@ -145,6 +145,9 @@ public class RobotFactoryGame extends Game {
 
     @Override
     public void handleMouseInput(double mouseX, double mouseY, int button) {
+        if (status != GameStatus.ACTIVE) {
+            return;
+        }
         int xOffset = screen.getGameScreenXPos();
         int yOffset = screen.getGameScreenYPos();
         mouseX -= xOffset;
