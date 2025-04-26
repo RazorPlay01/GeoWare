@@ -9,6 +9,8 @@ import java.io.File;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static com.github.razorplay01.geoware.geowareplugin.network.PacketSender.sendScoreUpdaterPacketToClient;
 
@@ -21,6 +23,8 @@ public class PointsManager {
     private static final String TABLE_NAME = "Puntos";
     private static final String POINTS_COLUMN = "puntos";
     private static final int TOP_LIMIT = 12;
+
+    private static final ExecutorService executorService = Executors.newFixedThreadPool(20);
 
     /**
      * Crea una nueva instancia de PointsManager y establece la conexión a la base de datos.
@@ -93,21 +97,24 @@ public class PointsManager {
         String uuid = player.getUniqueId().toString();
         String playerName = player.getName();
 
-        try {
-            int currentPoints = getPlayerPoints(player);
-            int updatedPoints = isAddition ? currentPoints + amount : Math.max(0, currentPoints - amount);
+        executorService.submit(() -> {
+            try {
+                int currentPoints = getPlayerPoints(player);
+                int updatedPoints = isAddition ? currentPoints + amount : Math.max(0, currentPoints - amount);
 
-            String upsertQuery = "INSERT OR REPLACE INTO " + TABLE_NAME +
-                    " (uuid, nombre, " + POINTS_COLUMN + ") VALUES (?, ?, ?)";
-            try (PreparedStatement statement = databaseConnection.prepareStatement(upsertQuery)) {
-                statement.setString(1, uuid);
-                statement.setString(2, playerName);
-                statement.setInt(3, updatedPoints);
-                statement.executeUpdate();
+                String upsertQuery = "INSERT OR REPLACE INTO " + TABLE_NAME +
+                        " (uuid, nombre, " + POINTS_COLUMN + ") VALUES (?, ?, ?)";
+                try (PreparedStatement statement = databaseConnection.prepareStatement(upsertQuery)) {
+                    statement.setString(1, uuid);
+                    statement.setString(2, playerName);
+                    statement.setInt(3, updatedPoints);
+                    statement.executeUpdate();
+                }
+            } catch (SQLException e) {
+                GeoWarePlugin.LOGGER.error("Error modifying points for player {}", playerName, e);
             }
-        } catch (SQLException e) {
-            GeoWarePlugin.LOGGER.error("Error modifying points for player {}", playerName, e);
-        }
+        });
+
         sendScoreUpdaterPacketToClient(player);
     }
 
