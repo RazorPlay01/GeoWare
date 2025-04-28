@@ -39,7 +39,7 @@ public class NetworkManager {
     public static void registerClient() {
         ClientPlayNetworking.registerGlobalReceiver(FabricCustomPayload.CUSTOM_PAYLOAD_ID, (payload, context) -> context.client().execute(() -> {
             IPacket packet = payload.packet();
-            GeoWareMod.LOGGER.info("Packet received from server: {}", packet.getPacketId());
+            //GeoWareMod.LOGGER.info("Packet received from server: {}", packet.getPacketId());
             switch (packet) {
                 case ArkanoidPacket pkt -> checkArkanoidPacketClient(pkt, context);
                 case BubblePuzzlePacket pkt -> checkBubblePuzzlePacketClient(pkt, context);
