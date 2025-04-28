@@ -43,7 +43,7 @@ public class GuitarHeroGame extends Game {
     private BossBar bossBar = new BossBar();
 
     public GuitarHeroGame(Screen screen, int prevScore, UUID musicPlayerId) {
-        super(screen, 0, 64, prevScore); // 64s de juego (56s a 120s)
+        super(screen, 0, 129, prevScore); // 64s de juego (56s a 120s)
         this.musicPlayerId = musicPlayerId;
         initializeNoteData();
         initializeEventData();
@@ -74,17 +74,38 @@ public class GuitarHeroGame extends Game {
 
     private void initializeEventData() {
         eventData.addAll(List.of(
-                new EventData(56000 + 1500, () -> bossBar.removeoclockLife(2)),
-                new EventData(56000 + 2500, () -> bossBar.removeoclockLife(2)),
-                new EventData(56000 + 3500, () -> bossBar.removeoclockLife(2)),
-                new EventData(56000 + 4500, () -> bossBar.removeoclockLife(2)),
-                new EventData(56000 + 5500, () -> bossBar.removeoclockLife(2)),
-                new EventData(56000 + 1500, () -> bossBar.removebbnosLife(2)),
-                new EventData(56000 + 2500, () -> bossBar.removebbnosLife(2)),
-                new EventData(56000 + 3500, () -> bossBar.removebbnosLife(2)),
-                new EventData(56000 + 4500, () -> bossBar.removebbnosLife(2)),
-                new EventData(56000 + 5500, () -> bossBar.addbbnosLife(4)),
-                new EventData(56000 + 7500, () -> bossBar.removebbnosLife(2))
+                new EventData(56000 + 3000, () -> bossBar.removeoclockLife(1)),
+                new EventData(56000 + 4200, () -> bossBar.removeoclockLife(1)),
+                new EventData(56000 + 5000, () -> bossBar.removeoclockLife(1)),
+
+                new EventData(56000 + 3000, () -> bossBar.removebbnosLife(1)),
+                new EventData(56000 + 4200, () -> bossBar.removebbnosLife(1)),
+                new EventData(56000 + 5000, () -> bossBar.removebbnosLife(1))
+                /*,
+                new EventData(56000 + 6200, () -> ),
+                new EventData(56000 + 9200, () -> ),
+                new EventData(56000 + 10000, () -> ),
+                new EventData(56000 + 11200, () -> ),
+                new EventData(56000 + 13200, () -> ),
+                new EventData(56000 + 18000, () -> ),
+                new EventData(56000 + 18200, () -> ),
+                new EventData(56000 + 19000, () -> ),
+                new EventData(56000 + 19200, () -> ),
+                new EventData(56000 + 22000, () -> ),
+                new EventData(56000 + 22200, () -> ),
+                new EventData(56000 + 23000, () -> ),
+                new EventData(56000 + 23200, () -> ),
+                new EventData(56000 + 25200, () -> ),
+                new EventData(56000 + 26000, () -> ),
+                new EventData(56000 + 26200, () -> ),
+                new EventData(56000 + 27000, () -> ),
+                new EventData(56000 + 32200, () -> ),
+                new EventData(56000 + 34200, () -> ),
+                new EventData(56000 + 42000, () -> ),
+                new EventData(56000 + 51000, () -> ),
+                new EventData(56000 + 51200, () -> ),
+                new EventData(56000 + 52200, () -> ),
+                new EventData(56000 + 64000, () -> )*/
         ));
     }
 

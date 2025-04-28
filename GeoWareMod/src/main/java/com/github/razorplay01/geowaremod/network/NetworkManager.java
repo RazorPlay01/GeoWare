@@ -145,13 +145,13 @@ public class NetworkManager {
     private static void checkDonkeyKongPacketClient(DonkeyKongPacket iPacket, ClientPlayNetworking.Context context) {
         GeoWareMod.guiScale = context.client().options.getGuiScale().getValue();
         context.client().options.getGuiScale().setValue(2);
-        context.client().execute(() -> MinecraftClient.getInstance().setScreen(new DonkeyKongScreen(iPacket.getScore(), 5, iPacket.getTimeLimitSeconds(), iPacket.getSpawnInterval(), iPacket.getSpawnProbability())));
+        context.client().execute(() -> MinecraftClient.getInstance().setScreen(new DonkeyKongScreen(iPacket.getScore(), 5, iPacket.getTimeLimitSeconds(), iPacket.getSpawnInterval(), iPacket.getSpawnProbability(), iPacket.getFinalPoints())));
     }
 
     private static void checkFruitFocusPacketClient(FruitFocusPacket iPacket, ClientPlayNetworking.Context context) {
         GeoWareMod.guiScale = context.client().options.getGuiScale().getValue();
         context.client().options.getGuiScale().setValue(2);
-        context.client().execute(() -> MinecraftClient.getInstance().setScreen(new FruitFocusGameScreen(iPacket.getTimeLimitSeconds(), iPacket.getScore(), iPacket.getHideDurationSeconds(), iPacket.getFruitsToHide())));
+        context.client().execute(() -> MinecraftClient.getInstance().setScreen(new FruitFocusGameScreen(iPacket.getTimeLimitSeconds(), iPacket.getScore(), iPacket.getHideDurationSeconds(), iPacket.getFruitsToHide(), iPacket.getCompletePoint())));
     }
 
     private static void checkGalagaPacketClient(GalagaPacket iPacket, ClientPlayNetworking.Context context) {
@@ -163,7 +163,7 @@ public class NetworkManager {
     private static void checkHanoiTowersPacketClient(HanoiTowersPacket iPacket, ClientPlayNetworking.Context context) {
         GeoWareMod.guiScale = context.client().options.getGuiScale().getValue();
         context.client().options.getGuiScale().setValue(2);
-        context.client().execute(() -> MinecraftClient.getInstance().setScreen(new HanoiTowersScreen(iPacket.getScore(), 5, iPacket.getTimeLimitSeconds(), iPacket.getRings())));
+        context.client().execute(() -> MinecraftClient.getInstance().setScreen(new HanoiTowersScreen(iPacket.getScore(), 5, iPacket.getTimeLimitSeconds(), iPacket.getRings(), iPacket.getFinalPoints())));
     }
 
     private static void checkKeyBindPacketClient(KeyBindPacket iPacket, ClientPlayNetworking.Context context) {
@@ -175,13 +175,13 @@ public class NetworkManager {
     private static void checkRobotFactoryPacketClient(RobotFactoryPacket iPacket, ClientPlayNetworking.Context context) {
         GeoWareMod.guiScale = context.client().options.getGuiScale().getValue();
         context.client().options.getGuiScale().setValue(2);
-        context.client().execute(() -> MinecraftClient.getInstance().setScreen(new RobotFactoryScreen(iPacket.getTimeLimitSeconds(), iPacket.getScore(), iPacket.getSpeedMultiplier(), iPacket.isEnableRotation(), iPacket.getPartQuantity())));
+        context.client().execute(() -> MinecraftClient.getInstance().setScreen(new RobotFactoryScreen(iPacket.getTimeLimitSeconds(), iPacket.getScore(), iPacket.getSpeedMultiplier(), iPacket.isEnableRotation(), iPacket.getPartQuantity(), iPacket.getCompletePoint())));
     }
 
     private static void checkScaryMazePacketClient(ScaryMazePacket iPacket, ClientPlayNetworking.Context context) {
         GeoWareMod.guiScale = context.client().options.getGuiScale().getValue();
         context.client().options.getGuiScale().setValue(2);
-        context.client().execute(() -> MinecraftClient.getInstance().setScreen(new ScaryMazeScreen(iPacket.getScore(), 5, iPacket.getTimeLimitSeconds(), iPacket.getLevel())));
+        context.client().execute(() -> MinecraftClient.getInstance().setScreen(new ScaryMazeScreen(iPacket.getScore(), 5, iPacket.getTimeLimitSeconds(), iPacket.getLevel(), iPacket.getFinalPoints())));
     }
 
     private static void checkTetrisPacketClient(TetrisPacket iPacket, ClientPlayNetworking.Context context) {

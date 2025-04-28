@@ -5,6 +5,8 @@ build
 libs
 /libs
 
+/output
+
 /GeoWareCommon/build
 
 /GeoWareMod/.gradle

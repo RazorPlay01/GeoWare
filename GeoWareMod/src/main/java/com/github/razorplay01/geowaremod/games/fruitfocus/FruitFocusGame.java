@@ -58,9 +58,11 @@ public class FruitFocusGame extends Game {
     private FruitSlot targetSlot;
 
     private final float soundVolume = 0.3f;
+    private final int completePoint;
 
-    public FruitFocusGame(GameScreen screen, int timeLimitSeconds, int prevScore, int hideDurationSeconds, int fruitsToHide) {
+    public FruitFocusGame(GameScreen screen, int timeLimitSeconds, int prevScore, int hideDurationSeconds, int fruitsToHide, int completePoint) {
         super(screen, 5, timeLimitSeconds, prevScore);
+        this.completePoint = completePoint;
         this.hideTimer = new Timer(hideDurationSeconds * 1000L); // Tiempo para mostrar frutas
         this.chooseTimer = new Timer(CHOOSE_DURATION * 1000L); // Tiempo para elegir
         this.fruitsToHide = Math.min(fruitsToHide, NUM_SLOTS); // Asegurar que no exceda NUM_SLOTS
@@ -206,7 +208,7 @@ public class FruitFocusGame extends Game {
             targetSlot.setHidden(false);
             discoveredSlots.add(targetSlot);
 
-            addScore(3);
+            addScore(completePoint);
 
             playSound(GameSounds.FRUITFOCUS_CORRECT, soundVolume, 1.0f);
             // Avanzar a la siguiente ronda inmediatamente

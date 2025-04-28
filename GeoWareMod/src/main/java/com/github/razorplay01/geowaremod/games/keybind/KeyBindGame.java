@@ -39,6 +39,17 @@ public class KeyBindGame extends Game {
     private final Key downKey;
     private final Key rightKey;
 
+    private final Set<Integer> validKeyCodes = Set.of(
+            GLFW.GLFW_KEY_W,
+            GLFW.GLFW_KEY_A,
+            GLFW.GLFW_KEY_S,
+            GLFW.GLFW_KEY_D,
+            GLFW.GLFW_KEY_L,
+            GLFW.GLFW_KEY_J,
+            GLFW.GLFW_KEY_K,
+            GLFW.GLFW_KEY_H
+    );
+
     private final float soundVolume = 0.3f;
 
     public KeyBindGame(GameScreen screen, int timeLimitSeconds, int prevScore, float circleSpeed, float spawnChance) {
@@ -179,6 +190,10 @@ public class KeyBindGame extends Game {
 
     @Override
     public void keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (!validKeyCodes.contains(keyCode)) {
+            return; // Ignorar cualquier tecla no válida
+        }
+
         Iterator<MovingCircle> iterator = movingCircles.iterator();
         while (iterator.hasNext()) {
             MovingCircle circle = iterator.next();

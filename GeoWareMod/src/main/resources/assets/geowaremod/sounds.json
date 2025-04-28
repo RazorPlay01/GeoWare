@@ -1,11 +1,4 @@
 {
-  "guitarhero_sound": {
-    "sounds": [
-      {
-        "name": "geowaremod:games/guitarhero/guitarhero_sound"
-      }
-    ]
-  },
   "duplicar_arkanoid": {
     "sounds": [
       {

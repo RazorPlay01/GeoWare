@@ -15,6 +15,7 @@ public class FruitFocusPacket implements IPacket {
     private int timeLimitSeconds;
     private int hideDurationSeconds;
     private int fruitsToHide;
+    private int completePoint;
 
     @Override
     public void read(PacketDataSerializer serializer) throws PacketSerializationException {
@@ -22,6 +23,7 @@ public class FruitFocusPacket implements IPacket {
         this.timeLimitSeconds = serializer.readInt();
         this.hideDurationSeconds = serializer.readInt();
         this.fruitsToHide = serializer.readInt();
+        this.completePoint = serializer.readInt();
     }
 
     @Override
@@ -30,6 +32,7 @@ public class FruitFocusPacket implements IPacket {
         serializer.writeInt(this.timeLimitSeconds);
         serializer.writeInt(this.hideDurationSeconds);
         serializer.writeInt(this.fruitsToHide);
+        serializer.writeInt(this.completePoint);
     }
 
 

@@ -29,6 +29,7 @@ dependencies {
     paperweight.paperDevBundle("1.21.1-R0.1-SNAPSHOT")
     implementation('com.google.code.findbugs:jsr305:3.0.2')
     implementation('org.xerial:sqlite-jdbc:3.7.2')
+    implementation('com.zaxxer:HikariCP:6.3.0')
     compileOnly('me.clip:placeholderapi:2.11.6')
     implementation('co.aikar:acf-paper:0.5.1-SNAPSHOT')
 

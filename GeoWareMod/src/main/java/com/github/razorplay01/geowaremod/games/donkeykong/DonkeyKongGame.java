@@ -57,6 +57,7 @@ public class DonkeyKongGame extends Game {
     private float helpTextureTimer = 0;
     private boolean showHelpTexture = false;
     private final float soundVolume = 0.3f;
+    private final int finalPoints;
 
     private final Animation princessIdle = new Animation(
             Texture.createTextureList(Identifier.of(GeoWareMod.MOD_ID, "textures/gui/peach.png"), 44, 56, 129, 56, 2, 1.0f, true),
@@ -66,8 +67,9 @@ public class DonkeyKongGame extends Game {
 
     Texture helpTexture = new Texture(Identifier.of(GeoWareMod.MOD_ID, "textures/gui/peach.png"), 89, 34, 40, 22, 129, 56, 1.0f);
 
-    protected DonkeyKongGame(Screen screen, int initDelay, int timeLimitSeconds, int prevScore, int spawnInterval, float spawnProbability) {
+    protected DonkeyKongGame(Screen screen, int initDelay, int timeLimitSeconds, int prevScore, int spawnInterval, float spawnProbability, int finalPoints) {
         super(screen, initDelay, timeLimitSeconds, prevScore);
+        this.finalPoints = finalPoints;
         this.backgroundImage = Identifier.of(GeoWareMod.MOD_ID, "textures/gui/map_base.png");
         this.spawnInterval = spawnInterval;
         this.spawnProbability = spawnProbability;
@@ -226,9 +228,7 @@ public class DonkeyKongGame extends Game {
 
     private void calculateVictoryBonus() {
         if (player.isWinning()) {
-            long remainingTimeSeconds = gameDutarion.getRemainingTime() / 1000;  // Convert to seconds
-            int timeBonus = (int) remainingTimeSeconds;  // 1 points per remaining second
-            addScore(timeBonus);
+            addScore(finalPoints);
         }
     }
 

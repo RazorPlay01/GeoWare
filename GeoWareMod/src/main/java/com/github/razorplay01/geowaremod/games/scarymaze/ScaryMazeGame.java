@@ -20,9 +20,11 @@ public class ScaryMazeGame extends Game {
     private boolean isPlayerBoundToMouse = false;
     private final float scaleFactor = 2.0f; // Factor de escala (ajústalo según necesites)
     private final float soundVolume = 0.3f;
+    private final int finalPoints;
 
-    protected ScaryMazeGame(Screen screen, int initDelay, int timeLimitSeconds, int prevScore, int level) {
+    protected ScaryMazeGame(Screen screen, int initDelay, int timeLimitSeconds, int prevScore, int level, int finalPoints) {
         super(screen, initDelay, timeLimitSeconds, prevScore);
+        this.finalPoints = finalPoints;
         this.level = Math.max(1, Math.min(level, 3));
     }
 
@@ -102,7 +104,7 @@ public class ScaryMazeGame extends Game {
                 }
             }
             if (player.intersects(finalArea)) {
-                addScore(10);
+                addScore(finalPoints);
                 status = GameStatus.ENDING;
                 playSound(GameSounds.SCARYMAZE_WIN, soundVolume, 1.0f);
             }

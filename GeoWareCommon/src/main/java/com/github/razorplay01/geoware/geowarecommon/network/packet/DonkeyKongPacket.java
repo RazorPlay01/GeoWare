@@ -15,6 +15,7 @@ public class DonkeyKongPacket implements IPacket {
     private int timeLimitSeconds;
     private int spawnInterval;
     private float spawnProbability;
+    private int finalPoints;
 
     @Override
     public void read(PacketDataSerializer serializer) throws PacketSerializationException {
@@ -22,6 +23,7 @@ public class DonkeyKongPacket implements IPacket {
         this.timeLimitSeconds = serializer.readInt();
         this.spawnInterval = serializer.readInt();
         this.spawnProbability = serializer.readFloat();
+        this.finalPoints = serializer.readInt();
     }
 
     @Override
@@ -30,6 +32,7 @@ public class DonkeyKongPacket implements IPacket {
         serializer.writeInt(this.timeLimitSeconds);
         serializer.writeInt(this.spawnInterval);
         serializer.writeFloat(this.spawnProbability);
+        serializer.writeInt(this.finalPoints);
     }
 
 

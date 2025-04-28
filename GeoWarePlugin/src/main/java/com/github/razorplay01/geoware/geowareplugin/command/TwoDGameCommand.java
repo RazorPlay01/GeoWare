@@ -36,38 +36,40 @@ public class TwoDGameCommand extends BaseCommand {
     }
 
     @Subcommand("hanoitowers")
-    @CommandCompletion("@players|all|allnotop|adventure|survival|spectator 60|180|300 @range:1-8")
+    @CommandCompletion("@players|all|allnotop|adventure|survival|spectator 60|180|300 @range:1-8 40|60|100")
     @Description("Inicia el juego Hanoi Towers para los jugadores objetivo")
     public void onHanoiTowers(CommandSender sender,
                               @Name("target") String target,
                               @Default("60") @Name("timeLimit") int timeLimit,
-                              @Default("5") @Name("rings") @Conditions("limits:min=1,max=8") int rings) {
+                              @Default("5") @Name("rings") @Conditions("limits:min=1,max=8") int rings,
+                              @Default("40") @Name("finalPoints") int finalPoints) {
         Collection<Player> targets = getTargetPlayers(target);
         if (targets.isEmpty()) {
             sender.sendMessage("§cNo se encontraron jugadores válidos.");
             return;
         }
         for (Player player : targets) {
-            PacketSender.sendHanoiTowersPacketToClient(player, timeLimit, rings);
+            PacketSender.sendHanoiTowersPacketToClient(player, timeLimit, rings, finalPoints);
         }
         sender.sendMessage("§aPacket HanoiTowers enviado a " + targets.size() + " jugador(es)");
     }
 
     @Subcommand("donkeykong")
-    @CommandCompletion("@players|all|allnotop|adventure|survival|spectator 60|180|300 800|1000|1200 0.5|0.7|0.9")
+    @CommandCompletion("@players|all|allnotop|adventure|survival|spectator 60|180|300 800|1000|1200 0.5|0.7|0.9 50|60|70")
     @Description("Inicia el juego Donkey Kong para los jugadores objetivo")
     public void onDonkeyKong(CommandSender sender,
                              @Name("target") String target,
                              @Default("60") @Name("timeLimit") int timeLimit,
                              @Default("80") @Name("spawnInterval") int spawnInterval,
-                             @Default("0.7") @Name("spawnProb") float spawnProb) {
+                             @Default("0.7") @Name("spawnProb") float spawnProb,
+                             @Default("50") @Name("finalPoints") int finalPoints) {
         Collection<Player> targets = getTargetPlayers(target);
         if (targets.isEmpty()) {
             sender.sendMessage("§cNo se encontraron jugadores válidos.");
             return;
         }
         for (Player player : targets) {
-            PacketSender.sendDonkeyKongPacketToClient(player, timeLimit, spawnInterval, spawnProb);
+            PacketSender.sendDonkeyKongPacketToClient(player, timeLimit, spawnInterval, spawnProb, finalPoints);
         }
         sender.sendMessage("§aPacket DonkeyKong enviado a " + targets.size() + " jugador(es)");
     }
@@ -107,11 +109,12 @@ public class TwoDGameCommand extends BaseCommand {
         }
         sender.sendMessage("§aPacket Arkanoid enviado a " + targets.size() + " jugador(es)");
     }
+
     @Subcommand("guitarhero")
     @CommandCompletion("@players|all|allnotop|adventure|survival|spectator")
     @Description("Inicia el juego GuitarHero para los jugadores objetivo")
     public void onGuitarHero(CommandSender sender,
-                           @Name("target") String target) {
+                             @Name("target") String target) {
         Collection<Player> targets = getTargetPlayers(target);
         if (targets.isEmpty()) {
             sender.sendMessage("§cNo se encontraron jugadores válidos.");
@@ -124,20 +127,21 @@ public class TwoDGameCommand extends BaseCommand {
     }
 
     @Subcommand("fruitfocus")
-    @CommandCompletion("@players|all|allnotop|adventure|survival|spectator 60|180|300 10 6")
+    @CommandCompletion("@players|all|allnotop|adventure|survival|spectator 60|180|300 10 6 3|6|9")
     @Description("Inicia el juego Fruit Focus para los jugadores objetivo")
     public void onFruitFocus(CommandSender sender,
                              @Name("target") String target,
                              @Default("60") @Name("timeLimit") int timeLimit,
                              @Default("10") @Name("hideDuration") int hideDuration,
-                             @Default("6") @Name("fruitsToHide") int fruitsToHide) {
+                             @Default("6") @Name("fruitsToHide") int fruitsToHide,
+                             @Default("3") @Name("completePoint") int completePoint) {
         Collection<Player> targets = getTargetPlayers(target);
         if (targets.isEmpty()) {
             sender.sendMessage("§cNo se encontraron jugadores válidos.");
             return;
         }
         for (Player player : targets) {
-            PacketSender.sendFruitFocusPacketToClient(player, timeLimit, hideDuration, fruitsToHide);
+            PacketSender.sendFruitFocusPacketToClient(player, timeLimit, hideDuration, fruitsToHide, completePoint);
         }
         sender.sendMessage("§aPacket FruitFocus enviado a " + targets.size() + " jugador(es)");
     }
@@ -184,39 +188,41 @@ public class TwoDGameCommand extends BaseCommand {
     }
 
     @Subcommand("robotfactory")
-    @CommandCompletion("@players|all|allnotop|adventure|survival|spectator 60|180|300 1.0|1.5|2.0 true|false @range:1-10")
+    @CommandCompletion("@players|all|allnotop|adventure|survival|spectator 60|180|300 1.0|1.5|2.0 true|false @range:1-10 1|5|10")
     @Description("Inicia el juego Robot Factory para los jugadores objetivo")
     public void onRobotFactory(CommandSender sender,
                                @Name("target") String target,
                                @Default("60") @Name("timeLimit") int timeLimit,
                                @Default("1.0") @Name("speed") float speed,
                                @Default("false") @Name("rotation") boolean rotation,
-                               @Default("5") @Name("partQuantity") @Conditions("limits:min=1,max=10") int partQuantity) {
+                               @Default("5") @Name("partQuantity") @Conditions("limits:min=1,max=10") int partQuantity,
+                               @Default("1") @Name("completePoint") int completePoint) {
         Collection<Player> targets = getTargetPlayers(target);
         if (targets.isEmpty()) {
             sender.sendMessage("§cNo se encontraron jugadores válidos.");
             return;
         }
         for (Player player : targets) {
-            PacketSender.sendRobotFactoryPacketToClient(player, timeLimit, speed, rotation, partQuantity);
+            PacketSender.sendRobotFactoryPacketToClient(player, timeLimit, speed, rotation, partQuantity, completePoint);
         }
         sender.sendMessage("§aPacket RobotFactory enviado a " + targets.size() + " jugador(es)");
     }
 
     @Subcommand("scarymaze")
-    @CommandCompletion("@players|all|allnotop|adventure|survival|spectator 60|180|300 1|2|3")
+    @CommandCompletion("@players|all|allnotop|adventure|survival|spectator 60|180|300 1|2|3 10|20|30")
     @Description("Inicia el juego Scary Maze para los jugadores objetivo")
     public void onScaryMaze(CommandSender sender,
                             @Name("target") String target,
                             @Default("60") @Name("timeLimit") int timeLimit,
-                            @Default("1") @Name("level") @Conditions("limits:min=1,max=3") int level) {
+                            @Default("1") @Name("level") @Conditions("limits:min=1,max=3") int level,
+                            @Default("50") @Name("finalPoints") int finalPoints) {
         Collection<Player> targets = getTargetPlayers(target);
         if (targets.isEmpty()) {
             sender.sendMessage("§cNo se encontraron jugadores válidos.");
             return;
         }
         for (Player player : targets) {
-            PacketSender.sendScaryMazePacketToClient(player, timeLimit, level);
+            PacketSender.sendScaryMazePacketToClient(player, timeLimit, level, finalPoints);
         }
         sender.sendMessage("§aPacket ScaryMaze enviado a " + targets.size() + " jugador(es)");
     }

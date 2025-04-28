@@ -42,6 +42,7 @@ public class PacketSender {
             GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());
         }
     }
+
     public static void sendGuitarHeroPacketToClient(Player targetPlayer) {
         try {
             int prevScore = GeoWarePlugin.getInstance().getPointsManager().getPlayerPoints(targetPlayer);
@@ -64,10 +65,10 @@ public class PacketSender {
         }
     }
 
-    public static void sendDonkeyKongPacketToClient(Player targetPlayer, int timeLimitSeconds, int spawnInterval, float spawnProbability) {
+    public static void sendDonkeyKongPacketToClient(Player targetPlayer, int timeLimitSeconds, int spawnInterval, float spawnProbability, int finalPoints) {
         try {
             int prevScore = GeoWarePlugin.getInstance().getPointsManager().getPlayerPoints(targetPlayer);
-            IPacket packet = new DonkeyKongPacket(prevScore, timeLimitSeconds, spawnInterval, spawnProbability);
+            IPacket packet = new DonkeyKongPacket(prevScore, timeLimitSeconds, spawnInterval, spawnProbability, finalPoints);
             packetSendInfo(packet, targetPlayer);
             targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {
@@ -75,10 +76,10 @@ public class PacketSender {
         }
     }
 
-    public static void sendFruitFocusPacketToClient(Player targetPlayer, int timeLimitSeconds, int hideDurationSeconds, int fruitsToHide) {
+    public static void sendFruitFocusPacketToClient(Player targetPlayer, int timeLimitSeconds, int hideDurationSeconds, int fruitsToHide, int completePoint) {
         try {
             int prevScore = GeoWarePlugin.getInstance().getPointsManager().getPlayerPoints(targetPlayer);
-            IPacket packet = new FruitFocusPacket(prevScore, timeLimitSeconds, hideDurationSeconds, fruitsToHide);
+            IPacket packet = new FruitFocusPacket(prevScore, timeLimitSeconds, hideDurationSeconds, fruitsToHide, completePoint);
             packetSendInfo(packet, targetPlayer);
             targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {
@@ -97,10 +98,10 @@ public class PacketSender {
         }
     }
 
-    public static void sendHanoiTowersPacketToClient(Player targetPlayer, int timeLimitSeconds, int rings) {
+    public static void sendHanoiTowersPacketToClient(Player targetPlayer, int timeLimitSeconds, int rings, int finalPoints) {
         try {
             int prevScore = GeoWarePlugin.getInstance().getPointsManager().getPlayerPoints(targetPlayer);
-            IPacket packet = new HanoiTowersPacket(prevScore, timeLimitSeconds, rings);
+            IPacket packet = new HanoiTowersPacket(prevScore, timeLimitSeconds, rings, finalPoints);
             packetSendInfo(packet, targetPlayer);
             targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {
@@ -119,10 +120,10 @@ public class PacketSender {
         }
     }
 
-    public static void sendRobotFactoryPacketToClient(Player targetPlayer, int timeLimitSeconds, float speedMultiplier, boolean enableRotation, int partQuantity) {
+    public static void sendRobotFactoryPacketToClient(Player targetPlayer, int timeLimitSeconds, float speedMultiplier, boolean enableRotation, int partQuantity, int completePoint) {
         try {
             int prevScore = GeoWarePlugin.getInstance().getPointsManager().getPlayerPoints(targetPlayer);
-            IPacket packet = new RobotFactoryPacket(prevScore, timeLimitSeconds, speedMultiplier, enableRotation, partQuantity);
+            IPacket packet = new RobotFactoryPacket(prevScore, timeLimitSeconds, speedMultiplier, enableRotation, partQuantity, completePoint);
             packetSendInfo(packet, targetPlayer);
             targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {
@@ -130,10 +131,10 @@ public class PacketSender {
         }
     }
 
-    public static void sendScaryMazePacketToClient(Player targetPlayer, int timeLimitSeconds, int level) {
+    public static void sendScaryMazePacketToClient(Player targetPlayer, int timeLimitSeconds, int level, int finalPoints) {
         try {
             int prevScore = GeoWarePlugin.getInstance().getPointsManager().getPlayerPoints(targetPlayer);
-            IPacket packet = new ScaryMazePacket(prevScore, timeLimitSeconds, level);
+            IPacket packet = new ScaryMazePacket(prevScore, timeLimitSeconds, level, finalPoints);
             packetSendInfo(packet, targetPlayer);
             targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {
@@ -176,7 +177,6 @@ public class PacketSender {
         try {
             Pair<Integer, Integer> scoreAndPosition = GeoWarePlugin.getInstance().getPointsManager().obtenerPuntosYPosicion(targetPlayer);
             IPacket packet = new ScoreUpdaterPacket(scoreAndPosition.getKey(), scoreAndPosition.getValue());
-            packetSendInfo(packet, targetPlayer);
             targetPlayer.sendPluginMessage(GeoWarePlugin.getInstance(), PACKET_BASE_CHANNEL, PacketTCP.write(packet));
         } catch (PacketSerializationException e) {
             GeoWarePlugin.getInstance().getLogger().warning(e.getMessage());

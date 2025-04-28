@@ -38,9 +38,11 @@ public class RobotFactoryGame extends Game {
 
     private final int partQuantity;
     private final float soundVolume = 0.3f;
+    private final int completePoint;
 
-    public RobotFactoryGame(GameScreen screen, int timeLimitSeconds, int prevScore, float speedMultiplier, boolean enableRotation, int partQuantity) {
+    public RobotFactoryGame(GameScreen screen, int timeLimitSeconds, int prevScore, float speedMultiplier, boolean enableRotation, int partQuantity, int completePoint) {
         super(screen, 5, timeLimitSeconds, prevScore);
+        this.completePoint = completePoint;
         this.partQuantity = partQuantity;
         this.speedMultiplier = speedMultiplier;
         this.enableRotation = enableRotation;
@@ -80,7 +82,7 @@ public class RobotFactoryGame extends Game {
 
         if (tablePart != null && heldPart != null && tableZone.intersects(heldPart.getHitbox()) &&
                 tablePart.getFamily() == heldPart.getFamily() && tablePart.getType() != heldPart.getType()) {
-            addScore(1);
+            addScore(completePoint);
             playSound(GameSounds.ROBOTFACTORY_ENSAMBLE, soundVolume, 1.0f); // Sonido al terminar el juego
             addCompletionParticle(tableZone.getXPos(), tableZone.getYPos(), tablePart.getFamily());
             parts.remove(tablePart);

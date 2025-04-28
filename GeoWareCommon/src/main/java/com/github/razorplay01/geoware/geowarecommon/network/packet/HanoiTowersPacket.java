@@ -14,12 +14,14 @@ public class HanoiTowersPacket implements IPacket {
     private int score;
     private int timeLimitSeconds;
     private int rings;
+    private int finalPoints;
 
     @Override
     public void read(PacketDataSerializer serializer) throws PacketSerializationException {
         this.score = serializer.readInt();
         this.timeLimitSeconds = serializer.readInt();
         this.rings = serializer.readInt();
+        this.finalPoints = serializer.readInt();
     }
 
     @Override
@@ -27,6 +29,7 @@ public class HanoiTowersPacket implements IPacket {
         serializer.writeInt(this.score);
         serializer.writeInt(this.timeLimitSeconds);
         serializer.writeInt(this.rings);
+        serializer.writeInt(this.finalPoints);
     }
 
 

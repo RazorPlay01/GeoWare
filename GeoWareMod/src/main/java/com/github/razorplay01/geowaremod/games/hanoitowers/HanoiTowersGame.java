@@ -28,13 +28,15 @@ public class HanoiTowersGame extends Game {
     private static final int GAME_HEIGHT = 255;
 
     private final float soundVolume = 0.3f;
+    private final int finalPoints;
 
     private boolean playDeadSound = false;
 
-    public HanoiTowersGame(Screen screen, int initDelay, int timeLimitSeconds, int prevScore, int rings) {
+    public HanoiTowersGame(Screen screen, int initDelay, int timeLimitSeconds, int prevScore, int rings, int finalPoints) {
         super(screen, initDelay, timeLimitSeconds, prevScore);
         this.numRings = rings;
         this.movesCounter = 0;
+        this.finalPoints = finalPoints;
 
 
         List<Texture> textures = new ArrayList<>();
@@ -66,7 +68,7 @@ public class HanoiTowersGame extends Game {
     public void update() {
         super.update();
         if (status == GameStatus.ACTIVE && verificarVictoria()) {
-            addScore(50);
+            addScore(finalPoints);
             playSound(GameSounds.HANOITOWERS_WIN, soundVolume, 1.0f); // Perdió
             status = GameStatus.ENDING;
         }

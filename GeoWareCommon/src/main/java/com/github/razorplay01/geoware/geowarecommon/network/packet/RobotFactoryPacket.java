@@ -16,6 +16,7 @@ public class RobotFactoryPacket implements IPacket {
     private float speedMultiplier;
     private boolean enableRotation;
     private int partQuantity;
+    private int completePoint;
 
     @Override
     public void read(PacketDataSerializer serializer) throws PacketSerializationException {
@@ -24,6 +25,7 @@ public class RobotFactoryPacket implements IPacket {
         this.speedMultiplier = serializer.readFloat();
         this.enableRotation = serializer.readBoolean();
         this.partQuantity = serializer.readInt();
+        this.completePoint = serializer.readInt();
     }
 
     @Override
@@ -33,6 +35,7 @@ public class RobotFactoryPacket implements IPacket {
         serializer.writeFloat(this.speedMultiplier);
         serializer.writeBoolean(this.enableRotation);
         serializer.writeInt(this.partQuantity);
+        serializer.writeInt(this.completePoint);
     }
 
 
