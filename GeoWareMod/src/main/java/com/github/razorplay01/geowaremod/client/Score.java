@@ -58,12 +58,12 @@ public class Score implements HudRenderCallback {
             drawContext.drawTexture(numbersTexture, x, y, (int) (172 * scale), (int) (16 * scale), 0, 0, 172, 16, 172, 16);
 
             // Manejo de la puntuación (máximo 9999)
-            int score = Math.min(GeoWareMod.playerScore, 9999);
+            int score = Math.min(GeoWareMod.playerScore != null ? Math.max(GeoWareMod.playerScore, 0) : 0, 9999);
             String scoreStr = String.format("%04d", score); // Siempre 4 dígitos
             drawNumber(drawContext, scoreStr, numbersFontBlackOutline, x + 19 * scale, y + 3 * scale, 16 * scale);
 
             // Manejo de la posición (máximo 99)
-            int position = Math.min(GeoWareMod.playerPosition, 99);
+            int position = Math.min(GeoWareMod.playerPosition != null ? Math.max(GeoWareMod.playerPosition, 0) : 0, 99);
             String positionStr = String.format("%02d", position); // Siempre 2 dígitos
             drawNumber(drawContext, positionStr, numbersFontWhiteOutline, x + 126 * scale, y + 3 * scale, 16 * scale);
         }
@@ -71,8 +71,15 @@ public class Score implements HudRenderCallback {
 
     private void drawNumber(DrawContext drawContext, String numberStr, Map<Integer, Texture> font, float x, float y, float spacing) {
         for (int i = 0; i < numberStr.length(); i++) {
-            int digit = Character.getNumericValue(numberStr.charAt(i));
+            char c = numberStr.charAt(i);
+            if (!Character.isDigit(c)) {
+                continue;
+            }
+            int digit = Character.getNumericValue(c);
             Texture drawTexture = font.get(digit);
+            if (drawTexture == null) {
+                continue;
+            }
             int width = (int) (drawTexture.width() * drawTexture.scale());
             int height = (int) (drawTexture.height() * drawTexture.scale());
             drawContext.drawTexture(

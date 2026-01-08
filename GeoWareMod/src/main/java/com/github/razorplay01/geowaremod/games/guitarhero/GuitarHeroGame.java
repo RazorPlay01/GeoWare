@@ -25,7 +25,7 @@ public class GuitarHeroGame extends Game {
     private static final int BASE_ZONE_WIDTH = 19;
     private static final int BASE_ZONE_HEIGHT = 16;
     private static final int NOTE_SPAWN_Y_OFFSET = -10;
-    private static final long PRESS_WINDOW = 200; // ±200ms para acertar
+    private static final long PRESS_WINDOW = 1000; // ±200ms para acertar
 
     private final List<Particle> particles = new ArrayList<>();
     private final List<Note> notes = new ArrayList<>();
@@ -43,7 +43,7 @@ public class GuitarHeroGame extends Game {
     private BossBar bossBar = new BossBar();
 
     public GuitarHeroGame(Screen screen, int prevScore, UUID musicPlayerId) {
-        super(screen, 0, 129, prevScore); // 64s de juego (56s a 120s)
+        super(screen, 0, 131, prevScore);
         this.musicPlayerId = musicPlayerId;
         initializeNoteData();
         initializeEventData();
@@ -64,51 +64,53 @@ public class GuitarHeroGame extends Game {
                 new NoteData("F", 56000 + 24500, 56000 + 26000),
                 new NoteData("J", 56000 + 24700, 56000 + 26200),
                 new NoteData("H", 56000 + 25500, 56000 + 27000),
-                new NoteData("H", 56000 + 40500, 56000 + 42000),
-                new NoteData("J", 56000 + 49500, 56000 + 51000),
-                new NoteData("G", 56000 + 49700, 56000 + 51200),
-                new NoteData("F", 56000 + 50700, 56000 + 52200),
-                new NoteData("J", 56000 + 62500, 56000 + 64000)
+                new NoteData("H", 56000 + 40000, 56000 + 41000),
+                new NoteData("F", 56000 + 48000, 56000 + 51000),
+                new NoteData("J", 56000 + 49000, 56000 + 52000),
+                new NoteData("F", 56000 + 45000, 56000 + 53000),
+                new NoteData("J", 56000 + 51000, 56000 + 54000),
+                new NoteData("J", 56000 + 61500, 56000 + 63500)
         ));
     }
 
     private void initializeEventData() {
         eventData.addAll(List.of(
-                new EventData(56000 + 3000, () -> bossBar.removeoclockLife(1)),
+                new EventData(56000 + 3000, () -> bossBar.removebbnosLife(2)),
+                new EventData(56000 + 9200, () -> bossBar.removebbnosLife(2)),
+                new EventData(56000 + 22000, () -> bossBar.removebbnosLife(1)),
+                new EventData(56000 + 22200, () -> bossBar.removebbnosLife(1)),
+                new EventData(56000 + 23000, () -> bossBar.removebbnosLife(1)),
+                new EventData(56000 + 23200, () -> bossBar.removebbnosLife(1)),
+                new EventData(56000 + 32200, () -> bossBar.removebbnosLife(1)),
+                new EventData(56000 + 43000, () -> bossBar.addbbnosLife(4)),
+
                 new EventData(56000 + 4200, () -> bossBar.removeoclockLife(1)),
                 new EventData(56000 + 5000, () -> bossBar.removeoclockLife(1)),
-
-                new EventData(56000 + 3000, () -> bossBar.removebbnosLife(1)),
-                new EventData(56000 + 4200, () -> bossBar.removebbnosLife(1)),
-                new EventData(56000 + 5000, () -> bossBar.removebbnosLife(1))
-                /*,
-                new EventData(56000 + 6200, () -> ),
-                new EventData(56000 + 9200, () -> ),
-                new EventData(56000 + 10000, () -> ),
-                new EventData(56000 + 11200, () -> ),
-                new EventData(56000 + 13200, () -> ),
-                new EventData(56000 + 18000, () -> ),
-                new EventData(56000 + 18200, () -> ),
-                new EventData(56000 + 19000, () -> ),
-                new EventData(56000 + 19200, () -> ),
-                new EventData(56000 + 22000, () -> ),
-                new EventData(56000 + 22200, () -> ),
-                new EventData(56000 + 23000, () -> ),
-                new EventData(56000 + 23200, () -> ),
-                new EventData(56000 + 25200, () -> ),
-                new EventData(56000 + 26000, () -> ),
-                new EventData(56000 + 26200, () -> ),
-                new EventData(56000 + 27000, () -> ),
-                new EventData(56000 + 32200, () -> ),
-                new EventData(56000 + 34200, () -> ),
-                new EventData(56000 + 42000, () -> ),
-                new EventData(56000 + 51000, () -> ),
-                new EventData(56000 + 51200, () -> ),
-                new EventData(56000 + 52200, () -> ),
-                new EventData(56000 + 64000, () -> )*/
+                new EventData(56000 + 6200, () -> bossBar.removeoclockLife(2)),
+                new EventData(56000 + 10000, () -> bossBar.addoclockLife(1)),
+                new EventData(56000 + 10500, () -> bossBar.addoclockLife(1)),
+                new EventData(56000 + 11000, () -> bossBar.addoclockLife(1)),
+                new EventData(56000 + 11200, () -> bossBar.addoclockLife(1)),
+                new EventData(56000 + 13200, () -> bossBar.removeoclockLife(1)),
+                new EventData(56000 + 18000, () -> bossBar.removeoclockLife(1)),
+                new EventData(56000 + 18200, () -> bossBar.removeoclockLife(1)),
+                new EventData(56000 + 19000, () -> bossBar.removeoclockLife(1)),
+                new EventData(56000 + 19200, () -> bossBar.removeoclockLife(1)),
+                new EventData(56000 + 25200, () -> bossBar.removeoclockLife(1)),
+                new EventData(56000 + 26000, () -> bossBar.removeoclockLife(1)),
+                new EventData(56000 + 26200, () -> bossBar.removeoclockLife(1)),
+                new EventData(56000 + 27000, () -> bossBar.removeoclockLife(1)),
+                new EventData(56000 + 34200, () -> bossBar.addoclockLife(3)),
+                new EventData(56000 + 35000, () -> bossBar.addoclockLife(2)),
+                new EventData(56000 + 35500, () -> bossBar.addoclockLife(2)),
+                new EventData(56000 + 36000, () -> bossBar.addoclockLife(2)),
+                new EventData(56000 + 51000, () -> bossBar.removeoclockLife(1)),
+                new EventData(56000 + 51200, () -> bossBar.removeoclockLife(2)),
+                new EventData(56000 + 52200, () -> bossBar.removeoclockLife(2)),
+                new EventData(56000 + 63000, () -> bossBar.removeoclockLife(5))
         ));
     }
-
+//23000.5 -8 23087.5
     @Override
     public void init() {
         super.init();

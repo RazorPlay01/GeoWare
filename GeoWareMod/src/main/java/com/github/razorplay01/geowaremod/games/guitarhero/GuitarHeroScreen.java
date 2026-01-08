@@ -2,6 +2,7 @@ package com.github.razorplay01.geowaremod.games.guitarhero;
 
 import com.github.razorplay01.geowaremod.GeoWareMod;
 import com.github.razorplay01.razorplayapi.util.screen.GameScreen;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
 
@@ -22,7 +23,7 @@ public class GuitarHeroScreen extends GameScreen {
 
     @Override
     public boolean shouldCloseOnEsc() {
-        return true;
+        return false;
     }
 
     @Override

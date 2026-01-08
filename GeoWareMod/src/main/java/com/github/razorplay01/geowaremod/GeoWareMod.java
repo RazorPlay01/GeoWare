@@ -27,8 +27,8 @@ public class GeoWareMod implements ModInitializer, ClientModInitializer {
     private static Score score;
 
     public static int guiScale = 2;
-    public static int playerScore = 0;
-    public static int playerPosition = 0;
+    public static Integer playerScore = 0;
+    public static Integer playerPosition = 0;
 
     public static final Map<MusicPlayer, UUID> playingAudios = new HashMap<>();
     public static long musicStartTime;

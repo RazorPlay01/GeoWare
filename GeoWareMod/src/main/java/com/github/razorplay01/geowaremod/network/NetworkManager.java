@@ -14,16 +14,23 @@ import com.github.razorplay01.geowaremod.games.keybind.KeyBindGameScreen;
 import com.github.razorplay01.geowaremod.games.robotfactory.RobotFactoryScreen;
 import com.github.razorplay01.geowaremod.games.scarymaze.ScaryMazeScreen;
 import com.github.razorplay01.geowaremod.games.tetris.TetrisGameScreen;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.Vec3d;
 import org.watermedia.api.player.videolan.MusicPlayer;
 
 import java.io.File;
 import java.net.URI;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
+
+import static com.github.razorplay01.geowaremod.GeoWareMod.musicStartTime;
+import static com.github.razorplay01.geowaremod.GeoWareMod.playingAudios;
 
 public class NetworkManager {
     private NetworkManager() {
@@ -67,7 +74,7 @@ public class NetworkManager {
 
         // Iniciar música
         try {
-            File audioFile = new File(client.runDirectory, "mods/geowaremod/guitarhero_sound.mp3");
+            File audioFile = new File(client.runDirectory, "assets/t/4_4.ogg");
             if (!audioFile.exists()) {
                 GeoWareMod.LOGGER.error("Archivo de audio no encontrado: {}", audioFile.getAbsolutePath());
                 return;
@@ -75,20 +82,81 @@ public class NetworkManager {
             MusicPlayer musicPlayer = new MusicPlayer();
             musicPlayer.start(URI.create(audioFile.toURI().toString()));
             musicPlayer.setVolume((int) (client.options.getSoundVolume(SoundCategory.MASTER) * 100));
-            GeoWareMod.playingAudios.put(musicPlayer, musicPlayerId);
-            GeoWareMod.musicStartTime = System.currentTimeMillis();
+            playingAudios.put(musicPlayer, musicPlayerId);
+            musicStartTime = System.currentTimeMillis();
             GeoWareMod.LOGGER.info("Music started playing with WaterMedia, ID: {}", musicPlayerId);
         } catch (Exception e) {
             GeoWareMod.LOGGER.error("Error al reproducir el audio con WaterMedia: {}", e.getMessage());
             return;
         }
 
+        /*// Programar interpolación suave de yaw y pitch desde t=55s hasta t=56s
+        if (client.player != null) {
+            client.execute(() -> {
+                // Calcular yaw y pitch objetivo para mirar a (23000.5, -8, 23087.5)
+                Vec3d targetPos = new Vec3d(23000.5, -8, 23087.5);
+                Vec3d playerPos = client.player.getPos();
+                double eyeHeight = client.player.getEyeHeight(client.player.getPose());
+                double dx = targetPos.x - playerPos.x;
+                double dy = targetPos.y - (playerPos.y + eyeHeight);
+                double dz = targetPos.z - playerPos.z;
+
+                // Calcular yaw (en grados)
+                final float targetYaw = MathHelper.wrapDegrees((float) Math.toDegrees(Math.atan2(dz, dx)) - 90.0f); // Minecraft: 0° es sur, 90° es oeste
+
+                // Calcular pitch (en grados)
+                double horizontalDistance = Math.sqrt(dx * dx + dz * dz);
+                final float targetPitch = MathHelper.clamp((float) -Math.toDegrees(Math.atan2(dy, horizontalDistance)), -90.0f, 90.0f);
+
+                // Registrar manejador de ticks para interpolación
+                long startTime = musicStartTime + 55000; // t=55s
+                long duration = 1000; // 1 segundo de interpolación
+                float initialYaw = client.player.getYaw();
+                float initialPitch = client.player.getPitch();
+
+                ClientTickEvents.EndTick tickHandler = new ClientTickEvents.EndTick() {
+                    private boolean finished = false;
+
+                    @Override
+                    public void onEndTick(MinecraftClient tickClient) {
+                        if (tickClient.player == null || !playingAudios.containsValue(musicPlayerId) || finished) {
+                            // Detener si el jugador se desconecta, la música termina, o la interpolación finaliza
+                            finished = true;
+                            return;
+                        }
+
+                        long currentTime = System.currentTimeMillis();
+                        if (currentTime < startTime) {
+                            return; // Esperar hasta t=55s
+                        }
+
+                        float progress = Math.min((float) (currentTime - startTime) / duration, 1.0f);
+                        if (progress >= 1.0f) {
+                            // Finalizar interpolación
+                            tickClient.player.setYaw(targetYaw);
+                            tickClient.player.setPitch(targetPitch);
+                            finished = true;
+                            return;
+                        }
+
+                        // Interpolar yaw y pitch
+                        float interpolatedYaw = MathHelper.lerpAngleDegrees(progress, initialYaw, targetYaw);
+                        float interpolatedPitch = MathHelper.lerp(progress, initialPitch, targetPitch);
+                        tickClient.player.setYaw(interpolatedYaw);
+                        tickClient.player.setPitch(interpolatedPitch);
+                    }
+                };
+
+                ClientTickEvents.END_CLIENT_TICK.register(tickHandler);
+            });
+        }*/
+
         // Programar apertura de la pantalla a los 56s
         client.execute(() -> new Thread(() -> {
             try {
                 Thread.sleep(56000); // Esperar 56s
                 client.execute(() -> {
-                    if (GeoWareMod.playingAudios.containsValue(musicPlayerId)) {
+                    if (playingAudios.containsValue(musicPlayerId)) {
                         GeoWareMod.guiScale = client.options.getGuiScale().getValue();
                         client.options.getGuiScale().setValue(2);
                         client.setScreen(new GuitarHeroScreen(packet.getScore(), musicPlayerId));
