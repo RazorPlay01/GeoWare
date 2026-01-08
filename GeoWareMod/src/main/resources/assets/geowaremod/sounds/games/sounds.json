@@ -1,0 +1,268 @@
+{
+  "duplicar_arkanoid": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/arkanoid/duplicar_arkanoid"
+      }
+    ]
+  },
+  "end_arkanoid": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/arkanoid/end_arkanoid"
+      }
+    ]
+  },
+  "golpe_arkanoid": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/arkanoid/golpe_arkanoid"
+      }
+    ]
+  },
+  "rebote_barra_arkanoid": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/arkanoid/rebote_barra_arkanoid"
+      }
+    ]
+  },
+  "reduccion_arkanoid": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/arkanoid/reduccion_arkanoid"
+      }
+    ]
+  },
+  "upgrade_bar_arkanoid": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/arkanoid/upgrade_bar_arkanoid"
+      }
+    ]
+  },
+  "disparo_bubblepuzzle": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/bubblepuzzle/disparo_bubblepuzzle"
+      }
+    ]
+  },
+  "end_bubblepuzzle": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/bubblepuzzle/end_bubblepuzzle"
+      }
+    ]
+  },
+  "pop_bubblepuzzle": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/bubblepuzzle/pop_bubblepuzzle"
+      }
+    ]
+  },
+  "barril_explosion_donkeykong": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/donkeykong/barril_explosion_donkeykong"
+      }
+    ]
+  },
+  "dead_donkeykong": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/donkeykong/dead_donkeykong"
+      }
+    ]
+  },
+  "jump_donkeykong": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/donkeykong/jump_donkeykong"
+      }
+    ]
+  },
+  "martillo_donkeykong": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/donkeykong/martillo_donkeykong"
+      }
+    ]
+  },
+  "win_donkeykong": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/donkeykong/win_donkeykong"
+      }
+    ]
+  },
+  "correct_fruitfocus": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/fruitfocus/correct_fruitfocus"
+      }
+    ]
+  },
+  "dead_fruitfocus": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/fruitfocus/dead_fruitfocus"
+      }
+    ]
+  },
+  "error_fruitfocus": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/fruitfocus/error_fruitfocus"
+      }
+    ]
+  },
+  "win_fruitfocus": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/fruitfocus/win_fruitfocus"
+      }
+    ]
+  },
+  "dead_galaga": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/galaga/dead_galaga"
+      }
+    ]
+  },
+  "kill_galaga": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/galaga/kill_galaga"
+      }
+    ]
+  },
+  "shoot_galaga": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/galaga/shoot_galaga"
+      }
+    ]
+  },
+  "dead_hanoitowers": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/hanoitowers/dead_hanoitowers"
+      }
+    ]
+  },
+  "select_hanoitowers": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/hanoitowers/select_hanoitowers"
+      }
+    ]
+  },
+  "throw_hanoitowers": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/hanoitowers/throw_hanoitowers"
+      }
+    ]
+  },
+  "win_hanoitowers": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/hanoitowers/win_hanoitowers"
+      }
+    ]
+  },
+  "error_keybind": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/keybind/error_keybind"
+      }
+    ]
+  },
+  "perfect_keybind": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/keybind/perfect_keybind"
+      }
+    ]
+  },
+  "end_fruitfocus": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/robotfactory/end_fruitfocus"
+      }
+    ]
+  },
+  "ensamble_robotfactory": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/robotfactory/ensamble_robotfactory"
+      }
+    ]
+  },
+  "select_robotfactory": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/robotfactory/select_robotfactory"
+      }
+    ]
+  },
+  "dead_scarymaze": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/scarymaze/dead_scarymaze"
+      }
+    ]
+  },
+  "select_scarymaze": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/scarymaze/select_scarymaze"
+      }
+    ]
+  },
+  "win_scarymaze": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/scarymaze/win_scarymaze"
+      }
+    ]
+  },
+  "bajar_tetris": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/tetris/bajar_tetris"
+      }
+    ]
+  },
+  "end_tetris": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/tetris/end_tetris"
+      }
+    ]
+  },
+  "line_tetris": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/tetris/line_tetris"
+      }
+    ]
+  },
+  "move_tetris": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/tetris/move_tetris"
+      }
+    ]
+  },
+  "rotate_tetris": {
+    "sounds": [
+      {
+        "name": "geowaremod:games/tetris/rotate_tetris"
+      }
+    ]
+  }
+}
